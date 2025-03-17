@@ -13,7 +13,13 @@ class ProductTests(APITestCase):
 
     def test_create_product(self):
         """Test tạo sản phẩm mới"""
-        data = {"name": "Laptop", "description": "Gaming Laptop", "price": 1200, "category": self.category.id, "stock": 10}
+        data = {
+            "name": "Laptop",
+            "description": "Gaming Laptop",
+            "price": 1200,
+            "category": self.category.id,
+            "stock": 10
+        }
         response = self.client.post("/api/products/add/", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
