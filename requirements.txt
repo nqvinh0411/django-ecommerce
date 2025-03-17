@@ -1,2 +1,6 @@
 psycopg2-binary
 Pillow
+djangorestframework
+djangorestframework-simplejwt
+pytest
+pytest-django
