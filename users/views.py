@@ -3,6 +3,9 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from datetime import datetime
+from .models import UserToken
 
 from .serializers import RegisterSerializer, UserSerializer
 
@@ -41,3 +44,29 @@ class UserDetailAPIView(APIView):
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        user = self.user
+        refresh = self.get_token(user)
+        access_token = refresh.access_token
+
+        expires_in = int(access_token.lifetime.total_seconds())
+
+        # Lưu UserToken như trước...
+        expired_date = datetime.utcnow() + access_token.lifetime
+        UserToken.objects.create(
+            user=user,
+            token=str(access_token),
+            expired_date=expired_date
+        )
+
+        return {
+            'refresh': str(refresh),
+            'access': str(access_token),
+            'expires_in': expires_in,
+            'token_type': 'Bearer',
+        }
