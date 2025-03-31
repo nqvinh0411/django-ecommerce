@@ -8,6 +8,8 @@ from .views import (
     UserLoginHistoryListAPIView,
 )
 
+app_name = 'users'
+
 urlpatterns = [
     path('register/', RegisterAPIView.as_view(), name='register'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),

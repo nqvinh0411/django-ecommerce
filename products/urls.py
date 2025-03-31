@@ -5,6 +5,8 @@ from .views import (
     ProductDetailView, ProductUpdateView, ProductDeleteView, ProductImageUploadView
 )
 
+app_name = 'products'
+
 urlpatterns = [
     path('categories/', CategoryListView.as_view(), name='category-list'),
     path('', ProductListView.as_view(), name='product-list'),
