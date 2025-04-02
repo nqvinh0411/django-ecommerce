@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+
+from . import models
 from .models import Warehouse, StockItem, StockMovement, InventoryAuditLog
-from django.db.models import models
 
 
 class StockItemInline(admin.TabularInline):
