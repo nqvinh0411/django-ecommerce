@@ -89,7 +89,7 @@ class PromotionCampaign(models.Model):
     updated_at = models.DateTimeField(_('Updated At'), auto_now=True)
     
     # Optional relations to products or categories if campaign applies to specific items
-    products = models.ManyToManyField('catalog.Product', blank=True, related_name='campaigns')
+    products = models.ManyToManyField('products.Product', blank=True, related_name='campaigns')
     categories = models.ManyToManyField('catalog.Category', blank=True, related_name='campaigns')
     
     class Meta:
