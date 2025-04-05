@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/reviews/', include('reviews.urls', namespace='reviews')),
     path('api/notifications/', include('notifications.urls')),
     path('api/catalog/', include('catalog.urls')),
+    path('api/customer/', include('customers.urls')),
     path('api/inventory/', include('inventory.urls')),
     path('api/shipping/', include('shipping.urls')),
     path('api/promotions/', include('promotions.urls')),

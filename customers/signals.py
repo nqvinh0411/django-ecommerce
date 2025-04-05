@@ -10,7 +10,7 @@ def create_customer_profile(sender, instance, created, **kwargs):
     """
     Create a Customer instance for every new User
     """
-    if created:
+    if created and getattr(instance, 'is_customer', False):
         Customer.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
