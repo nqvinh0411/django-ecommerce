@@ -1,4 +1,8 @@
-from rest_framework import viewsets, filters, status
+from rest_framework import filters, status
+from rest_framework.generics import (
+    ListCreateAPIView, RetrieveUpdateDestroyAPIView,
+    ListAPIView, RetrieveAPIView
+)
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -11,9 +15,10 @@ from .serializers import (
 from .permissions import IsAdminUserOrReadOnly, CreateOnlyPermission
 
 
-class WarehouseViewSet(viewsets.ModelViewSet):
+# Warehouse views
+class WarehouseListCreateView(ListCreateAPIView):
     """
-    API endpoint for warehouse management.
+    API endpoint for listing all warehouses (GET) or creating a new warehouse (POST).
     Only admin users can create, update or delete warehouses.
     """
     queryset = Warehouse.objects.all()
@@ -26,9 +31,20 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     ordering = ['name']
 
 
-class StockItemViewSet(viewsets.ModelViewSet):
+class WarehouseRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
-    API endpoint for stock items management.
+    API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) a warehouse.
+    Only admin users can create, update or delete warehouses.
+    """
+    queryset = Warehouse.objects.all()
+    serializer_class = WarehouseSerializer
+    permission_classes = [IsAdminUser]
+
+
+# StockItem views
+class StockItemListCreateView(ListCreateAPIView):
+    """
+    API endpoint for listing all stock items (GET) or creating a new stock item (POST).
     Only admin users can create, update or delete stock items.
     """
     queryset = StockItem.objects.all()
@@ -59,9 +75,20 @@ class StockItemViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class StockMovementViewSet(viewsets.ModelViewSet):
+class StockItemRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
-    API endpoint for stock movement operations.
+    API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) a stock item.
+    Only admin users can create, update or delete stock items.
+    """
+    queryset = StockItem.objects.all()
+    serializer_class = StockItemSerializer
+    permission_classes = [IsAdminUser]
+
+
+# StockMovement views
+class StockMovementListCreateView(ListCreateAPIView):
+    """
+    API endpoint for listing all stock movements (GET) or creating a new stock movement (POST).
     Users can only create stock movements and view them, not edit or delete.
     """
     queryset = StockMovement.objects.all()
@@ -94,9 +121,20 @@ class StockMovementViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class InventoryAuditLogViewSet(viewsets.ReadOnlyModelViewSet):
+class StockMovementRetrieveView(RetrieveAPIView):
     """
-    API endpoint for inventory audit logs.
+    API endpoint for retrieving a stock movement (GET).
+    Users can only view stock movements, not edit or delete.
+    """
+    queryset = StockMovement.objects.all()
+    serializer_class = StockMovementSerializer
+    permission_classes = [IsAuthenticated]
+
+
+# InventoryAuditLog views
+class InventoryAuditLogListView(ListAPIView):
+    """
+    API endpoint for listing all inventory audit logs (GET).
     Read-only access for authenticated users. Cannot be created, modified, or deleted via API.
     """
     queryset = InventoryAuditLog.objects.all()
@@ -122,3 +160,13 @@ class InventoryAuditLogViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(stock_item__warehouse_id=warehouse_id)
             
         return queryset
+
+
+class InventoryAuditLogRetrieveView(RetrieveAPIView):
+    """
+    API endpoint for retrieving an inventory audit log (GET).
+    Read-only access for authenticated users.
+    """
+    queryset = InventoryAuditLog.objects.all()
+    serializer_class = InventoryAuditLogSerializer
+    permission_classes = [IsAuthenticated]
