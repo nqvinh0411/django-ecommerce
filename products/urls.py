@@ -1,18 +1,23 @@
 from django.urls import path
 
 from .views import (
-    CategoryListView, ProductListView, ProductCreateView,
-    ProductDetailView, ProductUpdateView, ProductDeleteView, ProductImageUploadView
+    CategoryListCreateView, ProductListView, ProductCreateView,
+    ProductRetrieveView, ProductUpdateView, ProductDestroyView, ProductImageUploadView
 )
 
 app_name = 'products'
 
 urlpatterns = [
-    path('categories', CategoryListView.as_view(), name='category-list'),
+    # Category endpoints
+    path('categories', CategoryListCreateView.as_view(), name='category-list-create'),
+
+    # Product endpoints
     path('', ProductListView.as_view(), name='product-list'),
-    path('add', ProductCreateView.as_view(), name='product-add'),
-    path('<int:pk>', ProductDetailView.as_view(), name='product-detail'),
+    path('create', ProductCreateView.as_view(), name='product-create'),
+    path('<int:pk>/view', ProductRetrieveView.as_view(), name='product-detail'),
     path('<int:pk>/update', ProductUpdateView.as_view(), name='product-update'),
-    path('<int:pk>/delete', ProductDeleteView.as_view(), name='product-delete'),
-    path('<int:product_id>/images', ProductImageUploadView.as_view(), name='product-image-upload'),
+    path('<int:pk>/delete', ProductDestroyView.as_view(), name='product-delete'),
+    
+    # Product image endpoints
+    path('<int:product_id>/images/upload', ProductImageUploadView.as_view(), name='product-image-upload'),
 ]

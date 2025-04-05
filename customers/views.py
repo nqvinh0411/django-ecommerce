@@ -1,11 +1,8 @@
-from rest_framework import permissions, status
-from rest_framework.views import APIView
-from rest_framework.generics import (
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView,
-    ListAPIView, RetrieveAPIView
-)
-from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework import permissions, status
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+from core.views.base import BaseAPIView, BaseListCreateView, BaseRetrieveUpdateDestroyView, BaseListView, BaseRetrieveView
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 from .serializers import (
     CustomerSerializer, CustomerGroupSerializer,
@@ -15,12 +12,16 @@ from .permissions import IsCustomerOwner, IsAdminOrReadOnly
 
 
 # Customer views
-class CustomerListCreateView(ListCreateAPIView):
+class CustomerListCreateView(BaseListCreateView):
     """
-    API endpoint for listing all customers or creating a new customer.
+    API endpoint để liệt kê tất cả khách hàng hoặc tạo một khách hàng mới.
     """
     serializer_class = CustomerSerializer
     permission_classes = [permissions.IsAuthenticated, IsCustomerOwner]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['user__email', 'phone_number']
+    ordering_fields = ['created_at', 'user__email']
+    ordering = ['-created_at']
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -31,12 +32,13 @@ class CustomerListCreateView(ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class CustomerRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class CustomerRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
-    API endpoint for retrieving, updating or deleting a customer.
+    API endpoint để xem, cập nhật hoặc xóa thông tin khách hàng.
     """
     serializer_class = CustomerSerializer
     permission_classes = [permissions.IsAuthenticated, IsCustomerOwner]
+    lookup_url_kwarg = 'pk'
     
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -45,54 +47,98 @@ class CustomerRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
 
 # CustomerGroup views
-class CustomerGroupListCreateView(ListCreateAPIView):
+class CustomerGroupListCreateView(BaseListCreateView):
     """
-    API endpoint for listing all customer groups or creating a new customer group.
-    """
-    queryset = CustomerGroup.objects.all()
-    serializer_class = CustomerGroupSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class CustomerGroupRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """
-    API endpoint for retrieving, updating or deleting a customer group.
+    API endpoint để liệt kê tất cả các nhóm khách hàng hoặc tạo một nhóm mới.
     """
     queryset = CustomerGroup.objects.all()
     serializer_class = CustomerGroupSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'description']
+    ordering_fields = ['name', 'discount_rate', 'created_at']
+    ordering = ['name']
+
+
+class CustomerGroupRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
+    """
+    API endpoint để xem, cập nhật hoặc xóa một nhóm khách hàng.
+    """
+    queryset = CustomerGroup.objects.all()
+    serializer_class = CustomerGroupSerializer
+    permission_classes = [IsAdminOrReadOnly]
+    lookup_url_kwarg = 'pk'
 
 
 # CustomerAddress views
-class CustomerAddressListCreateView(ListCreateAPIView):
+class CustomerAddressListCreateView(BaseListCreateView):
     """
-    API endpoint for listing all customer addresses or creating a new customer address.
+    API endpoint để liệt kê tất cả địa chỉ của khách hàng hoặc tạo một địa chỉ mới.
     """
     serializer_class = CustomerAddressSerializer
     permission_classes = [permissions.IsAuthenticated, IsCustomerOwner]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['street_address', 'city', 'state', 'country']
+    ordering_fields = ['created_at', 'is_default']
+    ordering = ['-is_default', '-created_at']
 
     def get_queryset(self):
         return CustomerAddress.objects.filter(customer__user=self.request.user)
 
     def perform_create(self, serializer):
         customer = get_object_or_404(Customer, user=self.request.user)
+        # Nếu đánh dấu là địa chỉ mặc định, cập nhật các địa chỉ khác
+        if serializer.validated_data.get('is_default', False):
+            address_type = serializer.validated_data.get('address_type')
+            if address_type in ['shipping', 'both']:
+                CustomerAddress.objects.filter(
+                    customer=customer,
+                    address_type__in=['shipping', 'both'],
+                    is_default=True
+                ).update(is_default=False)
+            if address_type in ['billing', 'both']:
+                CustomerAddress.objects.filter(
+                    customer=customer,
+                    address_type__in=['billing', 'both'],
+                    is_default=True
+                ).update(is_default=False)
         serializer.save(customer=customer)
 
 
-class CustomerAddressRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class CustomerAddressRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
-    API endpoint for retrieving, updating or deleting a customer address.
+    API endpoint để xem, cập nhật hoặc xóa một địa chỉ của khách hàng.
     """
     serializer_class = CustomerAddressSerializer
     permission_classes = [permissions.IsAuthenticated, IsCustomerOwner]
+    lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
         return CustomerAddress.objects.filter(customer__user=self.request.user)
+        
+    def perform_update(self, serializer):
+        # Nếu đánh dấu là địa chỉ mặc định, cập nhật các địa chỉ khác
+        customer = self.get_object().customer
+        if serializer.validated_data.get('is_default', False):
+            address_type = serializer.validated_data.get('address_type', self.get_object().address_type)
+            if address_type in ['shipping', 'both']:
+                CustomerAddress.objects.filter(
+                    customer=customer,
+                    address_type__in=['shipping', 'both'],
+                    is_default=True
+                ).exclude(id=self.get_object().id).update(is_default=False)
+            if address_type in ['billing', 'both']:
+                CustomerAddress.objects.filter(
+                    customer=customer,
+                    address_type__in=['billing', 'both'],
+                    is_default=True
+                ).exclude(id=self.get_object().id).update(is_default=False)
+        serializer.save()
 
 
-class CustomerAddressDefaultShippingView(APIView):
+class CustomerAddressDefaultShippingView(BaseAPIView):
     """
-    API endpoint for retrieving the default shipping address.
+    API endpoint để lấy địa chỉ giao hàng mặc định của khách hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
     
@@ -104,13 +150,20 @@ class CustomerAddressDefaultShippingView(APIView):
         ).first()
         if address:
             serializer = CustomerAddressSerializer(address)
-            return Response(serializer.data)
-        return Response({'detail': 'No default shipping address found.'}, status=status.HTTP_404_NOT_FOUND)
+            return self.success_response(
+                data=serializer.data,
+                message="Địa chỉ giao hàng mặc định",
+                status_code=status.HTTP_200_OK
+            )
+        return self.error_response(
+            message="Không tìm thấy địa chỉ giao hàng mặc định",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
 
 
-class CustomerAddressDefaultBillingView(APIView):
+class CustomerAddressDefaultBillingView(BaseAPIView):
     """
-    API endpoint for retrieving the default billing address.
+    API endpoint để lấy địa chỉ thanh toán mặc định của khách hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
     
@@ -122,17 +175,28 @@ class CustomerAddressDefaultBillingView(APIView):
         ).first()
         if address:
             serializer = CustomerAddressSerializer(address)
-            return Response(serializer.data)
-        return Response({'detail': 'No default billing address found.'}, status=status.HTTP_404_NOT_FOUND)
+            return self.success_response(
+                data=serializer.data,
+                message="Địa chỉ thanh toán mặc định",
+                status_code=status.HTTP_200_OK
+            )
+        return self.error_response(
+            message="Không tìm thấy địa chỉ thanh toán mặc định",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
 
 
 # CustomerActivity views
-class CustomerActivityListView(ListAPIView):
+class CustomerActivityListView(BaseListView):
     """
-    API endpoint for listing all customer activities.
+    API endpoint để liệt kê tất cả hoạt động của khách hàng.
     """
     serializer_class = CustomerActivitySerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['activity_type', 'metadata']
+    ordering_fields = ['created_at', 'activity_type']
+    ordering = ['-created_at']
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -140,12 +204,13 @@ class CustomerActivityListView(ListAPIView):
         return CustomerActivity.objects.filter(customer__user=self.request.user)
 
 
-class CustomerActivityRetrieveView(RetrieveAPIView):
+class CustomerActivityRetrieveView(BaseRetrieveView):
     """
-    API endpoint for retrieving a customer activity.
+    API endpoint để xem chi tiết một hoạt động của khách hàng.
     """
     serializer_class = CustomerActivitySerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
         if self.request.user.is_staff:

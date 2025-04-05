@@ -1,11 +1,16 @@
 from django.urls import path
 from .views import (
     # Warehouse views
-    WarehouseListCreateView, WarehouseRetrieveUpdateDestroyView,
+    WarehouseListView, WarehouseCreateView, 
+    WarehouseRetrieveView, WarehouseUpdateView, WarehouseDestroyView,
+    
     # StockItem views
-    StockItemListCreateView, StockItemRetrieveUpdateDestroyView,
+    StockItemListView, StockItemCreateView,
+    StockItemRetrieveView, StockItemUpdateView, StockItemDestroyView,
+    
     # StockMovement views
-    StockMovementListCreateView, StockMovementRetrieveView,
+    StockMovementListView, StockMovementCreateView, StockMovementRetrieveView,
+    
     # InventoryAuditLog views
     InventoryAuditLogListView, InventoryAuditLogRetrieveView
 )
@@ -14,37 +19,51 @@ app_name = 'inventory'
 
 urlpatterns = [
     # Warehouse endpoints
-    # GET /warehouses - list all warehouses
-    # POST /warehouses - create a new warehouse
-    path('warehouses', WarehouseListCreateView.as_view(), name='warehouse-list-create'),
+    # GET /warehouses - liệt kê tất cả kho hàng
+    path('warehouses/list', WarehouseListView.as_view(), name='warehouse-list'),
     
-    # GET /warehouses/{id} - retrieve a warehouse
-    # PUT/PATCH /warehouses/{id} - update a warehouse
-    # DELETE /warehouses/{id} - delete a warehouse
-    path('warehouses/<int:pk>', WarehouseRetrieveUpdateDestroyView.as_view(), name='warehouse-detail'),
+    # POST /warehouses - tạo một kho hàng mới
+    path('warehouses/create', WarehouseCreateView.as_view(), name='warehouse-create'),
+    
+    # GET /warehouses/{id} - xem chi tiết một kho hàng
+    path('warehouses/<int:pk>/detail', WarehouseRetrieveView.as_view(), name='warehouse-detail'),
+    
+    # PUT/PATCH /warehouses/{id} - cập nhật một kho hàng
+    path('warehouses/<int:pk>/update', WarehouseUpdateView.as_view(), name='warehouse-update'),
+    
+    # DELETE /warehouses/{id} - xóa một kho hàng
+    path('warehouses/<int:pk>/delete', WarehouseDestroyView.as_view(), name='warehouse-delete'),
     
     # StockItem endpoints
-    # GET /stock-items - list all stock items
-    # POST /stock-items - create a new stock item
-    path('stock-items', StockItemListCreateView.as_view(), name='stock-item-list-create'),
+    # GET /stock-items - liệt kê tất cả sản phẩm trong kho
+    path('stock-items/list', StockItemListView.as_view(), name='stock-item-list'),
     
-    # GET /stock-items/{id} - retrieve a stock item
-    # PUT/PATCH /stock-items/{id} - update a stock item
-    # DELETE /stock-items/{id} - delete a stock item
-    path('stock-items/<int:pk>', StockItemRetrieveUpdateDestroyView.as_view(), name='stock-item-detail'),
+    # POST /stock-items - tạo một sản phẩm mới trong kho
+    path('stock-items/create', StockItemCreateView.as_view(), name='stock-item-create'),
+    
+    # GET /stock-items/{id} - xem chi tiết một sản phẩm trong kho
+    path('stock-items/<int:pk>/detail', StockItemRetrieveView.as_view(), name='stock-item-detail'),
+    
+    # PUT/PATCH /stock-items/{id} - cập nhật một sản phẩm trong kho
+    path('stock-items/<int:pk>/update', StockItemUpdateView.as_view(), name='stock-item-update'),
+    
+    # DELETE /stock-items/{id} - xóa một sản phẩm trong kho
+    path('stock-items/<int:pk>/delete', StockItemDestroyView.as_view(), name='stock-item-delete'),
     
     # StockMovement endpoints
-    # GET /stock-movements - list all stock movements
-    # POST /stock-movements - create a new stock movement
-    path('stock-movements', StockMovementListCreateView.as_view(), name='stock-movement-list-create'),
+    # GET /stock-movements - liệt kê tất cả di chuyển kho
+    path('stock-movements/list', StockMovementListView.as_view(), name='stock-movement-list'),
     
-    # GET /stock-movements/{id} - retrieve a stock movement
-    path('stock-movements/<int:pk>', StockMovementRetrieveView.as_view(), name='stock-movement-detail'),
+    # POST /stock-movements - tạo một di chuyển kho mới
+    path('stock-movements/create', StockMovementCreateView.as_view(), name='stock-movement-create'),
+    
+    # GET /stock-movements/{id} - xem chi tiết một di chuyển kho
+    path('stock-movements/<int:pk>/detail', StockMovementRetrieveView.as_view(), name='stock-movement-detail'),
     
     # InventoryAuditLog endpoints
-    # GET /audit-logs - list all inventory audit logs
-    path('audit-logs', InventoryAuditLogListView.as_view(), name='inventory-audit-log-list'),
+    # GET /audit-logs - liệt kê tất cả log kiểm kê
+    path('audit-logs/list', InventoryAuditLogListView.as_view(), name='inventory-audit-log-list'),
     
-    # GET /audit-logs/{id} - retrieve an inventory audit log
-    path('audit-logs/<int:pk>', InventoryAuditLogRetrieveView.as_view(), name='inventory-audit-log-detail'),
+    # GET /audit-logs/{id} - xem chi tiết một log kiểm kê
+    path('audit-logs/<int:pk>/detail', InventoryAuditLogRetrieveView.as_view(), name='inventory-audit-log-detail'),
 ]

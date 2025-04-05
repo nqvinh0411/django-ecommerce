@@ -1,24 +1,27 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 from .views import (
-    RegisterAPIView, LogoutAPIView, UserDetailAPIView,
-    CustomTokenObtainPairView, UserSessionListAPIView,
-    UserSessionDeleteAPIView, LogoutOtherSessionsAPIView,
-    UserLoginHistoryListAPIView, AuthTokenRefreshView,
+    RegisterView, LogoutView, UserDetailView,
+    CustomTokenObtainPairView, UserSessionListView,
+    UserSessionDeleteView, LogoutOtherSessionsView,
+    UserLoginHistoryListView, TokenRefreshView,
 )
 
 app_name = 'users'
 
 urlpatterns = [
-    path('register', RegisterAPIView.as_view(), name='register'),
-    path('login', CustomTokenObtainPairView.as_view(), name='login'),
-    path('logout', LogoutAPIView.as_view(), name='logout'),
-    path('user/info', UserDetailAPIView.as_view(), name='info'),
-    path('token/refresh', AuthTokenRefreshView.as_view(), name='token_refresh'),
-
-    path('user/sessions', UserSessionListAPIView.as_view()),
-    path('user/sessions/<int:pk>', UserSessionDeleteAPIView.as_view()),
-    path('user/sessions/logout_others', LogoutOtherSessionsAPIView.as_view()),
-    path('user/login_history', UserLoginHistoryListAPIView.as_view()),
+    # Authentication endpoints
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    
+    # User endpoints
+    path('me/', UserDetailView.as_view(), name='user-detail'),
+    
+    # Session management
+    path('sessions/', UserSessionListView.as_view(), name='session-list'),
+    path('sessions/<int:session_id>/', UserSessionDeleteView.as_view(), name='session-delete'),
+    path('sessions/logout-others/', LogoutOtherSessionsView.as_view(), name='session-logout-others'),
+    path('login-history/', UserLoginHistoryListView.as_view(), name='login-history'),
 ]

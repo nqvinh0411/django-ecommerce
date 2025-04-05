@@ -1,63 +1,33 @@
-from rest_framework import generics, status
-from rest_framework.permissions import IsAdminUser
-from rest_framework.response import Response
-from .models import StoreSetting, Currency, LanguageSetting, EmailTemplate
-from .serializers import (
-    StoreSettingSerializer, CurrencySerializer,
-    LanguageSettingSerializer, EmailTemplateSerializer
+"""
+Settings views module - exports all view classes for the settings app.
+This file follows the Single Responsibility Principle by focusing only on exporting views.
+"""
+# Store settings views
+from .views.store import StoreSettingView
+
+# Currency views
+from .views.currency import CurrencyListView
+
+# Language views
+from .views.language import LanguageSettingListView
+
+# Email template views
+from .views.email_template import (
+    EmailTemplateListCreateView,
+    EmailTemplateRetrieveUpdateDestroyView
 )
 
-
-class StoreSettingView(generics.RetrieveUpdateAPIView):
-    """
-    API view to retrieve or update store settings.
-    Only one instance exists and only admin users can access it.
-    """
-    serializer_class = StoreSettingSerializer
-    permission_classes = [IsAdminUser]
+__all__ = [
+    # Store settings views
+    'StoreSettingView',
     
-    def get_object(self):
-        """
-        Get or create the store settings instance.
-        """
-        return StoreSetting.get_settings()
-
-
-class CurrencyListView(generics.ListAPIView):
-    """
-    API view to list all currencies.
-    Admin only access.
-    """
-    queryset = Currency.objects.all()
-    serializer_class = CurrencySerializer
-    permission_classes = [IsAdminUser]
-
-
-class LanguageSettingListView(generics.ListAPIView):
-    """
-    API view to list all language settings.
-    Admin only access.
-    """
-    queryset = LanguageSetting.objects.all()
-    serializer_class = LanguageSettingSerializer
-    permission_classes = [IsAdminUser]
-
-
-class EmailTemplateListCreateView(generics.ListCreateAPIView):
-    """
-    API view to list all email templates or create a new one.
-    Admin only access.
-    """
-    queryset = EmailTemplate.objects.all()
-    serializer_class = EmailTemplateSerializer
-    permission_classes = [IsAdminUser]
-
-
-class EmailTemplateDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API view to retrieve, update or delete an email template.
-    Admin only access.
-    """
-    queryset = EmailTemplate.objects.all()
-    serializer_class = EmailTemplateSerializer
-    permission_classes = [IsAdminUser]
+    # Currency views
+    'CurrencyListView',
+    
+    # Language views
+    'LanguageSettingListView',
+    
+    # Email template views
+    'EmailTemplateListCreateView',
+    'EmailTemplateRetrieveUpdateDestroyView'
+]

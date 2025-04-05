@@ -20,7 +20,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    # Admin interface
     path('admin/', admin.site.urls),
+    
+    # API routes - Versioned API structure
+    path('api/', include('api.urls')),
+    
+    # Legacy routes - Kept for backwards compatibility during transition
+    # These should eventually be migrated to the versioned API structure
     path('api/auth/', include('users.urls', namespace='users')),
     path('api/products/', include('products.urls', namespace='products')),
     path('api/cart/', include('cart.urls', namespace='carts')),

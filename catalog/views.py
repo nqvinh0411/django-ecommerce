@@ -1,13 +1,12 @@
-from rest_framework import filters, status
-from rest_framework.views import APIView
-from rest_framework.generics import (
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView,
-    ListAPIView, CreateAPIView, RetrieveAPIView,
-    UpdateAPIView, DestroyAPIView
-)
-from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
+from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAdminUser
+
+from core.views.base import (
+    BaseListCreateView, BaseRetrieveUpdateDestroyView
+)
+from core.permissions.base import IsAdminOrReadOnly
+
 from .models import Category, Brand, Tag, Attribute, AttributeValue
 from .serializers import (
     CategorySerializer, BrandSerializer, TagSerializer,
@@ -16,105 +15,105 @@ from .serializers import (
 
 
 # Category views
-class CategoryListCreateView(ListCreateAPIView):
+class CategoryListCreateView(BaseListCreateView):
     """
     API endpoint for listing all Categories (GET) or creating a new Category (POST).
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['slug', 'is_active', 'parent']
     search_fields = ['name', 'description']
 
 
-class CategoryRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class CategoryRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
     API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) a Category.
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
 
 
 # Brand views
-class BrandListCreateView(ListCreateAPIView):
+class BrandListCreateView(BaseListCreateView):
     """
     API endpoint for listing all Brands (GET) or creating a new Brand (POST).
     """
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['slug', 'is_active']
     search_fields = ['name', 'description']
 
 
-class BrandRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class BrandRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
     API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) a Brand.
     """
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
 
 
 # Tag views
-class TagListCreateView(ListCreateAPIView):
+class TagListCreateView(BaseListCreateView):
     """
     API endpoint for listing all Tags (GET) or creating a new Tag (POST).
     """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['slug', 'is_active']
     search_fields = ['name']
 
 
-class TagRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class TagRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
     API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) a Tag.
     """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
 
 
 # Attribute views
-class AttributeListCreateView(ListCreateAPIView):
+class AttributeListCreateView(BaseListCreateView):
     """
     API endpoint for listing all Attributes (GET) or creating a new Attribute (POST).
     """
     queryset = Attribute.objects.all()
     serializer_class = AttributeSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['slug', 'is_filterable', 'is_variant']
     search_fields = ['name', 'description']
 
 
-class AttributeRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class AttributeRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
     API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) an Attribute.
     """
     queryset = Attribute.objects.all()
     serializer_class = AttributeSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
 
 
 # AttributeValue views
-class AttributeValueListCreateView(ListCreateAPIView):
+class AttributeValueListCreateView(BaseListCreateView):
     """
     API endpoint for listing all AttributeValues (GET) or creating a new AttributeValue (POST).
     """
     queryset = AttributeValue.objects.all()
     serializer_class = AttributeValueSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['attribute', 'slug']
     search_fields = ['value', 'display_value']
@@ -129,11 +128,11 @@ class AttributeValueListCreateView(ListCreateAPIView):
         return queryset
 
 
-class AttributeValueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class AttributeValueRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
     API endpoint for retrieving (GET), updating (PUT/PATCH), or deleting (DELETE) an AttributeValue.
     """
     queryset = AttributeValue.objects.all()
     serializer_class = AttributeValueSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'

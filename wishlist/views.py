@@ -1,4 +1,7 @@
-from rest_framework.views import APIView
+from rest_framework.generics import (
+    RetrieveAPIView, CreateAPIView, DestroyAPIView, 
+    ListAPIView, GenericAPIView
+)
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -10,77 +13,96 @@ from .serializers import WishlistSerializer, WishlistItemSerializer
 from .permissions import IsWishlistOwner
 
 
-class WishlistView(APIView):
+class WishlistRetrieveView(RetrieveAPIView):
     """
-    View to get the current user's wishlist.
+    Retrieve the current user's wishlist.
+    
+    GET /wishlist - Returns the wishlist details with all items
+    
     Automatically creates a wishlist if the user doesn't have one.
     """
+    serializer_class = WishlistSerializer
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get_object(self):
+        customer = get_object_or_404(Customer, user=self.request.user)
+        wishlist, created = Wishlist.objects.get_or_create(customer=customer)
+        return wishlist
+
+
+class WishlistItemListView(ListAPIView):
+    """
+    List all items in the user's wishlist.
+    
+    GET /wishlist/items - Returns a list of all wishlist items
+    """
+    serializer_class = WishlistItemSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        customer = get_object_or_404(Customer, user=self.request.user)
+        wishlist, created = Wishlist.objects.get_or_create(customer=customer)
+        return WishlistItem.objects.filter(wishlist=wishlist)
+
+
+class WishlistItemCreateView(CreateAPIView):
+    """
+    Add a product to the user's wishlist.
+    
+    POST /wishlist/items
+    
+    Request body:
+    {
+        "product_id": <int>
+    }
+    """
+    serializer_class = WishlistItemSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
         # Get or create customer's wishlist
-        customer = get_object_or_404(Customer, user=request.user)
+        customer = get_object_or_404(Customer, user=self.request.user)
         wishlist, created = Wishlist.objects.get_or_create(customer=customer)
         
-        serializer = WishlistSerializer(wishlist)
-        return Response(serializer.data)
-
-
-class AddWishlistItemView(APIView):
-    """
-    View to add a product to the user's wishlist.
-    Automatically creates a wishlist if the user doesn't have one.
-    """
-    permission_classes = [IsAuthenticated]
-    
-    def post(self, request):
-        # Get required data
-        product_id = request.data.get('product_id')
-        if not product_id:
-            return Response(
-                {'error': 'product_id is required'},
-                status=status.HTTP_400_BAD_REQUEST
+        # Check if item already exists
+        product = serializer.validated_data['product']
+        if WishlistItem.objects.filter(wishlist=wishlist, product=product).exists():
+            from rest_framework.serializers import ValidationError
+            raise ValidationError(
+                {"product_id": "This product is already in your wishlist"}
             )
-            
-        # Get or create customer's wishlist
-        customer = get_object_or_404(Customer, user=request.user)
-        wishlist, created = Wishlist.objects.get_or_create(customer=customer)
         
-        # Create serializer with the data
-        serializer = WishlistItemSerializer(data={'product_id': product_id})
-        
-        if serializer.is_valid():
-            # Check if item already exists
-            if WishlistItem.objects.filter(wishlist=wishlist, product_id=product_id).exists():
-                return Response(
-                    {'message': 'This product is already in your wishlist'},
-                    status=status.HTTP_200_OK
-                )
-                
-            # Save the item
-            serializer.save(wishlist=wishlist)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Save the item
+        serializer.save(wishlist=wishlist)
 
 
-class RemoveWishlistItemView(APIView):
+class WishlistItemRetrieveView(RetrieveAPIView):
     """
-    View to remove a product from the user's wishlist.
-    """
-    permission_classes = [IsAuthenticated, IsWishlistOwner]
+    Retrieve a specific wishlist item.
     
-    def delete(self, request, item_id):
-        # Get the item
-        item = get_object_or_404(WishlistItem, id=item_id)
-        
-        # Check permissions
-        self.check_object_permissions(request, item)
-        
-        # Delete the item
-        item.delete()
-        
-        return Response(
-            {'message': 'Item removed from wishlist successfully'},
-            status=status.HTTP_204_NO_CONTENT
-        )
+    GET /wishlist/items/{id} - Returns details of a specific wishlist item
+    """
+    serializer_class = WishlistItemSerializer
+    permission_classes = [IsAuthenticated, IsWishlistOwner]
+    lookup_url_kwarg = 'item_id'
+    
+    def get_queryset(self):
+        customer = get_object_or_404(Customer, user=self.request.user)
+        wishlist = get_object_or_404(Wishlist, customer=customer)
+        return WishlistItem.objects.filter(wishlist=wishlist)
+
+
+class WishlistItemDestroyView(DestroyAPIView):
+    """
+    Remove a product from the user's wishlist.
+    
+    DELETE /wishlist/items/{id} - Removes an item from the wishlist
+    """
+    serializer_class = WishlistItemSerializer
+    permission_classes = [IsAuthenticated, IsWishlistOwner]
+    lookup_url_kwarg = 'item_id'
+    
+    def get_queryset(self):
+        customer = get_object_or_404(Customer, user=self.request.user)
+        wishlist = get_object_or_404(Wishlist, customer=customer)
+        return WishlistItem.objects.filter(wishlist=wishlist)

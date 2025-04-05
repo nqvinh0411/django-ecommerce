@@ -16,6 +16,7 @@ class Wishlist(models.Model):
         verbose_name=_('Customer')
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _('Wishlist')
@@ -32,7 +33,7 @@ class WishlistItem(models.Model):
     wishlist = models.ForeignKey(
         Wishlist,
         on_delete=models.CASCADE,
-        related_name='items',
+        related_name='wishlist_items',
         verbose_name=_('Wishlist')
     )
     product = models.ForeignKey(

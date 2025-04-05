@@ -1,14 +1,20 @@
 from cart.models import Cart, CartItem
-from rest_framework import generics, permissions, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import permissions, status
+from django.shortcuts import get_object_or_404
+
+from core.views.base import (
+    BaseAPIView, BaseListView, BaseRetrieveView, BaseUpdateView
+)
+from core.permissions.base import IsOwnerOrAdminUser
 
 from .models import Order, OrderItem
-from .serializers import OrderSerializer
+from .serializers import OrderSerializer, OrderStatusUpdateSerializer
 
 
-# API Tạo đơn hàng từ giỏ hàng
-class CreateOrderView(APIView):
+class OrderCreateView(BaseAPIView):
+    """
+    API để tạo đơn hàng mới từ giỏ hàng của người dùng.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
@@ -16,54 +22,116 @@ class CreateOrderView(APIView):
         cart_items = CartItem.objects.filter(cart=cart)
 
         if not cart_items.exists():
-            return Response({"error": "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
+            return self.error_response(
+                message="Giỏ hàng đang trống",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
 
+        # Tạo đơn hàng mới
         order = Order.objects.create(user=request.user, status="pending")
+        total_amount = 0
+        
+        # Tạo các item trong đơn hàng từ giỏ hàng
         for item in cart_items:
-            OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity,
-                                     price=item.product.price)
+            item_price = item.product.price
+            item_total = item_price * item.quantity
+            total_amount += item_total
+            
+            OrderItem.objects.create(
+                order=order, 
+                product=item.product, 
+                quantity=item.quantity,
+                price=item_price
+            )
+        
+        # Xóa giỏ hàng sau khi tạo đơn hàng
         cart_items.delete()
 
-        return Response({"message": "Order created successfully", "order_id": order.id}, status=status.HTTP_201_CREATED)
+        # Trả về response thành công với thông tin đơn hàng
+        serializer = OrderSerializer(order)
+        return self.success_response(
+            data=serializer.data,
+            message="Đơn hàng đã được tạo thành công",
+            status_code=status.HTTP_201_CREATED
+        )
 
 
-# API Lấy danh sách đơn hàng của user
-class UserOrdersView(generics.ListAPIView):
+class UserOrderListView(BaseListView):
+    """
+    API để lấy danh sách đơn hàng của người dùng hiện tại.
+    """
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['status']
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']  # Đơn hàng mới nhất hiển thị trước
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
 
 
-# API Xem chi tiết đơn hàng
-class OrderDetailView(generics.RetrieveAPIView):
+class OrderDetailView(BaseRetrieveView):
+    """
+    API để xem chi tiết một đơn hàng.
+    """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
+    permission_classes = [IsOwnerOrAdminUser]
+    lookup_url_kwarg = 'order_id'
+    
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.all()
         return Order.objects.filter(user=self.request.user)
 
 
-# API Cập nhật trạng thái đơn hàng (chỉ dành cho Seller/Admin)
-class UpdateOrderStatusView(APIView):
+class OrderStatusUpdateView(BaseUpdateView):
+    """
+    API để cập nhật trạng thái đơn hàng.
+    - Người dùng thường chỉ có thể cập nhật trạng thái thành 'cancelled'
+    - Admin/Staff có thể cập nhật bất kỳ trạng thái nào
+    """
+    queryset = Order.objects.all()
+    serializer_class = OrderStatusUpdateSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def put(self, request, pk):
-        try:
-            order = Order.objects.get(id=pk)
-
-            if not request.user.is_staff and order.items.filter(product__seller=request.user).count() == 0:
-                return Response({"error": "You do not have permission to update this order"},
-                                status=status.HTTP_403_FORBIDDEN)
-
-            new_status = request.data.get("status")
-            if new_status not in ["pending", "shipped", "delivered", "cancelled"]:
-                return Response({"error": "Invalid status"}, status=status.HTTP_400_BAD_REQUEST)
-
-            order.status = new_status
-            order.save()
-            return Response({"message": "Order status updated successfully"}, status=status.HTTP_200_OK)
-        except Order.DoesNotExist:
-            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+    lookup_url_kwarg = 'order_id'
+    http_method_names = ['patch']
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.all()
+        return Order.objects.filter(user=self.request.user)
+    
+    def perform_update(self, serializer):
+        # Kiểm tra quyền cập nhật trạng thái
+        new_status = serializer.validated_data.get('status')
+        instance = self.get_object()
+        
+        # Nếu không phải admin/staff, chỉ cho phép hủy đơn
+        if not self.request.user.is_staff and new_status != 'cancelled':
+            return self.error_response(
+                message="Bạn chỉ có thể hủy đơn hàng của mình", 
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Kiểm tra các ràng buộc khác về trạng thái
+        if instance.status == 'delivered' and new_status != 'completed':
+            return self.error_response(
+                message="Đơn hàng đã giao không thể thay đổi trạng thái khác ngoài hoàn thành", 
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+            
+        if instance.status == 'cancelled':
+            return self.error_response(
+                message="Đơn hàng đã hủy không thể thay đổi trạng thái", 
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+            
+        if instance.status == 'completed':
+            return self.error_response(
+                message="Đơn hàng đã hoàn thành không thể thay đổi trạng thái", 
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Thực hiện cập nhật
+        serializer.save()
