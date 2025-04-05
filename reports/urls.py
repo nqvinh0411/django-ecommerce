@@ -6,9 +6,11 @@ from .views import (
     TrafficLogListView
 )
 
+app_name = "reports"
+
 urlpatterns = [
-    path('sales/', SalesReportListView.as_view(), name='sales-report'),
-    path('products/', ProductReportListView.as_view(), name='product-report'),
-    path('customers/', CustomerReportListView.as_view(), name='customer-report'),
-    path('traffic/', TrafficLogListView.as_view(), name='traffic-log'),
+    path('sales', SalesReportListView.as_view(), name='sales-report'),
+    path('products', ProductReportListView.as_view(), name='product-report'),
+    path('customers', CustomerReportListView.as_view(), name='customer-report'),
+    path('traffic', TrafficLogListView.as_view(), name='traffic-log'),
 ]
