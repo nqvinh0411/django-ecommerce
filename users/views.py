@@ -5,12 +5,12 @@ from django.utils.timezone import now
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import AllowAny
 from .models import UserToken, LoginHistory
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserSerializer, CustomTokenObtainPairSerializer
 
 User = get_user_model()
 
@@ -56,46 +56,7 @@ class UserDetailAPIView(APIView):
             }, status=401)
 
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        access_token = data['access']
-        refresh_token = data['refresh']
-        user = self.user
 
-        access = self.get_token(user).access_token
-        expired_date = datetime.utcnow() + access.lifetime
-
-        request = self.context['request']
-        device = request.data.get('device', 'Unknown')
-        ip = request.META.get('REMOTE_ADDR')
-        user_agent = request.META.get('HTTP_USER_AGENT')
-
-        # Tạo UserToken
-        UserToken.objects.create(
-            user=user,
-            token=str(access_token),
-            expired_date=expired_date,
-            device_name=device,
-            ip_address=ip,
-            user_agent=user_agent
-        )
-
-        # Ghi log login
-        LoginHistory.objects.create(
-            user=user,
-            token_ref=str(access_token)[:50],
-            device_name=device,
-            ip_address=ip,
-            user_agent=user_agent,
-        )
-
-        return {
-            'access': access_token,
-            'refresh': refresh_token,
-            'expires_in': int(access.lifetime.total_seconds()),
-            'token_type': 'Bearer'
-        }
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
