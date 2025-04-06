@@ -11,7 +11,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from core.views.base import (
     BaseAPIView, BaseCreateView, BaseListView
 )
-from core.permissions.base import IsOwnerOrAdminUser
 
 from .models import UserToken, LoginHistory
 from .serializers import (

@@ -3,41 +3,21 @@ from django.urls import path, include
 # Nhóm các URL theo module
 urlpatterns = [
     # Module catalog
-    path('', include('catalog.urls')),
-    
-    # Module wishlist
-    path('', include('wishlist.urls')),
-    
-    # Module auth/users
-    path('auth/', include('users.urls')),
-    
-    # Module customers
-    path('', include('customers.urls')),
-    
-    # Module products
-    path('', include('products.urls')),
-    
-    # Module inventory
-    path('', include('inventory.urls')),
-    
-    # Module cart
-    path('', include('cart.urls')),
-    
-    # Module orders
-    path('', include('orders.urls')),
-    
-    # Module shipping
-    path('', include('shipping.urls')),
-    
-    # Module payments
-    path('', include('payments.urls')),
-    
-    # Module reviews
-    path('', include('reviews.urls')),
-    
-    # Module promotions
-    path('', include('promotions.urls')),
-    
-    # Module reports
-    path('', include('reports.urls')),
+    path('auth/', include(('users.urls', 'users'), namespace='users_v1')),
+    path('products/', include(('products.urls', 'products'), namespace='products_v1')),
+    path('cart/', include(('cart.urls', 'cart'), namespace='cart_v1')),
+    path('orders/', include(('orders.urls', 'orders'), namespace='orders_v1')),
+    path('payments/', include(('payments.urls', 'payments'), namespace='payments_v1')),
+    path('reviews/', include(('reviews.urls', 'reviews'), namespace='reviews_v1')),
+    path('notifications/', include(('notifications.urls', 'notifications'), namespace='notifications_v1')),
+    path('catalog/', include(('catalog.urls', 'catalog'), namespace='catalog_v1')),
+    path('customer/', include(('customers.urls', 'customers'), namespace='customer_v1')),
+    path('inventory/', include(('inventory.urls', 'inventory'), namespace='inventory_v1')),
+    path('shipping/', include(('shipping.urls', 'shipping'), namespace='shipping_v1')),
+    path('promotions/', include(('promotions.urls', 'promotions'), namespace='promotions_v1')),
+    path('wishlist/', include(('wishlist.urls', 'wishlist'), namespace='wishlist_v1')),
+    path('reports/', include(('reports.urls', 'reports'), namespace='reports_v1')),
+    path('settings/', include(('settings.urls', 'settings'), namespace='settings_v1')),
+    path('pages/', include(('pages.urls', 'pages'), namespace='pages_v1')),
+    path('support/', include(('support.urls', 'support'), namespace='support_v1')),
 ]

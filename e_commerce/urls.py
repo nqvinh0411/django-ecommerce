@@ -25,26 +25,6 @@ urlpatterns = [
     
     # API routes - Versioned API structure
     path('api/', include('api.urls')),
-    
-    # Legacy routes - Kept for backwards compatibility during transition
-    # These should eventually be migrated to the versioned API structure
-    path('api/auth/', include('users.urls', namespace='users')),
-    path('api/products/', include('products.urls', namespace='products')),
-    path('api/cart/', include('cart.urls', namespace='carts')),
-    path('api/orders/', include('orders.urls', namespace='orders')),
-    path('api/payments/', include('payments.urls', namespace='payments')),
-    path('api/reviews/', include('reviews.urls', namespace='reviews')),
-    path('api/notifications/', include('notifications.urls', namespace='notifications')),
-    path('api/catalog/', include('catalog.urls', namespace='catalog')),
-    path('api/customer/', include('customers.urls', namespace='customer')),
-    path('api/inventory/', include('inventory.urls', namespace='inventory')),
-    path('api/shipping/', include('shipping.urls', namespace='shipping')),
-    path('api/promotions/', include('promotions.urls', namespace='promotions')),
-    path('api/wishlist/', include('wishlist.urls', namespace='wishlist')),
-    path('api/reports/', include('reports.urls', namespace='reports')),
-    path('api/settings/', include('settings.urls', namespace='settings')),
-    path('api/pages/', include('pages.urls', namespace='pages')),
-    path('api/support/', include('support.urls', namespace='support')),
 ]
 
 if settings.DEBUG:

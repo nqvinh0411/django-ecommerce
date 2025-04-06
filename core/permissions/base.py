@@ -1,6 +1,16 @@
 from rest_framework import permissions
 
 
+class CreateOnlyPermission(permissions.BasePermission):
+    """
+    Custom permission cho phép chỉ tạo mới (POST), các hành động khác sẽ bị từ chối.
+    """
+    message = "Chỉ cho phép tạo mới dữ liệu."
+
+    def has_permission(self, request, view):
+        return request.method == 'POST'
+
+
 class IsAdminUser(permissions.IsAdminUser):
     """
     Allows access only to admin users.
@@ -37,6 +47,21 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         )
 
 
+class IsOwner(permissions.BasePermission):
+    """
+    Custom permission để chỉ cho phép chủ sở hữu truy cập.
+    """
+    message = "Bạn không có quyền truy cập đối tượng này."
+
+    def has_object_permission(self, request, view, obj):
+        # Kiểm tra nếu user là chủ sở hữu (qua trường 'owner' hoặc 'user')
+        if hasattr(obj, 'owner'):
+            return obj.owner == request.user
+        elif hasattr(obj, 'user'):
+            return obj.user == request.user
+        return False
+
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
@@ -56,3 +81,24 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         elif hasattr(obj, 'user'):
             return obj.user == request.user
         return False
+
+
+class IsOwnerOrAdminUser(permissions.BasePermission):
+    """
+    Custom permission: Chỉ cho phép chủ sở hữu hoặc admin truy cập.
+    """
+    message = "Bạn phải là chủ sở hữu hoặc quản trị viên để thực hiện hành động này."
+
+    def has_object_permission(self, request, view, obj):
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        is_owner = False
+        if hasattr(obj, 'owner'):
+            is_owner = obj.owner == request.user
+        elif hasattr(obj, 'user'):
+            is_owner = obj.user == request.user
+
+        is_admin = request.user.is_staff
+
+        return is_owner or is_admin

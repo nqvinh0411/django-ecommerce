@@ -8,25 +8,30 @@ class ApiResponseMixin:
     """
     
     @staticmethod
-    def success_response(data=None, message="", status_code=status.HTTP_200_OK, headers=None):
+    def success_response(data=None, message="", status_code=status.HTTP_200_OK, headers=None, extra=None):
         """
         Tạo response thành công với cấu trúc chuẩn.
         """
         response_data = {
             "status": "success",
             "status_code": status_code,
+            "message": message if message else "",
+            "data": data if data else {}
         }
         
-        if message:
-            response_data["message"] = message
-            
-        if data is not None:
-            response_data["data"] = data
+        # if message:
+        #     response_data["message"] = message
+        #
+        # if data is not None:
+        #     response_data["data"] = data
+
+        if extra and isinstance(extra, dict):
+            response_data.update(extra)
             
         return Response(response_data, status=status_code, headers=headers)
     
     @staticmethod
-    def error_response(message="", errors=None, status_code=status.HTTP_400_BAD_REQUEST, headers=None):
+    def error_response(message="", errors=None, status_code=status.HTTP_400_BAD_REQUEST, headers=None, extra=None):
         """
         Tạo response lỗi với cấu trúc chuẩn.
         """
@@ -38,6 +43,9 @@ class ApiResponseMixin:
         
         if errors:
             response_data["errors"] = errors
+
+        if extra and isinstance(extra, dict):
+            response_data.update(extra)
             
         return Response(response_data, status=status_code, headers=headers)
 

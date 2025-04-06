@@ -41,7 +41,7 @@ def validate_slug(value):
     return value
 
 
-def validate_password_strength(value):
+def validate_password(value):
     """
     Validate that the password is strong enough.
     """
