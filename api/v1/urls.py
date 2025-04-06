@@ -3,7 +3,6 @@ from django.urls import path, include
 # Nhóm các URL theo module
 urlpatterns = [
     # Module catalog
-    path('auth/', include(('users.urls', 'users'), namespace='users_v1')),
     path('products/', include(('products.urls', 'products'), namespace='products_v1')),
     path('cart/', include(('cart.urls', 'cart'), namespace='cart_v1')),
     path('orders/', include(('orders.urls', 'orders'), namespace='orders_v1')),
