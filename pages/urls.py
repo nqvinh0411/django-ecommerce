@@ -10,14 +10,14 @@ app_name = "pages"
 
 urlpatterns = [
     # Pages - GET (list), POST (create)
-    path('pages', PageListCreateView.as_view(), name='page-list'),
+    path('', PageListCreateView.as_view(), name='page-list'),
     
     # Page detail - GET (retrieve), PUT/PATCH (update), DELETE (destroy)
-    path('pages/<slug:slug>', PageRetrieveUpdateDestroyBySlugView.as_view(), name='page-detail'),
+    path('/<slug:slug>', PageRetrieveUpdateDestroyBySlugView.as_view(), name='page-detail'),
     
     # Banners - GET (list), POST (create)
-    path('banners', BannerListCreateView.as_view(), name='banner-list'),
+    path('/banners', BannerListCreateView.as_view(), name='banner-list'),
     
     # Menus - GET (list), POST (create)
-    path('menus/<str:menu_type>', MenuListCreateView.as_view(), name='menu-list'),
+    path('/menus/<str:menu_type>', MenuListCreateView.as_view(), name='menu-list'),
 ]
