@@ -3,7 +3,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser
 
 from core.views.base import (
-    BaseListCreateView, BaseRetrieveUpdateDestroyView
+    BaseListView,
+    BaseCreateView,
+    BaseRetrieveUpdateDestroyView
 )
 from core.permissions.base import IsAdminOrReadOnly
 
@@ -15,9 +17,9 @@ from .serializers import (
 
 
 # Category views
-class CategoryListCreateView(BaseListCreateView):
+class CategoryListView(BaseListView):
     """
-    API endpoint for listing all Categories (GET) or creating a new Category (POST).
+    API endpoint for listing all Categories (GET)
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -26,6 +28,11 @@ class CategoryListCreateView(BaseListCreateView):
     filterset_fields = ['slug', 'is_active', 'parent']
     search_fields = ['name', 'description']
 
+class CategoryCreateView(BaseCreateView):
+    """
+    API endpoint for creating a new Category (POST).
+    """
+    pass
 
 class CategoryRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
