@@ -1,13 +1,15 @@
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser
+from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
 
 from core.views.base import (
     BaseListView,
     BaseCreateView,
+    BaseListCreateView,
     BaseRetrieveUpdateDestroyView
 )
-from core.permissions.base import IsAdminOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 from .models import Category, Brand, Tag, Attribute, AttributeValue
 from .serializers import (
@@ -28,11 +30,13 @@ class CategoryListView(BaseListView):
     filterset_fields = ['slug', 'is_active', 'parent']
     search_fields = ['name', 'description']
 
+
 class CategoryCreateView(BaseCreateView):
     """
     API endpoint for creating a new Category (POST).
     """
     pass
+
 
 class CategoryRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
@@ -124,14 +128,14 @@ class AttributeValueListCreateView(BaseListCreateView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['attribute', 'slug']
     search_fields = ['value', 'display_value']
-    
+
     def get_queryset(self):
         queryset = AttributeValue.objects.all()
         attribute_slug = self.request.query_params.get('attribute_slug', None)
-        
+
         if attribute_slug:
             queryset = queryset.filter(attribute__slug=attribute_slug)
-            
+
         return queryset
 
 

@@ -19,7 +19,7 @@ class CategoryListCreateView(BaseListCreateView):
 
 
 class ProductListView(BaseListView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.order_by('id').all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     filterset_fields = ['category', 'seller_id']

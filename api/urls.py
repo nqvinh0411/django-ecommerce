@@ -13,8 +13,8 @@ urlpatterns = [
     path('redoc', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
     # API version routing
-    path('auth/', include(('users.urls', 'users'), namespace='users')),
+    path('auth', include(('users.urls', 'users'), namespace='users')),
 
-    path('v1/', include(('api.v1.urls', 'v1'), namespace='v1')),
+    path('v1', include(('api.v1.urls', 'v1'), namespace='v1')),
     # path('v2/', include(('api.v2.urls', 'v2')), namespace='v2'),
 ]
