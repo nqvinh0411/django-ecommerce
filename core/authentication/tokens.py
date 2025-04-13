@@ -8,17 +8,12 @@ def get_tokens_for_user(user):
     Generate JWT tokens for a user.
     Returns a dictionary with access and refresh tokens.
     """
-    refresh = RefreshToken.for_user(user)
-    
-    # Set custom claims
-    refresh['user_id'] = user.id
-    refresh['email'] = user.email
-    if hasattr(user, 'is_staff'):
-        refresh['is_staff'] = user.is_staff
+    refresh_token = RefreshToken.for_user(user)
+    access_token = refresh_token.access_token
     
     return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        'refresh': str(refresh_token),
+        'access': str(access_token),
     }
 
 

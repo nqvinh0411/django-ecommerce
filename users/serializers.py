@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils import timezone
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
@@ -176,7 +177,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         user = self.user
 
         access = self.get_token(user).access_token
-        expired_date = datetime.utcnow() + access.lifetime
+        expired_date = timezone.now() + access.lifetime
 
         request = self.context['request']
         device = request.data.get('device', 'Unknown')
@@ -203,7 +204,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         )
 
         # Cập nhật last_login
-        user.last_login = datetime.now()
+        user.last_login = timezone.now()
         user.save(update_fields=['last_login'])
 
         return {

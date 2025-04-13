@@ -1,7 +1,4 @@
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
 from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
-
 from core.views.base import (
     BaseListView,
     BaseCreateView,
@@ -35,7 +32,8 @@ class CategoryCreateView(BaseCreateView):
     """
     API endpoint for creating a new Category (POST).
     """
-    pass
+    serializer_class = CategorySerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class CategoryRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
