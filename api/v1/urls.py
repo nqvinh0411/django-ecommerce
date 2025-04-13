@@ -19,4 +19,5 @@ urlpatterns = [
     path('/settings', include(('settings.urls', 'settings'), namespace='settings_v1')),
     path('/pages', include(('pages.urls', 'pages'), namespace='pages_v1')),
     path('/support', include(('support.urls', 'support'), namespace='support_v1')),
+    path('/hrm', include(('hrm.urls', 'hrm'), namespace='hrm_v1')),
 ]

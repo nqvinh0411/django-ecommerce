@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'settings',
     'pages',
     'support',
+    'hrm',
 ]
 
 MIDDLEWARE = [
