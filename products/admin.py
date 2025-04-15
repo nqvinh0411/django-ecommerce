@@ -1,20 +1,19 @@
 from django.contrib import admin
 
-from .models import Category, Product, ProductImage
+from .models import Product, ProductImage
 
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 1  # Số lượng ô nhập ảnh mặc định
+    extra = 1
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'price', 'stock', 'seller_id', 'created_at')
-    search_fields = ('name', 'category__name')
-    list_filter = ('category', 'seller_id')
+    list_display = ('name', 'category_id', 'price', 'stock', 'created_at',)
+    search_fields = ('name', 'category_id__name',)
+    list_filter = ('category_id',)
     inlines = [ProductImageInline]
 
 
-admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductImage)

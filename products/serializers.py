@@ -1,19 +1,7 @@
-from rest_framework import serializers
 from core.validators.common import validate_slug
-from .models import Category, Product, ProductImage
+from rest_framework import serializers
 
-
-class CategorySerializer(serializers.ModelSerializer):
-    slug = serializers.SlugField(validators=[validate_slug])
-    product_count = serializers.SerializerMethodField(read_only=True)
-    
-    class Meta:
-        model = Category
-        fields = ['id', 'name', 'slug', 'description', 'parent', 'image', 'product_count']
-        read_only_fields = ['id', 'product_count']
-    
-    def get_product_count(self, obj):
-        return obj.product_set.count()
+from .models import Product, ProductImage
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -21,7 +9,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = ['id', 'product', 'image', 'is_primary', 'alt_text', 'created_at']
         read_only_fields = ['id', 'created_at']
-    
+
     def validate(self, data):
         # Nếu đang đặt ảnh là primary, đảm bảo các ảnh primary khác trở thành non-primary
         if data.get('is_primary', False):
@@ -41,12 +29,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'category', 'category_name',
-                  'seller_id', 'seller_username', 'stock', 'created_at', 'updated_at',
+        fields = ['id', 'name', 'description', 'price', 'category_id', 'category_name',
+                  'seller_username', 'stock', 'created_at', 'updated_at',
                   'images', 'primary_image']
-        read_only_fields = ['id', 'category_name', 'seller_id', 'seller_username', 
+        read_only_fields = ['id', 'category_name', 'seller_username',
                             'created_at', 'updated_at', 'images', 'primary_image']
-    
+
     def get_primary_image(self, obj):
         primary_image = obj.images.filter(is_primary=True).first()
         if primary_image:
@@ -57,7 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'category', 'stock']
+        fields = ['name', 'description', 'price', 'category_id', 'stock']
         read_only_fields = ['id', 'updated_at', 'created_at']
 
     def validate_price(self, value):

@@ -1,21 +1,14 @@
-from rest_framework import permissions
-from rest_framework.parsers import MultiPartParser, FormParser
-from django.shortcuts import get_object_or_404
-
+from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from core.views.base import (
     BaseListCreateView, BaseRetrieveView,
     BaseUpdateView, BaseDestroyView, BaseCreateView, BaseListView
 )
-from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from django.shortcuts import get_object_or_404
+from rest_framework import permissions
+from rest_framework.parsers import MultiPartParser, FormParser
 
-from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer, ProductCreateSerializer, ProductImageSerializer
-
-
-class CategoryListCreateView(BaseListCreateView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrReadOnly]
+from .models import Product
+from .serializers import ProductSerializer, ProductCreateSerializer, ProductImageSerializer
 
 
 class ProductListView(BaseListView):
@@ -46,7 +39,7 @@ class ProductUpdateView(BaseUpdateView):
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    
+
     def get_queryset(self):
         return Product.objects.filter(seller=self.request.user)
 
