@@ -29,7 +29,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'category_id', 'category_name',
+        fields = ['id', 'name', 'description', 'price', 'category', 'category_name',
                   'seller_username', 'stock', 'created_at', 'updated_at',
                   'images', 'primary_image']
         read_only_fields = ['id', 'category_name', 'seller_username',
@@ -45,7 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'category_id', 'stock']
+        fields = ['name', 'description', 'price', 'category', 'stock']
         read_only_fields = ['id', 'updated_at', 'created_at']
 
     def validate_price(self, value):
