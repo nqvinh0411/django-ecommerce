@@ -17,7 +17,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.CharField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_primary = models.BooleanField(default=False)

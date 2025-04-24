@@ -15,7 +15,7 @@ class ProductListView(BaseListView):
     queryset = Product.objects.order_by('id').all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
-    filterset_fields = ['category', 'seller_id']
+    filterset_fields = ['category']
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'created_at', 'stock']
 
@@ -41,7 +41,7 @@ class ProductUpdateView(BaseUpdateView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        return Product.objects.filter(seller=self.request.user)
+        return Product.objects.all()
 
 
 class ProductDestroyView(BaseDestroyView):
@@ -49,7 +49,7 @@ class ProductDestroyView(BaseDestroyView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        return Product.objects.filter(seller=self.request.user)
+        return Product.objects.all()
 
 
 class ProductImageUploadView(BaseCreateView):
@@ -59,5 +59,5 @@ class ProductImageUploadView(BaseCreateView):
 
     def perform_create(self, serializer):
         product_id = self.kwargs.get("product_id")
-        product = get_object_or_404(Product, id=product_id, seller=self.request.user)
+        product = get_object_or_404(Product, id=product_id)
         serializer.save(product=product)
