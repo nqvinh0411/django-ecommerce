@@ -12,6 +12,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from core.views.base import (
     BaseAPIView, BaseCreateView, BaseListView
 )
+from core.optimization.mixins import QueryOptimizationMixin
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
 
 from .models import UserToken, LoginHistory
 from .serializers import (
@@ -92,6 +94,7 @@ class LoginView(BaseAPIView):
     """Đăng nhập bằng email và mật khẩu, trả về JWT tokens."""
     permission_classes = [AllowAny]
 
+    @log_slow_queries(threshold_ms=300)
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -158,13 +161,16 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
-class UserSessionListView(BaseListView):
+class UserSessionListView(QueryOptimizationMixin, BaseListView):
     """
     API để lấy danh sách các phiên đăng nhập của người dùng hiện tại.
     """
     serializer_class = UserSessionSerializer
     permission_classes = [permissions.IsAuthenticated]
     ordering = ['-created_date']
+    
+    # Tối ưu hóa với select_related để tránh N+1 query
+    select_related_fields = ['user']
     
     def get_queryset(self):
         return UserToken.objects.filter(user=self.request.user, expired_date__gt=now())
@@ -201,37 +207,46 @@ class UserSessionDeleteView(BaseAPIView):
 
 class LogoutOtherSessionsView(BaseAPIView):
     """
-    API để đăng xuất tất cả các phiên trừ phiên hiện tại.
+    API để đăng xuất tất cả các phiên khác ngoại trừ phiên hiện tại.
     """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         current_token = request.META.get("HTTP_AUTHORIZATION", "").split(" ")[-1]
-        others = UserToken.objects.filter(user=request.user).exclude(token=current_token)
+        
+        # Lấy tất cả phiên ngoại trừ phiên hiện tại
+        sessions = UserToken.objects.filter(
+            user=request.user,
+            expired_date__gt=now()
+        ).exclude(token=current_token)
+        
+        count = sessions.count()
         
         # Cập nhật lịch sử đăng nhập
-        count = others.count()
-        for session in others:
+        for session in sessions:
             LoginHistory.objects.filter(
                 user=request.user, 
                 token_ref__startswith=session.token[:50]
             ).update(logout_date=now())
-            
-        others.delete()
+        
+        sessions.delete()
         
         return self.success_response(
-            message=f"Đã đăng xuất {count} thiết bị khác",
+            message=f"Đã đăng xuất {count} phiên khác",
             status_code=status.HTTP_200_OK
         )
 
 
-class UserLoginHistoryListView(BaseListView):
+class UserLoginHistoryListView(QueryOptimizationMixin, BaseListView):
     """
     API để lấy lịch sử đăng nhập của người dùng hiện tại.
     """
     serializer_class = LoginHistorySerializer
     permission_classes = [permissions.IsAuthenticated]
     ordering = ['-login_date']
+    
+    # Tối ưu hóa với select_related để tránh N+1 query
+    select_related_fields = ['user']
     
     def get_queryset(self):
         return LoginHistory.objects.filter(user=self.request.user)
@@ -295,6 +310,7 @@ class TokenRefreshView(BaseAPIView):
             status_code=status.HTTP_200_OK
         )
 
+    @cached_property_with_ttl(ttl=300)  # Cache trong 5 phút
     def _get_user_from_token(self, token):
         """
         Lấy thông tin người dùng từ token.
