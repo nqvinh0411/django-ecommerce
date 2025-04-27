@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
+from django.utils import timezone
 from django.utils.timezone import now
 from rest_framework import permissions, status
 from rest_framework.permissions import AllowAny
@@ -84,6 +85,69 @@ class UserDetailView(BaseAPIView):
             data=serializer.data,
             message="Thông tin người dùng",
             status_code=status.HTTP_200_OK
+        )
+
+
+class LoginView(BaseAPIView):
+    """Đăng nhập bằng email và mật khẩu, trả về JWT tokens."""
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        device = request.data.get('device', 'Unknown')
+
+        if not email or not password:
+            return self.error_response(
+                message="Email và mật khẩu là bắt buộc",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = authenticate(request, email=email, password=password)
+        if not user:
+            return self.error_response(
+                message="Email hoặc mật khẩu không chính xác",
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Tạo JWT tokens
+        refresh = RefreshToken.for_user(user)
+        access = refresh.access_token
+
+        # Lưu token & lịch sử đăng nhập
+        expired_date = timezone.now() + access.lifetime
+        ip = request.META.get('REMOTE_ADDR')
+        user_agent = request.META.get('HTTP_USER_AGENT')
+
+        UserToken.objects.create(
+            user=user,
+            token=str(access),
+            expired_date=expired_date,
+            device_name=device,
+            ip_address=ip,
+            user_agent=user_agent,
+        )
+
+        LoginHistory.objects.create(
+            user=user,
+            token_ref=str(access)[:50],
+            device_name=device,
+            ip_address=ip,
+            user_agent=user_agent,
+        )
+
+        user.last_login = timezone.now()
+        user.save(update_fields=['last_login'])
+
+        return self.success_response(
+            data={
+                'access': str(access),
+                'refresh': str(refresh),
+                'expires_in': int(access.lifetime.total_seconds()),
+                'token_type': 'Bearer',
+                'user': UserSerializer(user).data,
+            },
+            status_code=status.HTTP_200_OK,
         )
 
 

@@ -4,10 +4,13 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.validators.common import validate_password
 
 from .models import UserToken, LoginHistory
+
+import traceback
 
 User = get_user_model()
 
@@ -167,50 +170,60 @@ class LoginHistorySerializer(serializers.ModelSerializer):
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = 'email'
+
     """
     Serializer cho việc đăng nhập và lấy JWT token.
     """
     def validate(self, attrs):
-        data = super().validate(attrs)
-        access_token = data['access']
-        refresh_token = data['refresh']
-        user = self.user
+        try:
+            data = super().validate(attrs)
 
-        access = self.get_token(user).access_token
-        expired_date = timezone.now() + access.lifetime
+            access_token = data['access']
+            refresh_token = data['refresh']
 
-        request = self.context['request']
-        device = request.data.get('device', 'Unknown')
-        ip = request.META.get('REMOTE_ADDR')
-        user_agent = request.META.get('HTTP_USER_AGENT')
+            user = self.user
 
-        # Tạo UserToken
-        UserToken.objects.create(
-            user=user,
-            token=str(access_token),
-            expired_date=expired_date,
-            device_name=device,
-            ip_address=ip,
-            user_agent=user_agent
-        )
+            print(f"User authenticated: {user.username} (ID: {user.id})")
+            
+            # Lấy thông tin request
+            request = self.context['request']
+            device = request.data.get('device', 'Unknown')
+            ip = request.META.get('REMOTE_ADDR')
+            user_agent = request.META.get('HTTP_USER_AGENT')
 
-        # Ghi log login
-        LoginHistory.objects.create(
-            user=user,
-            token_ref=str(access_token)[:50],
-            device_name=device,
-            ip_address=ip,
-            user_agent=user_agent,
-        )
+            token = RefreshToken.for_user(user)
+            access = token.access_token
+            expired_date = timezone.now() + access.lifetime
 
-        # Cập nhật last_login
-        user.last_login = timezone.now()
-        user.save(update_fields=['last_login'])
+            UserToken.objects.create(
+                user=user,
+                token=str(access_token),
+                expired_date=expired_date,
+                device_name=device,
+                ip_address=ip,
+                user_agent=user_agent
+            )
 
-        return {
-            'access': access_token,
-            'refresh': refresh_token,
-            'expires_in': int(access.lifetime.total_seconds()),
-            'token_type': 'Bearer',
-            'user': UserSerializer(user).data
-        }
+            LoginHistory.objects.create(
+                user=user,
+                token_ref=str(access_token)[:50],
+                device_name=device,
+                ip_address=ip,
+                user_agent=user_agent,
+            )
+
+            user.last_login = timezone.now()
+            user.save(update_fields=['last_login'])
+
+            return {
+                'access': access_token,
+                'refresh': refresh_token,
+                'expires_in': int(access.lifetime.total_seconds()),
+                'token_type': 'Bearer',
+                'user': UserSerializer(user).data
+            }
+        except Exception as e:
+            print(f"Authentication error: {str(e)}")
+            print(traceback.format_exc())
+            raise
