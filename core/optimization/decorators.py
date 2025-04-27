@@ -207,30 +207,32 @@ def log_slow_queries(threshold_ms=500):
             if not getattr(settings, 'QUERY_LOGGING_ENABLED', settings.DEBUG):
                 return func(*args, **kwargs)
                 
-            initial_queries = len(connection.queries)
-            
-            # Enable query recording if it's not already enabled
-            debug = connection.use_debug_cursor
-            connection.use_debug_cursor = True
-            
-            # Call the original function
-            result = func(*args, **kwargs)
-            
-            # Check for slow queries
-            for i in range(initial_queries, len(connection.queries)):
-                query = connection.queries[i]
-                if float(query.get('time', 0)) * 1000 > threshold_ms:
-                    import logging
-                    logger = logging.getLogger('django.db.backends')
-                    logger.warning(
-                        f"Slow query in {func.__name__}: {query.get('time')}s - {query.get('sql')}"
-                    )
-            
-            # Restore original debug setting
-            connection.use_debug_cursor = debug
-            
-            return result
-            
+            # Chỉ ghi lại truy vấn khi DEBUG=True
+            if settings.DEBUG:
+                # Lưu số lượng truy vấn ban đầu
+                initial_queries = len(connection.queries)
+                
+                # Đảm bảo query logging được bật
+                connection.force_debug_cursor = True
+                
+                # Gọi hàm gốc
+                result = func(*args, **kwargs)
+                
+                # Kiểm tra các truy vấn chậm
+                for i in range(initial_queries, len(connection.queries)):
+                    query = connection.queries[i]
+                    if float(query.get('time', 0)) * 1000 > threshold_ms:
+                        import logging
+                        logger = logging.getLogger('django.db.backends')
+                        logger.warning(
+                            f"Slow query in {func.__name__}: {query.get('time')}s - {query.get('sql')}"
+                        )
+                
+                return result
+            else:
+                # Nếu không ở chế độ debug, chỉ thực thi hàm mà không ghi log
+                return func(*args, **kwargs)
+                
         return wrapper
     return decorator
 

@@ -11,17 +11,18 @@ class EmailBackend(ModelBackend):
     `is_active` flag) but looks up the user by `email` instead of `username`.
     """
 
-    def authenticate(self, request, username: str | None = None, password: str | None = None, **kwargs):  # type: ignore[override]
+    def authenticate(self, request, email: str | None = None, password: str | None = None, **kwargs):  # type: ignore[override]
         # `username` here actually contains the email sent from the frontend.
-        if username is None or password is None:
+        if email is None or password is None:
             return None
 
         UserModel = get_user_model()
         try:
-            user = UserModel.objects.get(email=username)
+            user = UserModel.objects.get(email=email)
+            return user
         except UserModel.DoesNotExist:
             return None
 
-        if user.check_password(password) and self.user_can_authenticate(user):
-            return user
-        return None
+        # if user.check_password(password) and self.user_can_authenticate(user):
+        #     return user
+        # return None

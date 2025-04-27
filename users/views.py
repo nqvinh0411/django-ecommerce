@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.timezone import now
 from rest_framework import permissions, status
@@ -14,6 +14,7 @@ from core.views.base import (
 )
 from core.optimization.mixins import QueryOptimizationMixin
 from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from users.backends import EmailBackend
 
 from .models import UserToken, LoginHistory
 from .serializers import (
@@ -106,7 +107,9 @@ class LoginView(BaseAPIView):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        user = authenticate(request, email=email, password=password)
+        backend = EmailBackend()
+        user = backend.authenticate(request, email=email, password=password)
+        
         if not user:
             return self.error_response(
                 message="Email hoặc mật khẩu không chính xác",
