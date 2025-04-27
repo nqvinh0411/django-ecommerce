@@ -12,13 +12,50 @@ from rest_framework import status
 
 class ApiResponseMixin:
     """
-    Mixin cung cấp các phương thức response chuẩn hóa.
+    Mixin cung cấp các phương thức response chuẩn hóa cho API views.
+    
+    Mixin này định nghĩa các phương thức để tạo response thành công và lỗi 
+    với một định dạng nhất quán trên toàn bộ hệ thống e-commerce.
+    Kết quả trả về sẽ tuân theo định dạng chuẩn:
+    
+    Đối với thành công:
+    {
+        "status": "success",
+        "status_code": xxx,
+        "message": "Thông báo thành công (nếu có)",
+        "data": { ... } 
+    }
+    
+    Đối với lỗi:
+    {
+        "status": "error",
+        "status_code": xxx,
+        "message": "Thông báo lỗi",
+        "errors": { ... } // Chi tiết lỗi (nếu có)
+    }
     """
     
     @staticmethod
     def success_response(data=None, message="", status_code=status.HTTP_200_OK, headers=None, extra=None):
         """
         Tạo response thành công với cấu trúc chuẩn.
+        
+        Args:
+            data (dict, optional): Dữ liệu trả về cho client. Mặc định: None.
+            message (str, optional): Thông báo thành công. Mặc định: "".
+            status_code (int, optional): HTTP status code. Mặc định: 200.
+            headers (dict, optional): HTTP headers bổ sung. Mặc định: None.
+            extra (dict, optional): Dữ liệu bổ sung sẽ được gộp vào response. Mặc định: None.
+            
+        Returns:
+            Response: DRF Response object với dữ liệu đã được định dạng chuẩn.
+            
+        Example:
+            return self.success_response(
+                data={'user': user_data},
+                message="Đăng nhập thành công",
+                status_code=status.HTTP_200_OK
+            )
         """
         response_data = {
             "status": "success",
@@ -42,6 +79,23 @@ class ApiResponseMixin:
     def error_response(message="", errors=None, status_code=status.HTTP_400_BAD_REQUEST, headers=None, extra=None):
         """
         Tạo response lỗi với cấu trúc chuẩn.
+        
+        Args:
+            message (str, optional): Thông báo lỗi tổng quát. Mặc định: "Đã xảy ra lỗi" nếu không cung cấp.
+            errors (dict, optional): Chi tiết lỗi, thường là validation errors theo field. Mặc định: None.
+            status_code (int, optional): HTTP status code. Mặc định: 400.
+            headers (dict, optional): HTTP headers bổ sung. Mặc định: None.
+            extra (dict, optional): Dữ liệu bổ sung sẽ được gộp vào response. Mặc định: None.
+            
+        Returns:
+            Response: DRF Response object với thông tin lỗi đã được định dạng chuẩn.
+            
+        Example:
+            return self.error_response(
+                message="Không thể xác thực người dùng",
+                errors={"email": ["Email không tồn tại"]},
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
         """
         response_data = {
             "status": "error",
@@ -61,11 +115,30 @@ class ApiResponseMixin:
 class SerializerContextMixin:
     """
     Mixin cung cấp context cho serializer với request hiện tại.
+    
+    Mixin này tự động thêm một số thông tin hữu ích vào serializer context,
+    giúp serializer có thể truy cập các dữ liệu như request, format và view
+    trong quá trình serialization/deserialization.
+    
+    Điều này đặc biệt hữu ích khi cần kiểm tra quyền truy cập, 
+    tạo URL tuyệt đối, hoặc truy cập thông tin người dùng hiện tại.
+    
+    Note:
+        Mixin này giả định rằng lớp cha đã có phương thức `get_serializer_context()`.
+        Thường thì nó được kế thừa cùng với GenericAPIView.
     """
     
     def get_serializer_context(self):
         """
-        Thêm request vào context serializer.
+        Thêm request và các thông tin khác vào context của serializer.
+        
+        Phương thức này mở rộng context mặc định bằng cách thêm reference đến:
+        - request: HTTP request hiện tại
+        - format: format được yêu cầu (vd: 'json', 'api')
+        - view: reference đến view hiện tại
+        
+        Returns:
+            dict: Context đã được mở rộng cho serializer.
         """
         context = super().get_serializer_context()
         context.update({
@@ -79,14 +152,49 @@ class SerializerContextMixin:
 class PermissionByActionMixin:
     """
     Mixin cho phép xác định permission_classes khác nhau cho các action khác nhau.
+    
+    Khi sử dụng ViewSets, các action khác nhau (list, create, retrieve, update, etc.)
+    thường yêu cầu các permissions khác nhau. Mixin này cho phép định nghĩa các
+    permission classes cụ thể cho từng action.
+    
+    Attributes:
+        permission_classes_by_action (dict): Dictionary ánh xạ tên action 
+            đến danh sách các permission classes sẽ được áp dụng.
+            
+    Example:
+        ```python
+        class ProductViewSet(PermissionByActionMixin, ModelViewSet):
+            permission_classes = [IsAuthenticated]  # Mặc định cho tất cả actions
+            permission_classes_by_action = {
+                'list': [AllowAny],  # Cho phép tất cả user xem danh sách
+                'create': [IsAdminUser],  # Chỉ admin mới có thể tạo mới
+                'update': [IsAdminOrOwner],  # Admin hoặc chủ sở hữu mới được cập nhật
+                'destroy': [IsAdminUser]  # Chỉ admin mới có thể xóa
+            }
+        ```
     """
     permission_classes_by_action = {}
     
     def get_permissions(self):
         """
         Lấy permission_classes dựa trên action hiện tại.
-        Nếu không có permission_classes được xác định cho action,
-        sử dụng permission_classes mặc định.
+        
+        Phương thức này kiểm tra xem action hiện tại có trong 
+        `permission_classes_by_action` không và trả về permissions tương ứng.
+        Nếu không tìm thấy action, sẽ sử dụng permission_classes mặc định.
+        
+        Returns:
+            list: Danh sách các permission objects đã được khởi tạo.
+            
+        Note:
+            Action thường được xác định tự động bởi DRF cho các ViewSets,
+            tương ứng với các phương thức HTTP:
+            - 'list': GET trên collection
+            - 'create': POST trên collection
+            - 'retrieve': GET trên item
+            - 'update': PUT trên item
+            - 'partial_update': PATCH trên item
+            - 'destroy': DELETE trên item
         """
         try:
             return [permission() for permission in self.permission_classes_by_action[self.action]]
@@ -97,14 +205,43 @@ class PermissionByActionMixin:
 class SerializerByActionMixin:
     """
     Mixin cho phép xác định serializer_class khác nhau cho các action khác nhau.
+    
+    Tương tự như PermissionByActionMixin, mixin này giúp sử dụng các serializers
+    khác nhau tùy thuộc vào action đang được thực hiện. Điều này đặc biệt hữu ích
+    khi cần hiển thị các trường khác nhau cho các thao tác khác nhau (ví dụ: hiển thị 
+    thông tin rút gọn khi liệt kê nhưng chi tiết khi xem một item).
+    
+    Attributes:
+        serializer_class_by_action (dict): Dictionary ánh xạ tên action
+            đến serializer class sẽ được sử dụng.
+            
+    Example:
+        ```python
+        class ProductViewSet(SerializerByActionMixin, ModelViewSet):
+            serializer_class = ProductSerializer  # Serializer mặc định
+            serializer_class_by_action = {
+                'list': ProductListSerializer,  # Serializer rút gọn cho danh sách
+                'create': ProductCreateSerializer,  # Serializer cho tạo mới
+                'update': ProductUpdateSerializer,  # Serializer cho cập nhật
+            }
+        ```
     """
     serializer_class_by_action = {}
     
     def get_serializer_class(self):
         """
         Lấy serializer_class dựa trên action hiện tại.
-        Nếu không có serializer_class được xác định cho action,
-        sử dụng serializer_class mặc định.
+        
+        Phương thức này kiểm tra xem action hiện tại có trong 
+        `serializer_class_by_action` không và trả về serializer class tương ứng.
+        Nếu không tìm thấy action, sẽ sử dụng serializer_class mặc định.
+        
+        Returns:
+            class: Serializer class sẽ được sử dụng.
+            
+        Note:
+            Việc sử dụng serializers khác nhau giúp tối ưu hóa lượng dữ liệu được
+            truyền tải và tránh việc hiển thị dữ liệu không cần thiết hoặc nhạy cảm.
         """
         try:
             return self.serializer_class_by_action[self.action]
