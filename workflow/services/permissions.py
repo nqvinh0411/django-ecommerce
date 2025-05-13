@@ -5,7 +5,9 @@ This module contains functions for checking permissions related to workflow exec
 including who can process workflow steps based on actor configurations.
 """
 import logging
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 logger = logging.getLogger(__name__)
 

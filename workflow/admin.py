@@ -3,6 +3,9 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 from .models import (
     Workflow, WorkflowStep, WorkflowTransition, WorkflowAction,

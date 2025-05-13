@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
@@ -24,7 +25,7 @@ class Workflow(models.Model):
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
     created_by = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, 
         null=True, 
         related_name="created_workflows",
@@ -73,7 +74,7 @@ class WorkflowActorConfig(models.Model):
     )
     actor_type = models.CharField(_("Actor Type"), max_length=20, choices=ACTOR_TYPE_CHOICES)
     user = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
         null=True, 
         blank=True,
@@ -463,7 +464,7 @@ class WorkflowInstance(models.Model):
     )
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='pending')
     current_user = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, 
         null=True,
         related_name="assigned_workflow_instances",
@@ -472,7 +473,7 @@ class WorkflowInstance(models.Model):
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
     created_by = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, 
         null=True,
         related_name="initiated_workflow_instances",
@@ -704,7 +705,7 @@ class WorkflowStepLog(models.Model):
     )
     action = models.CharField(_("Action"), max_length=50)
     performed_by = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, 
         null=True,
         related_name="workflow_actions",

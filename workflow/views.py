@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 from .models import (
     Workflow, WorkflowStep, WorkflowTransition, WorkflowAction,

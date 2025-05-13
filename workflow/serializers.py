@@ -1,11 +1,14 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from .models import (
     Workflow, WorkflowStep, WorkflowTransition, WorkflowAction,
     WorkflowInstance, WorkflowStepLog, WorkflowActorConfig,
     WorkflowConditionContext
 )
+
+User = get_user_model()  # Get the custom user model
 
 
 class ContentTypeSerializer(serializers.ModelSerializer):

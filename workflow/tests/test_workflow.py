@@ -1,9 +1,12 @@
 from django.test import TestCase
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+
+User = get_user_model()
 
 from ..models import (
     Workflow, WorkflowStep, WorkflowTransition, WorkflowAction,
