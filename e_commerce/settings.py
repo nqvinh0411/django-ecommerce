@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-!(5lsz%*gsr#gavx28%m9jhapnc5p1mmy_!o7+c$-ot*!2538c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -81,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.response.StandardizedResponseMiddleware',
+    'core.middleware.ensure_cors.EnsureCORSHeadersMiddleware',  # Middleware đảm bảo CORS headers
 ]
 
 ROOT_URLCONF = 'e_commerce.urls'
@@ -201,7 +203,7 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # In production, set specific origins
+CORS_ALLOW_ALL_ORIGINS = False  # In production, set specific origins
 CORS_ALLOW_CREDENTIALS = True
 
 # URL configuration
