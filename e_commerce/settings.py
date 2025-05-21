@@ -202,9 +202,56 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 }
 
-# CORS settings
-CORS_ALLOW_ALL_ORIGINS = False  # In production, set specific origins
+
+# CORS settings - Cấu hình theo môi trường
+# Để đơn giản hóa switch giữa các môi trường, sử dụng biến ENV (mặc định là 'development')
+ENV = os.environ.get('DJANGO_ENV', 'development')
+
+# Cấu hình CORS chung
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# Cấu hình CORS theo môi trường
+if ENV == 'production':
+    CORS_ALLOWED_ORIGINS = [
+        # Thêm domain chính thức của production
+        'https://your-production-domain.com',
+        'https://www.your-production-domain.com',
+    ]
+    CORS_ALLOW_ALL_ORIGINS = False
+elif ENV == 'uat':
+    CORS_ALLOWED_ORIGINS = [
+        # Thêm domain UAT
+        'https://uat.your-domain.com',
+        'http://192.168.100.16:3000',  # Giữ lại IP nội bộ nếu UAT vẫn chạy trong mạng nội bộ
+    ]
+    CORS_ALLOW_ALL_ORIGINS = False
+else:  # development
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'http://192.168.100.16:3000',
+    ]
+    # Có thể bật tùy chọn này trong môi trường development nếu cần
+    CORS_ALLOW_ALL_ORIGINS = False
 
 # URL configuration
 APPEND_SLASH = False
