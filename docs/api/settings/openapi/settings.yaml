@@ -1,0 +1,1052 @@
+openapi: 3.0.0
+info:
+  title: Settings API
+  description: API cho module settings
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api@example.com
+servers:
+- url: https://api.example.com/api/v1
+  description: Production server
+- url: https://staging-api.example.com/api/v1
+  description: Staging server
+tags:
+- name: settings
+  description: Operations related to settings
+paths:
+  /currencys:
+    get:
+      tags:
+      - currencys
+      summary: List all currencys
+      description: Returns a list of currencys
+      operationId: listCurrencys
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of currencys
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - currencys
+      summary: Create a new currency
+      description: Creates a new currency and returns its details
+      operationId: createCurrency
+      requestBody:
+        description: Currency object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Currency created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /currencys/{id}:
+    get:
+      tags:
+      - currencys
+      summary: Get currency by ID
+      description: Returns a single currency
+      operationId: getCurrency
+      parameters:
+      - name: id
+        in: path
+        description: ID of currency to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Currency details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Currency not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - currencys
+      summary: Update currency
+      description: Updates an existing currency
+      operationId: updateCurrency
+      parameters:
+      - name: id
+        in: path
+        description: ID of currency to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Currency object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Currency updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - currencys
+      summary: Delete currency
+      description: Deletes a currency
+      operationId: deleteCurrency
+      parameters:
+      - name: id
+        in: path
+        description: ID of currency to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Currency deleted successfully
+      security:
+      - BearerAuth: []
+  /emailtemplates:
+    get:
+      tags:
+      - emailtemplates
+      summary: List all emailtemplates
+      description: Returns a list of emailtemplates
+      operationId: listEmailtemplates
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of emailtemplates
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - emailtemplates
+      summary: Create a new emailtemplate
+      description: Creates a new emailtemplate and returns its details
+      operationId: createEmailtemplate
+      requestBody:
+        description: Emailtemplate object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Emailtemplate created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /emailtemplates/{id}:
+    get:
+      tags:
+      - emailtemplates
+      summary: Get emailtemplate by ID
+      description: Returns a single emailtemplate
+      operationId: getEmailtemplate
+      parameters:
+      - name: id
+        in: path
+        description: ID of emailtemplate to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Emailtemplate details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Emailtemplate not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - emailtemplates
+      summary: Update emailtemplate
+      description: Updates an existing emailtemplate
+      operationId: updateEmailtemplate
+      parameters:
+      - name: id
+        in: path
+        description: ID of emailtemplate to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Emailtemplate object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Emailtemplate updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - emailtemplates
+      summary: Delete emailtemplate
+      description: Deletes a emailtemplate
+      operationId: deleteEmailtemplate
+      parameters:
+      - name: id
+        in: path
+        description: ID of emailtemplate to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Emailtemplate deleted successfully
+      security:
+      - BearerAuth: []
+  /languagesettings:
+    get:
+      tags:
+      - languagesettings
+      summary: List all languagesettings
+      description: Returns a list of languagesettings
+      operationId: listLanguagesettings
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of languagesettings
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - languagesettings
+      summary: Create a new languagesetting
+      description: Creates a new languagesetting and returns its details
+      operationId: createLanguagesetting
+      requestBody:
+        description: Languagesetting object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Languagesetting created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /languagesettings/{id}:
+    get:
+      tags:
+      - languagesettings
+      summary: Get languagesetting by ID
+      description: Returns a single languagesetting
+      operationId: getLanguagesetting
+      parameters:
+      - name: id
+        in: path
+        description: ID of languagesetting to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Languagesetting details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Languagesetting not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - languagesettings
+      summary: Update languagesetting
+      description: Updates an existing languagesetting
+      operationId: updateLanguagesetting
+      parameters:
+      - name: id
+        in: path
+        description: ID of languagesetting to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Languagesetting object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Languagesetting updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - languagesettings
+      summary: Delete languagesetting
+      description: Deletes a languagesetting
+      operationId: deleteLanguagesetting
+      parameters:
+      - name: id
+        in: path
+        description: ID of languagesetting to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Languagesetting deleted successfully
+      security:
+      - BearerAuth: []
+  /storesettings:
+    get:
+      tags:
+      - storesettings
+      summary: List all storesettings
+      description: Returns a list of storesettings
+      operationId: listStoresettings
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of storesettings
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - storesettings
+      summary: Create a new storesetting
+      description: Creates a new storesetting and returns its details
+      operationId: createStoresetting
+      requestBody:
+        description: Storesetting object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Storesetting created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /storesettings/{id}:
+    get:
+      tags:
+      - storesettings
+      summary: Get storesetting by ID
+      description: Returns a single storesetting
+      operationId: getStoresetting
+      parameters:
+      - name: id
+        in: path
+        description: ID of storesetting to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Storesetting details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Storesetting not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - storesettings
+      summary: Update storesetting
+      description: Updates an existing storesetting
+      operationId: updateStoresetting
+      parameters:
+      - name: id
+        in: path
+        description: ID of storesetting to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Storesetting object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Storesetting updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - storesettings
+      summary: Delete storesetting
+      description: Deletes a storesetting
+      operationId: deleteStoresetting
+      parameters:
+      - name: id
+        in: path
+        description: ID of storesetting to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Storesetting deleted successfully
+      security:
+      - BearerAuth: []
+components:
+  schemas: {}
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

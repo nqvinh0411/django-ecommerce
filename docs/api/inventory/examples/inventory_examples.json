@@ -1,0 +1,358 @@
+{
+  "inventoryauditlog": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of InventoryAuditLogs",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example InventoryAuditLog 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example InventoryAuditLog 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/inventoryauditlogs?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "InventoryAuditLog details",
+      "data": {
+        "id": 1,
+        "name": "Example InventoryAuditLog",
+        "description": "This is an example InventoryAuditLog",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New InventoryAuditLog",
+      "description": "This is a new InventoryAuditLog"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "InventoryAuditLog created successfully",
+      "data": {
+        "id": 3,
+        "name": "New InventoryAuditLog",
+        "description": "This is a new InventoryAuditLog",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated InventoryAuditLog",
+      "description": "This is an updated InventoryAuditLog"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "InventoryAuditLog updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated InventoryAuditLog",
+        "description": "This is an updated InventoryAuditLog",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "InventoryAuditLog deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "stockitem": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of StockItems",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example StockItem 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example StockItem 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/stockitems?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "StockItem details",
+      "data": {
+        "id": 1,
+        "name": "Example StockItem",
+        "description": "This is an example StockItem",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New StockItem",
+      "description": "This is a new StockItem"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "StockItem created successfully",
+      "data": {
+        "id": 3,
+        "name": "New StockItem",
+        "description": "This is a new StockItem",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated StockItem",
+      "description": "This is an updated StockItem"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "StockItem updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated StockItem",
+        "description": "This is an updated StockItem",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "StockItem deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "stockmovement": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of StockMovements",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example StockMovement 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example StockMovement 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/stockmovements?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "StockMovement details",
+      "data": {
+        "id": 1,
+        "name": "Example StockMovement",
+        "description": "This is an example StockMovement",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New StockMovement",
+      "description": "This is a new StockMovement"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "StockMovement created successfully",
+      "data": {
+        "id": 3,
+        "name": "New StockMovement",
+        "description": "This is a new StockMovement",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated StockMovement",
+      "description": "This is an updated StockMovement"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "StockMovement updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated StockMovement",
+        "description": "This is an updated StockMovement",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "StockMovement deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "warehouse": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Warehouses",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Warehouse 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Warehouse 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/warehouses?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Warehouse details",
+      "data": {
+        "id": 1,
+        "name": "Example Warehouse",
+        "description": "This is an example Warehouse",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Warehouse",
+      "description": "This is a new Warehouse"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Warehouse created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Warehouse",
+        "description": "This is a new Warehouse",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Warehouse",
+      "description": "This is an updated Warehouse"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Warehouse updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Warehouse",
+        "description": "This is an updated Warehouse",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Warehouse deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

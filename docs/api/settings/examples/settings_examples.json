@@ -1,0 +1,358 @@
+{
+  "currency": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Currencys",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Currency 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Currency 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/currencys?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Currency details",
+      "data": {
+        "id": 1,
+        "name": "Example Currency",
+        "description": "This is an example Currency",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Currency",
+      "description": "This is a new Currency"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Currency created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Currency",
+        "description": "This is a new Currency",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Currency",
+      "description": "This is an updated Currency"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Currency updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Currency",
+        "description": "This is an updated Currency",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Currency deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "emailtemplate": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of EmailTemplates",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example EmailTemplate 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example EmailTemplate 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/emailtemplates?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "EmailTemplate details",
+      "data": {
+        "id": 1,
+        "name": "Example EmailTemplate",
+        "description": "This is an example EmailTemplate",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New EmailTemplate",
+      "description": "This is a new EmailTemplate"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "EmailTemplate created successfully",
+      "data": {
+        "id": 3,
+        "name": "New EmailTemplate",
+        "description": "This is a new EmailTemplate",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated EmailTemplate",
+      "description": "This is an updated EmailTemplate"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "EmailTemplate updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated EmailTemplate",
+        "description": "This is an updated EmailTemplate",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "EmailTemplate deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "languagesetting": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of LanguageSettings",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example LanguageSetting 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example LanguageSetting 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/languagesettings?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "LanguageSetting details",
+      "data": {
+        "id": 1,
+        "name": "Example LanguageSetting",
+        "description": "This is an example LanguageSetting",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New LanguageSetting",
+      "description": "This is a new LanguageSetting"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "LanguageSetting created successfully",
+      "data": {
+        "id": 3,
+        "name": "New LanguageSetting",
+        "description": "This is a new LanguageSetting",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated LanguageSetting",
+      "description": "This is an updated LanguageSetting"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "LanguageSetting updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated LanguageSetting",
+        "description": "This is an updated LanguageSetting",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "LanguageSetting deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "storesetting": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of StoreSettings",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example StoreSetting 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example StoreSetting 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/storesettings?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "StoreSetting details",
+      "data": {
+        "id": 1,
+        "name": "Example StoreSetting",
+        "description": "This is an example StoreSetting",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New StoreSetting",
+      "description": "This is a new StoreSetting"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "StoreSetting created successfully",
+      "data": {
+        "id": 3,
+        "name": "New StoreSetting",
+        "description": "This is a new StoreSetting",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated StoreSetting",
+      "description": "This is an updated StoreSetting"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "StoreSetting updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated StoreSetting",
+        "description": "This is an updated StoreSetting",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "StoreSetting deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

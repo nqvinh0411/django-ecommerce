@@ -1,0 +1,91 @@
+{
+  "cart": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Carts",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Cart 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Cart 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/carts?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Cart details",
+      "data": {
+        "id": 1,
+        "name": "Example Cart",
+        "description": "This is an example Cart",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Cart",
+      "description": "This is a new Cart"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Cart created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Cart",
+        "description": "This is a new Cart",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Cart",
+      "description": "This is an updated Cart"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Cart updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Cart",
+        "description": "This is an updated Cart",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Cart deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

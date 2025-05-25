@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce API Documentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding-top: 20px;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .api-options {
+            margin-bottom: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 50px;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1>E-commerce API Documentation</h1>
+            <p class="lead">Tài liệu API cho hệ thống E-commerce</p>
+        </div>
+
+        <div class="row api-options">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Swagger UI
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Interactive Documentation</h5>
+                        <p class="card-text">Tài liệu tương tác đầy đủ cho API với giao diện Swagger UI. Bạn có thể thử nghiệm API trực tiếp từ trình duyệt.</p>
+                        <a href="/api-docs/swagger/" class="btn btn-primary">Xem Swagger UI</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        ReDoc
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Reference Documentation</h5>
+                        <p class="card-text">Tài liệu tham khảo chi tiết với giao diện ReDoc. Phù hợp cho việc đọc và tìm hiểu về API.</p>
+                        <a href="/api-docs/redoc/" class="btn btn-success">Xem ReDoc</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        API Schema
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Raw Schema</h5>
+                        <p class="card-text">Tải xuống schema API ở định dạng JSON hoặc YAML.</p>
+                        <a href="/api-docs/swagger.json" class="btn btn-secondary me-2">JSON Schema</a>
+                        <a href="/api-docs/swagger.yaml" class="btn btn-secondary">YAML Schema</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Hướng dẫn sử dụng API
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Bắt đầu với API</h5>
+                        <p>Để sử dụng API của hệ thống E-commerce, bạn cần thực hiện các bước sau:</p>
+                        
+                        <h6>1. Xác thực</h6>
+                        <p>Hầu hết các API yêu cầu xác thực bằng JWT token. Để lấy token, gọi API đăng nhập:</p>
+                        <pre><code>POST /api/v1/auth/login/
+{
+    "username": "your_username",
+    "password": "your_password"
+}</code></pre>
+                        
+                        <h6>2. Sử dụng token</h6>
+                        <p>Thêm token vào header của request:</p>
+                        <pre><code>Authorization: Bearer your_jwt_token</code></pre>
+                        
+                        <h6>3. Định dạng response</h6>
+                        <p>Tất cả API trả về kết quả theo định dạng chuẩn:</p>
+                        <pre><code>{
+    "status": "success" | "error",
+    "status_code": 200 | 4xx | 5xx,
+    "message": "Thông báo",
+    "data": {...} | [...],
+    "pagination": {
+        "count": 100,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 10,
+        "next": "URL trang tiếp theo",
+        "previous": "URL trang trước"
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer text-center">
+            <p>&copy; 2025 E-commerce API. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

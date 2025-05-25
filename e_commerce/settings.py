@@ -23,6 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!(5lsz%*gsr#gavx28%m9jhapnc5p1mmy_!o7+c$-ot*!2538c'
 
+# JWT settings
+JWT_SECRET_KEY = SECRET_KEY  # Sử dụng cùng SECRET_KEY với Django, có thể thay đổi trong production
+JWT_ALGORITHM = 'HS256'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
+    'drf_yasg',
 
     # Core apps
     'core',
@@ -79,6 +84,7 @@ MIDDLEWARE = [
     'core.middleware.csrf_exempt_api.CsrfExemptApiMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'core.middleware.jwt_auth.JWTAuthenticationMiddleware',  # Middleware xác thực JWT
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.response.StandardizedResponseMiddleware',
@@ -200,6 +206,9 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
     'JTI_CLAIM': 'jti',
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=60),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 }
 
 

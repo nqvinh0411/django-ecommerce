@@ -1,0 +1,91 @@
+{
+  "user": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Users",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example User 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example User 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/users?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "User details",
+      "data": {
+        "id": 1,
+        "name": "Example User",
+        "description": "This is an example User",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New User",
+      "description": "This is a new User"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "User created successfully",
+      "data": {
+        "id": 3,
+        "name": "New User",
+        "description": "This is a new User",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated User",
+      "description": "This is an updated User"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "User updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated User",
+        "description": "This is an updated User",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "User deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

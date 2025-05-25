@@ -106,11 +106,29 @@ class TrackingInfoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrackingInfo
         fields = ['shipment', 'status', 'location', 'note']
-    
+        
     def create(self, validated_data):
-        # Extract the shipment from context if it's provided
-        shipment = self.context.get('shipment', None)
-        if shipment:
-            validated_data['shipment'] = shipment
-            
-        return super().create(validated_data)
+        # Create tracking info and update shipment status if needed
+        tracking_info = TrackingInfo.objects.create(**validated_data)
+        
+        # Update shipment status if needed
+        return tracking_info
+
+
+class CalculateShippingSerializer(serializers.Serializer):
+    """Serializer for calculating shipping rates"""
+    country = serializers.CharField(max_length=2, help_text="Mã quốc gia 2 ký tự (VD: VN)")
+    province = serializers.CharField(max_length=100, required=False, help_text="Tên tỉnh/thành phố (không bắt buộc)")
+    weight = serializers.DecimalField(max_digits=8, decimal_places=2, help_text="Trọng lượng đơn hàng (kg)")
+    
+    def validate_country(self, value):
+        """Validate country code"""
+        if len(value) != 2:
+            raise serializers.ValidationError("Mã quốc gia phải là 2 ký tự")
+        return value.upper()
+    
+    def validate_weight(self, value):
+        """Validate weight"""
+        if value <= 0:
+            raise serializers.ValidationError("Trọng lượng phải lớn hơn 0")
+        return value

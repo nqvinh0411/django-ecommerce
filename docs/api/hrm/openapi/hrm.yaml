@@ -1,0 +1,2337 @@
+openapi: 3.0.0
+info:
+  title: Hrm API
+  description: API cho module hrm
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api@example.com
+servers:
+- url: https://api.example.com/api/v1
+  description: Production server
+- url: https://staging-api.example.com/api/v1
+  description: Staging server
+tags:
+- name: hrm
+  description: Operations related to hrm
+paths:
+  /departments:
+    get:
+      tags:
+      - departments
+      summary: List all departments
+      description: Returns a list of departments
+      operationId: listDepartments
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of departments
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - departments
+      summary: Create a new department
+      description: Creates a new department and returns its details
+      operationId: createDepartment
+      requestBody:
+        description: Department object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Department created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /departments/{id}:
+    get:
+      tags:
+      - departments
+      summary: Get department by ID
+      description: Returns a single department
+      operationId: getDepartment
+      parameters:
+      - name: id
+        in: path
+        description: ID of department to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Department details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Department not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - departments
+      summary: Update department
+      description: Updates an existing department
+      operationId: updateDepartment
+      parameters:
+      - name: id
+        in: path
+        description: ID of department to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Department object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Department updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - departments
+      summary: Delete department
+      description: Deletes a department
+      operationId: deleteDepartment
+      parameters:
+      - name: id
+        in: path
+        description: ID of department to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Department deleted successfully
+      security:
+      - BearerAuth: []
+  /employees:
+    get:
+      tags:
+      - employees
+      summary: List all employees
+      description: Returns a list of employees
+      operationId: listEmployees
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of employees
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - employees
+      summary: Create a new employee
+      description: Creates a new employee and returns its details
+      operationId: createEmployee
+      requestBody:
+        description: Employee object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Employee created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /employees/{id}:
+    get:
+      tags:
+      - employees
+      summary: Get employee by ID
+      description: Returns a single employee
+      operationId: getEmployee
+      parameters:
+      - name: id
+        in: path
+        description: ID of employee to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Employee details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Employee not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - employees
+      summary: Update employee
+      description: Updates an existing employee
+      operationId: updateEmployee
+      parameters:
+      - name: id
+        in: path
+        description: ID of employee to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Employee object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Employee updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - employees
+      summary: Delete employee
+      description: Deletes a employee
+      operationId: deleteEmployee
+      parameters:
+      - name: id
+        in: path
+        description: ID of employee to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Employee deleted successfully
+      security:
+      - BearerAuth: []
+  /holidays:
+    get:
+      tags:
+      - holidays
+      summary: List all holidays
+      description: Returns a list of holidays
+      operationId: listHolidays
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of holidays
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - holidays
+      summary: Create a new holiday
+      description: Creates a new holiday and returns its details
+      operationId: createHoliday
+      requestBody:
+        description: Holiday object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Holiday created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /holidays/{id}:
+    get:
+      tags:
+      - holidays
+      summary: Get holiday by ID
+      description: Returns a single holiday
+      operationId: getHoliday
+      parameters:
+      - name: id
+        in: path
+        description: ID of holiday to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Holiday details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Holiday not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - holidays
+      summary: Update holiday
+      description: Updates an existing holiday
+      operationId: updateHoliday
+      parameters:
+      - name: id
+        in: path
+        description: ID of holiday to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Holiday object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Holiday updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - holidays
+      summary: Delete holiday
+      description: Deletes a holiday
+      operationId: deleteHoliday
+      parameters:
+      - name: id
+        in: path
+        description: ID of holiday to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Holiday deleted successfully
+      security:
+      - BearerAuth: []
+  /leaverequests:
+    get:
+      tags:
+      - leaverequests
+      summary: List all leaverequests
+      description: Returns a list of leaverequests
+      operationId: listLeaverequests
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of leaverequests
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - leaverequests
+      summary: Create a new leaverequest
+      description: Creates a new leaverequest and returns its details
+      operationId: createLeaverequest
+      requestBody:
+        description: Leaverequest object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Leaverequest created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /leaverequests/{id}:
+    get:
+      tags:
+      - leaverequests
+      summary: Get leaverequest by ID
+      description: Returns a single leaverequest
+      operationId: getLeaverequest
+      parameters:
+      - name: id
+        in: path
+        description: ID of leaverequest to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Leaverequest details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Leaverequest not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - leaverequests
+      summary: Update leaverequest
+      description: Updates an existing leaverequest
+      operationId: updateLeaverequest
+      parameters:
+      - name: id
+        in: path
+        description: ID of leaverequest to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Leaverequest object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Leaverequest updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - leaverequests
+      summary: Delete leaverequest
+      description: Deletes a leaverequest
+      operationId: deleteLeaverequest
+      parameters:
+      - name: id
+        in: path
+        description: ID of leaverequest to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Leaverequest deleted successfully
+      security:
+      - BearerAuth: []
+  /payrolls:
+    get:
+      tags:
+      - payrolls
+      summary: List all payrolls
+      description: Returns a list of payrolls
+      operationId: listPayrolls
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of payrolls
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - payrolls
+      summary: Create a new payroll
+      description: Creates a new payroll and returns its details
+      operationId: createPayroll
+      requestBody:
+        description: Payroll object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Payroll created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /payrolls/{id}:
+    get:
+      tags:
+      - payrolls
+      summary: Get payroll by ID
+      description: Returns a single payroll
+      operationId: getPayroll
+      parameters:
+      - name: id
+        in: path
+        description: ID of payroll to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Payroll details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Payroll not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - payrolls
+      summary: Update payroll
+      description: Updates an existing payroll
+      operationId: updatePayroll
+      parameters:
+      - name: id
+        in: path
+        description: ID of payroll to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Payroll object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Payroll updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - payrolls
+      summary: Delete payroll
+      description: Deletes a payroll
+      operationId: deletePayroll
+      parameters:
+      - name: id
+        in: path
+        description: ID of payroll to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Payroll deleted successfully
+      security:
+      - BearerAuth: []
+  /positions:
+    get:
+      tags:
+      - positions
+      summary: List all positions
+      description: Returns a list of positions
+      operationId: listPositions
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of positions
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - positions
+      summary: Create a new position
+      description: Creates a new position and returns its details
+      operationId: createPosition
+      requestBody:
+        description: Position object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Position created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /positions/{id}:
+    get:
+      tags:
+      - positions
+      summary: Get position by ID
+      description: Returns a single position
+      operationId: getPosition
+      parameters:
+      - name: id
+        in: path
+        description: ID of position to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Position details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Position not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - positions
+      summary: Update position
+      description: Updates an existing position
+      operationId: updatePosition
+      parameters:
+      - name: id
+        in: path
+        description: ID of position to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Position object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Position updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - positions
+      summary: Delete position
+      description: Deletes a position
+      operationId: deletePosition
+      parameters:
+      - name: id
+        in: path
+        description: ID of position to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Position deleted successfully
+      security:
+      - BearerAuth: []
+  /salarys:
+    get:
+      tags:
+      - salarys
+      summary: List all salarys
+      description: Returns a list of salarys
+      operationId: listSalarys
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of salarys
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - salarys
+      summary: Create a new salary
+      description: Creates a new salary and returns its details
+      operationId: createSalary
+      requestBody:
+        description: Salary object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Salary created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /salarys/{id}:
+    get:
+      tags:
+      - salarys
+      summary: Get salary by ID
+      description: Returns a single salary
+      operationId: getSalary
+      parameters:
+      - name: id
+        in: path
+        description: ID of salary to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Salary details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Salary not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - salarys
+      summary: Update salary
+      description: Updates an existing salary
+      operationId: updateSalary
+      parameters:
+      - name: id
+        in: path
+        description: ID of salary to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Salary object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Salary updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - salarys
+      summary: Delete salary
+      description: Deletes a salary
+      operationId: deleteSalary
+      parameters:
+      - name: id
+        in: path
+        description: ID of salary to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Salary deleted successfully
+      security:
+      - BearerAuth: []
+  /timesheets:
+    get:
+      tags:
+      - timesheets
+      summary: List all timesheets
+      description: Returns a list of timesheets
+      operationId: listTimesheets
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of timesheets
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - timesheets
+      summary: Create a new timesheet
+      description: Creates a new timesheet and returns its details
+      operationId: createTimesheet
+      requestBody:
+        description: Timesheet object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Timesheet created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /timesheets/{id}:
+    get:
+      tags:
+      - timesheets
+      summary: Get timesheet by ID
+      description: Returns a single timesheet
+      operationId: getTimesheet
+      parameters:
+      - name: id
+        in: path
+        description: ID of timesheet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Timesheet details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Timesheet not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - timesheets
+      summary: Update timesheet
+      description: Updates an existing timesheet
+      operationId: updateTimesheet
+      parameters:
+      - name: id
+        in: path
+        description: ID of timesheet to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Timesheet object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Timesheet updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - timesheets
+      summary: Delete timesheet
+      description: Deletes a timesheet
+      operationId: deleteTimesheet
+      parameters:
+      - name: id
+        in: path
+        description: ID of timesheet to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Timesheet deleted successfully
+      security:
+      - BearerAuth: []
+  /workschedules:
+    get:
+      tags:
+      - workschedules
+      summary: List all workschedules
+      description: Returns a list of workschedules
+      operationId: listWorkschedules
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of workschedules
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - workschedules
+      summary: Create a new workschedule
+      description: Creates a new workschedule and returns its details
+      operationId: createWorkschedule
+      requestBody:
+        description: Workschedule object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Workschedule created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /workschedules/{id}:
+    get:
+      tags:
+      - workschedules
+      summary: Get workschedule by ID
+      description: Returns a single workschedule
+      operationId: getWorkschedule
+      parameters:
+      - name: id
+        in: path
+        description: ID of workschedule to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Workschedule details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Workschedule not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - workschedules
+      summary: Update workschedule
+      description: Updates an existing workschedule
+      operationId: updateWorkschedule
+      parameters:
+      - name: id
+        in: path
+        description: ID of workschedule to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Workschedule object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Workschedule updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - workschedules
+      summary: Delete workschedule
+      description: Deletes a workschedule
+      operationId: deleteWorkschedule
+      parameters:
+      - name: id
+        in: path
+        description: ID of workschedule to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Workschedule deleted successfully
+      security:
+      - BearerAuth: []
+components:
+  schemas: {}
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

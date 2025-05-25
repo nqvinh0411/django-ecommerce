@@ -18,7 +18,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.CharField()
+    image = models.CharField(max_length=2550)  # Thêm max_length để khắc phục lỗi
     created_at = models.DateTimeField(auto_now_add=True)
     is_primary = models.BooleanField(default=False)
     alt_text = models.CharField(max_length=2550, blank=True)

@@ -1,0 +1,358 @@
+{
+  "shipment": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Shipments",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Shipment 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Shipment 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/shipments?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Shipment details",
+      "data": {
+        "id": 1,
+        "name": "Example Shipment",
+        "description": "This is an example Shipment",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Shipment",
+      "description": "This is a new Shipment"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Shipment created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Shipment",
+        "description": "This is a new Shipment",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Shipment",
+      "description": "This is an updated Shipment"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Shipment updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Shipment",
+        "description": "This is an updated Shipment",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Shipment deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "shippingmethod": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of ShippingMethods",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example ShippingMethod 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example ShippingMethod 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/shippingmethods?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "ShippingMethod details",
+      "data": {
+        "id": 1,
+        "name": "Example ShippingMethod",
+        "description": "This is an example ShippingMethod",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New ShippingMethod",
+      "description": "This is a new ShippingMethod"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "ShippingMethod created successfully",
+      "data": {
+        "id": 3,
+        "name": "New ShippingMethod",
+        "description": "This is a new ShippingMethod",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated ShippingMethod",
+      "description": "This is an updated ShippingMethod"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "ShippingMethod updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated ShippingMethod",
+        "description": "This is an updated ShippingMethod",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "ShippingMethod deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "shippingrate": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of ShippingRates",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example ShippingRate 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example ShippingRate 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/shippingrates?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "ShippingRate details",
+      "data": {
+        "id": 1,
+        "name": "Example ShippingRate",
+        "description": "This is an example ShippingRate",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New ShippingRate",
+      "description": "This is a new ShippingRate"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "ShippingRate created successfully",
+      "data": {
+        "id": 3,
+        "name": "New ShippingRate",
+        "description": "This is a new ShippingRate",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated ShippingRate",
+      "description": "This is an updated ShippingRate"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "ShippingRate updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated ShippingRate",
+        "description": "This is an updated ShippingRate",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "ShippingRate deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "shippingzone": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of ShippingZones",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example ShippingZone 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example ShippingZone 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/shippingzones?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "ShippingZone details",
+      "data": {
+        "id": 1,
+        "name": "Example ShippingZone",
+        "description": "This is an example ShippingZone",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New ShippingZone",
+      "description": "This is a new ShippingZone"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "ShippingZone created successfully",
+      "data": {
+        "id": 3,
+        "name": "New ShippingZone",
+        "description": "This is a new ShippingZone",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated ShippingZone",
+      "description": "This is an updated ShippingZone"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "ShippingZone updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated ShippingZone",
+        "description": "This is an updated ShippingZone",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "ShippingZone deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

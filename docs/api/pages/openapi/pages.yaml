@@ -1,0 +1,795 @@
+openapi: 3.0.0
+info:
+  title: Pages API
+  description: API cho module pages
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api@example.com
+servers:
+- url: https://api.example.com/api/v1
+  description: Production server
+- url: https://staging-api.example.com/api/v1
+  description: Staging server
+tags:
+- name: pages
+  description: Operations related to pages
+paths:
+  /banners:
+    get:
+      tags:
+      - banners
+      summary: List all banners
+      description: Returns a list of banners
+      operationId: listBanners
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of banners
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - banners
+      summary: Create a new banner
+      description: Creates a new banner and returns its details
+      operationId: createBanner
+      requestBody:
+        description: Banner object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Banner created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /banners/{id}:
+    get:
+      tags:
+      - banners
+      summary: Get banner by ID
+      description: Returns a single banner
+      operationId: getBanner
+      parameters:
+      - name: id
+        in: path
+        description: ID of banner to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Banner details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Banner not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - banners
+      summary: Update banner
+      description: Updates an existing banner
+      operationId: updateBanner
+      parameters:
+      - name: id
+        in: path
+        description: ID of banner to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Banner object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Banner updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - banners
+      summary: Delete banner
+      description: Deletes a banner
+      operationId: deleteBanner
+      parameters:
+      - name: id
+        in: path
+        description: ID of banner to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Banner deleted successfully
+      security:
+      - BearerAuth: []
+  /menuitems:
+    get:
+      tags:
+      - menuitems
+      summary: List all menuitems
+      description: Returns a list of menuitems
+      operationId: listMenuitems
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of menuitems
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - menuitems
+      summary: Create a new menuitem
+      description: Creates a new menuitem and returns its details
+      operationId: createMenuitem
+      requestBody:
+        description: Menuitem object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Menuitem created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /menuitems/{id}:
+    get:
+      tags:
+      - menuitems
+      summary: Get menuitem by ID
+      description: Returns a single menuitem
+      operationId: getMenuitem
+      parameters:
+      - name: id
+        in: path
+        description: ID of menuitem to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Menuitem details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Menuitem not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - menuitems
+      summary: Update menuitem
+      description: Updates an existing menuitem
+      operationId: updateMenuitem
+      parameters:
+      - name: id
+        in: path
+        description: ID of menuitem to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Menuitem object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Menuitem updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - menuitems
+      summary: Delete menuitem
+      description: Deletes a menuitem
+      operationId: deleteMenuitem
+      parameters:
+      - name: id
+        in: path
+        description: ID of menuitem to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Menuitem deleted successfully
+      security:
+      - BearerAuth: []
+  /pages:
+    get:
+      tags:
+      - pages
+      summary: List all pages
+      description: Returns a list of pages
+      operationId: listPages
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of pages
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - pages
+      summary: Create a new page
+      description: Creates a new page and returns its details
+      operationId: createPage
+      requestBody:
+        description: Page object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Page created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /pages/{id}:
+    get:
+      tags:
+      - pages
+      summary: Get page by ID
+      description: Returns a single page
+      operationId: getPage
+      parameters:
+      - name: id
+        in: path
+        description: ID of page to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Page details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Page not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - pages
+      summary: Update page
+      description: Updates an existing page
+      operationId: updatePage
+      parameters:
+      - name: id
+        in: path
+        description: ID of page to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Page object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Page updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - pages
+      summary: Delete page
+      description: Deletes a page
+      operationId: deletePage
+      parameters:
+      - name: id
+        in: path
+        description: ID of page to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Page deleted successfully
+      security:
+      - BearerAuth: []
+components:
+  schemas: {}
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

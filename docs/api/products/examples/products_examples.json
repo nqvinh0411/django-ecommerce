@@ -1,0 +1,91 @@
+{
+  "product": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Products",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Product 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Product 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/products?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Product details",
+      "data": {
+        "id": 1,
+        "name": "Example Product",
+        "description": "This is an example Product",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Product",
+      "description": "This is a new Product"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Product created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Product",
+        "description": "This is a new Product",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Product",
+      "description": "This is an updated Product"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Product updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Product",
+        "description": "This is an updated Product",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Product deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

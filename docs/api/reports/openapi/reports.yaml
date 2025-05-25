@@ -1,0 +1,1052 @@
+openapi: 3.0.0
+info:
+  title: Reports API
+  description: API cho module reports
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api@example.com
+servers:
+- url: https://api.example.com/api/v1
+  description: Production server
+- url: https://staging-api.example.com/api/v1
+  description: Staging server
+tags:
+- name: reports
+  description: Operations related to reports
+paths:
+  /customerreports:
+    get:
+      tags:
+      - customerreports
+      summary: List all customerreports
+      description: Returns a list of customerreports
+      operationId: listCustomerreports
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of customerreports
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - customerreports
+      summary: Create a new customerreport
+      description: Creates a new customerreport and returns its details
+      operationId: createCustomerreport
+      requestBody:
+        description: Customerreport object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Customerreport created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /customerreports/{id}:
+    get:
+      tags:
+      - customerreports
+      summary: Get customerreport by ID
+      description: Returns a single customerreport
+      operationId: getCustomerreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of customerreport to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Customerreport details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Customerreport not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - customerreports
+      summary: Update customerreport
+      description: Updates an existing customerreport
+      operationId: updateCustomerreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of customerreport to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Customerreport object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Customerreport updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - customerreports
+      summary: Delete customerreport
+      description: Deletes a customerreport
+      operationId: deleteCustomerreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of customerreport to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Customerreport deleted successfully
+      security:
+      - BearerAuth: []
+  /productreports:
+    get:
+      tags:
+      - productreports
+      summary: List all productreports
+      description: Returns a list of productreports
+      operationId: listProductreports
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of productreports
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - productreports
+      summary: Create a new productreport
+      description: Creates a new productreport and returns its details
+      operationId: createProductreport
+      requestBody:
+        description: Productreport object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Productreport created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /productreports/{id}:
+    get:
+      tags:
+      - productreports
+      summary: Get productreport by ID
+      description: Returns a single productreport
+      operationId: getProductreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of productreport to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Productreport details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Productreport not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - productreports
+      summary: Update productreport
+      description: Updates an existing productreport
+      operationId: updateProductreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of productreport to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Productreport object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Productreport updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - productreports
+      summary: Delete productreport
+      description: Deletes a productreport
+      operationId: deleteProductreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of productreport to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Productreport deleted successfully
+      security:
+      - BearerAuth: []
+  /salesreports:
+    get:
+      tags:
+      - salesreports
+      summary: List all salesreports
+      description: Returns a list of salesreports
+      operationId: listSalesreports
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of salesreports
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - salesreports
+      summary: Create a new salesreport
+      description: Creates a new salesreport and returns its details
+      operationId: createSalesreport
+      requestBody:
+        description: Salesreport object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Salesreport created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /salesreports/{id}:
+    get:
+      tags:
+      - salesreports
+      summary: Get salesreport by ID
+      description: Returns a single salesreport
+      operationId: getSalesreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of salesreport to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Salesreport details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Salesreport not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - salesreports
+      summary: Update salesreport
+      description: Updates an existing salesreport
+      operationId: updateSalesreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of salesreport to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Salesreport object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Salesreport updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - salesreports
+      summary: Delete salesreport
+      description: Deletes a salesreport
+      operationId: deleteSalesreport
+      parameters:
+      - name: id
+        in: path
+        description: ID of salesreport to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Salesreport deleted successfully
+      security:
+      - BearerAuth: []
+  /trafficlogs:
+    get:
+      tags:
+      - trafficlogs
+      summary: List all trafficlogs
+      description: Returns a list of trafficlogs
+      operationId: listTrafficlogs
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of trafficlogs
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - trafficlogs
+      summary: Create a new trafficlog
+      description: Creates a new trafficlog and returns its details
+      operationId: createTrafficlog
+      requestBody:
+        description: Trafficlog object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Trafficlog created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /trafficlogs/{id}:
+    get:
+      tags:
+      - trafficlogs
+      summary: Get trafficlog by ID
+      description: Returns a single trafficlog
+      operationId: getTrafficlog
+      parameters:
+      - name: id
+        in: path
+        description: ID of trafficlog to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Trafficlog details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Trafficlog not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - trafficlogs
+      summary: Update trafficlog
+      description: Updates an existing trafficlog
+      operationId: updateTrafficlog
+      parameters:
+      - name: id
+        in: path
+        description: ID of trafficlog to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Trafficlog object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Trafficlog updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - trafficlogs
+      summary: Delete trafficlog
+      description: Deletes a trafficlog
+      operationId: deleteTrafficlog
+      parameters:
+      - name: id
+        in: path
+        description: ID of trafficlog to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Trafficlog deleted successfully
+      security:
+      - BearerAuth: []
+components:
+  schemas: {}
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,269 @@
+{
+  "banner": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Banners",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Banner 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Banner 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/banners?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Banner details",
+      "data": {
+        "id": 1,
+        "name": "Example Banner",
+        "description": "This is an example Banner",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Banner",
+      "description": "This is a new Banner"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Banner created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Banner",
+        "description": "This is a new Banner",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Banner",
+      "description": "This is an updated Banner"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Banner updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Banner",
+        "description": "This is an updated Banner",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Banner deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "menuitem": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of MenuItems",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example MenuItem 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example MenuItem 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/menuitems?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "MenuItem details",
+      "data": {
+        "id": 1,
+        "name": "Example MenuItem",
+        "description": "This is an example MenuItem",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New MenuItem",
+      "description": "This is a new MenuItem"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "MenuItem created successfully",
+      "data": {
+        "id": 3,
+        "name": "New MenuItem",
+        "description": "This is a new MenuItem",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated MenuItem",
+      "description": "This is an updated MenuItem"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "MenuItem updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated MenuItem",
+        "description": "This is an updated MenuItem",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "MenuItem deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "page": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Pages",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Page 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Page 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/pages?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Page details",
+      "data": {
+        "id": 1,
+        "name": "Example Page",
+        "description": "This is an example Page",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Page",
+      "description": "This is a new Page"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Page created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Page",
+        "description": "This is a new Page",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Page",
+      "description": "This is an updated Page"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Page updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Page",
+        "description": "This is an updated Page",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Page deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,803 @@
+{
+  "department": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Departments",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Department 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Department 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/departments?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Department details",
+      "data": {
+        "id": 1,
+        "name": "Example Department",
+        "description": "This is an example Department",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Department",
+      "description": "This is a new Department"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Department created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Department",
+        "description": "This is a new Department",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Department",
+      "description": "This is an updated Department"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Department updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Department",
+        "description": "This is an updated Department",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Department deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "employee": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Employees",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Employee 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Employee 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/employees?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Employee details",
+      "data": {
+        "id": 1,
+        "name": "Example Employee",
+        "description": "This is an example Employee",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Employee",
+      "description": "This is a new Employee"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Employee created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Employee",
+        "description": "This is a new Employee",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Employee",
+      "description": "This is an updated Employee"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Employee updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Employee",
+        "description": "This is an updated Employee",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Employee deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "holiday": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Holidays",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Holiday 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Holiday 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/holidays?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Holiday details",
+      "data": {
+        "id": 1,
+        "name": "Example Holiday",
+        "description": "This is an example Holiday",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Holiday",
+      "description": "This is a new Holiday"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Holiday created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Holiday",
+        "description": "This is a new Holiday",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Holiday",
+      "description": "This is an updated Holiday"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Holiday updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Holiday",
+        "description": "This is an updated Holiday",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Holiday deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "leaverequest": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of LeaveRequests",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example LeaveRequest 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example LeaveRequest 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/leaverequests?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "LeaveRequest details",
+      "data": {
+        "id": 1,
+        "name": "Example LeaveRequest",
+        "description": "This is an example LeaveRequest",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New LeaveRequest",
+      "description": "This is a new LeaveRequest"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "LeaveRequest created successfully",
+      "data": {
+        "id": 3,
+        "name": "New LeaveRequest",
+        "description": "This is a new LeaveRequest",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated LeaveRequest",
+      "description": "This is an updated LeaveRequest"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "LeaveRequest updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated LeaveRequest",
+        "description": "This is an updated LeaveRequest",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "LeaveRequest deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "payroll": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Payrolls",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Payroll 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Payroll 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/payrolls?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Payroll details",
+      "data": {
+        "id": 1,
+        "name": "Example Payroll",
+        "description": "This is an example Payroll",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Payroll",
+      "description": "This is a new Payroll"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Payroll created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Payroll",
+        "description": "This is a new Payroll",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Payroll",
+      "description": "This is an updated Payroll"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Payroll updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Payroll",
+        "description": "This is an updated Payroll",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Payroll deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "position": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Positions",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Position 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Position 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/positions?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Position details",
+      "data": {
+        "id": 1,
+        "name": "Example Position",
+        "description": "This is an example Position",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Position",
+      "description": "This is a new Position"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Position created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Position",
+        "description": "This is a new Position",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Position",
+      "description": "This is an updated Position"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Position updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Position",
+        "description": "This is an updated Position",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Position deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "salary": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Salarys",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Salary 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Salary 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/salarys?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Salary details",
+      "data": {
+        "id": 1,
+        "name": "Example Salary",
+        "description": "This is an example Salary",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Salary",
+      "description": "This is a new Salary"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Salary created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Salary",
+        "description": "This is a new Salary",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Salary",
+      "description": "This is an updated Salary"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Salary updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Salary",
+        "description": "This is an updated Salary",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Salary deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "timesheet": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Timesheets",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Timesheet 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Timesheet 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/timesheets?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Timesheet details",
+      "data": {
+        "id": 1,
+        "name": "Example Timesheet",
+        "description": "This is an example Timesheet",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Timesheet",
+      "description": "This is a new Timesheet"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Timesheet created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Timesheet",
+        "description": "This is a new Timesheet",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Timesheet",
+      "description": "This is an updated Timesheet"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Timesheet updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Timesheet",
+        "description": "This is an updated Timesheet",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Timesheet deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "workschedule": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of WorkSchedules",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example WorkSchedule 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example WorkSchedule 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/workschedules?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "WorkSchedule details",
+      "data": {
+        "id": 1,
+        "name": "Example WorkSchedule",
+        "description": "This is an example WorkSchedule",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New WorkSchedule",
+      "description": "This is a new WorkSchedule"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "WorkSchedule created successfully",
+      "data": {
+        "id": 3,
+        "name": "New WorkSchedule",
+        "description": "This is a new WorkSchedule",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated WorkSchedule",
+      "description": "This is an updated WorkSchedule"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "WorkSchedule updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated WorkSchedule",
+        "description": "This is an updated WorkSchedule",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "WorkSchedule deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

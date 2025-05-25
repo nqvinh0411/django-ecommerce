@@ -1,0 +1,358 @@
+{
+  "coupon": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Coupons",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Coupon 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Coupon 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/coupons?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Coupon details",
+      "data": {
+        "id": 1,
+        "name": "Example Coupon",
+        "description": "This is an example Coupon",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Coupon",
+      "description": "This is a new Coupon"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Coupon created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Coupon",
+        "description": "This is a new Coupon",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Coupon",
+      "description": "This is an updated Coupon"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Coupon updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Coupon",
+        "description": "This is an updated Coupon",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Coupon deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "promotioncampaign": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of PromotionCampaigns",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example PromotionCampaign 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example PromotionCampaign 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/promotioncampaigns?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "PromotionCampaign details",
+      "data": {
+        "id": 1,
+        "name": "Example PromotionCampaign",
+        "description": "This is an example PromotionCampaign",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New PromotionCampaign",
+      "description": "This is a new PromotionCampaign"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "PromotionCampaign created successfully",
+      "data": {
+        "id": 3,
+        "name": "New PromotionCampaign",
+        "description": "This is a new PromotionCampaign",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated PromotionCampaign",
+      "description": "This is an updated PromotionCampaign"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "PromotionCampaign updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated PromotionCampaign",
+        "description": "This is an updated PromotionCampaign",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "PromotionCampaign deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "usagelog": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of UsageLogs",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example UsageLog 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example UsageLog 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/usagelogs?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "UsageLog details",
+      "data": {
+        "id": 1,
+        "name": "Example UsageLog",
+        "description": "This is an example UsageLog",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New UsageLog",
+      "description": "This is a new UsageLog"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "UsageLog created successfully",
+      "data": {
+        "id": 3,
+        "name": "New UsageLog",
+        "description": "This is a new UsageLog",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated UsageLog",
+      "description": "This is an updated UsageLog"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "UsageLog updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated UsageLog",
+        "description": "This is an updated UsageLog",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "UsageLog deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "voucher": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Vouchers",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Voucher 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Voucher 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/vouchers?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Voucher details",
+      "data": {
+        "id": 1,
+        "name": "Example Voucher",
+        "description": "This is an example Voucher",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Voucher",
+      "description": "This is a new Voucher"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Voucher created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Voucher",
+        "description": "This is a new Voucher",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Voucher",
+      "description": "This is an updated Voucher"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Voucher updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Voucher",
+        "description": "This is an updated Voucher",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Voucher deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

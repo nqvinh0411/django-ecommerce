@@ -1,4 +1,9 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+from .viewsets import WishlistViewSet
+
+# Legacy imports for backward compatibility
 from .views import (
     WishlistRetrieveView,
     WishlistItemListView,
@@ -9,19 +14,25 @@ from .views import (
 
 app_name = "wishlist"
 
+# Thiết lập router cho ViewSets
+router = DefaultRouter()
+router.register(r'', WishlistViewSet, basename='wishlist')
+
 urlpatterns = [
-    # GET /wishlist/view - Lấy thông tin wishlist của người dùng hiện tại
-    path('/wishlist/view', WishlistRetrieveView.as_view(), name='wishlist-detail'),
+    # ViewSets URL patterns - Chuẩn hóa API
+    path('', include(router.urls)),
     
-    # GET /wishlist/items/list - Lấy danh sách các items trong wishlist
-    path('/wishlist/items/list', WishlistItemListView.as_view(), name='wishlist-items-list'),
+    # ===== LEGACY ENDPOINTS FOR BACKWARD COMPATIBILITY =====
+    # These endpoints are kept for backward compatibility but will be deprecated
+    # Hãy sử dụng các endpoint mới từ router ở trên
     
-    # POST /wishlist/items/add - Thêm sản phẩm vào wishlist
-    path('/wishlist/items/add', WishlistItemCreateView.as_view(), name='wishlist-items-create'),
+    # Wishlist endpoints - DEPRECATED
+    path('/old/wishlist/view', WishlistRetrieveView.as_view(), name='wishlist-detail-legacy'),
+    path('/old/wishlist/items/list', WishlistItemListView.as_view(), name='wishlist-items-list-legacy'),
+    path('/old/wishlist/items/add', WishlistItemCreateView.as_view(), name='wishlist-items-create-legacy'),
+    path('/old/wishlist/items/<int:item_id>/view', WishlistItemRetrieveView.as_view(), name='wishlist-item-detail-legacy'),
+    path('/old/wishlist/items/<int:item_id>/remove', WishlistItemDestroyView.as_view(), name='wishlist-item-delete-legacy'),
     
-    # GET /wishlist/items/{id}/view - Lấy chi tiết một item cụ thể
-    path('/wishlist/items/<int:item_id>/view', WishlistItemRetrieveView.as_view(), name='wishlist-item-detail'),
-    
-    # DELETE /wishlist/items/{id}/remove - Xóa một item khỏi wishlist
-    path('/wishlist/items/<int:item_id>/remove', WishlistItemDestroyView.as_view(), name='wishlist-item-delete'),
+    # Note: Những URL patterns cũ này sẽ bị loại bỏ trong phiên bản tương lai
+    # Vui lòng sử dụng các endpoints mới được cung cấp bởi router
 ]

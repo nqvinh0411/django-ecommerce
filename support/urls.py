@@ -1,4 +1,12 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+from .viewsets import (
+    SupportCategoryViewSet, SupportTicketViewSet,
+    TicketReplyViewSet, FAQViewSet
+)
+
+# Legacy imports for backward compatibility
 from .views import (
     SupportTicketListCreateView,
     SupportTicketRetrieveUpdateView,
@@ -10,22 +18,29 @@ from .views import (
 
 app_name = "support"
 
+# Thiết lập router cho ViewSets
+router = DefaultRouter()
+router.register(r'categories', SupportCategoryViewSet, basename='support-category')
+router.register(r'tickets', SupportTicketViewSet, basename='support-ticket')
+router.register(r'replies', TicketReplyViewSet, basename='ticket-reply')
+router.register(r'faqs', FAQViewSet, basename='faq')
+
 urlpatterns = [
-    # Support tickets - GET (list), POST (create)
-    path('/tickets', SupportTicketListCreateView.as_view(), name='support-ticket-list'),
+    # ViewSets URL patterns - Chuẩn hóa API
+    path('', include(router.urls)),
     
-    # Support ticket detail - GET (retrieve), PUT/PATCH (update)
-    path('/tickets/<int:ticket_id>', SupportTicketRetrieveUpdateView.as_view(), name='support-ticket-detail'),
+    # ===== LEGACY ENDPOINTS FOR BACKWARD COMPATIBILITY =====
+    # These endpoints are kept for backward compatibility but will be deprecated
+    # Hãy sử dụng các endpoint mới từ router ở trên
     
-    # Ticket reply - POST (create)
-    path('/tickets/<int:ticket_id>/reply', TicketReplyCreateView.as_view(), name='ticket-reply'),
+    # Legacy support endpoints - DEPRECATED
+    path('/old/tickets', SupportTicketListCreateView.as_view(), name='support-ticket-list-legacy'),
+    path('/old/tickets/<int:ticket_id>', SupportTicketRetrieveUpdateView.as_view(), name='support-ticket-detail-legacy'),
+    path('/old/tickets/<int:ticket_id>/reply', TicketReplyCreateView.as_view(), name='ticket-reply-legacy'),
+    path('/old/admin/tickets', AdminSupportTicketListView.as_view(), name='admin-ticket-list-legacy'),
+    path('/old/faqs', FAQListView.as_view(), name='faq-list-legacy'),
+    path('/old/categories', SupportCategoryListView.as_view(), name='support-category-list-legacy'),
     
-    # Admin ticket list - GET (list with extended admin functionality)
-    path('/admin/tickets', AdminSupportTicketListView.as_view(), name='admin-ticket-list'),
-    
-    # FAQs - GET (list)
-    path('/faqs', FAQListView.as_view(), name='faq-list'),
-    
-    # Support categories - GET (list)
-    path('/categories', SupportCategoryListView.as_view(), name='support-category-list'),
+    # Note: Những URL patterns cũ này sẽ bị loại bỏ trong phiên bản tương lai
+    # Vui lòng sử dụng các endpoints mới được cung cấp bởi router
 ]

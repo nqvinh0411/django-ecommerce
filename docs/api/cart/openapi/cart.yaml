@@ -1,0 +1,281 @@
+openapi: 3.0.0
+info:
+  title: Cart API
+  description: API cho module cart
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api@example.com
+servers:
+- url: https://api.example.com/api/v1
+  description: Production server
+- url: https://staging-api.example.com/api/v1
+  description: Staging server
+tags:
+- name: cart
+  description: Operations related to cart
+paths:
+  /carts:
+    get:
+      tags:
+      - carts
+      summary: List all carts
+      description: Returns a list of carts
+      operationId: listCarts
+      parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: List of carts
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+                      page_size:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      next:
+                        type: string
+                        nullable: true
+                      previous:
+                        type: string
+                        nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Authentication credentials were not provided.
+      security:
+      - BearerAuth: []
+    post:
+      tags:
+      - carts
+      summary: Create a new cart
+      description: Creates a new cart and returns its details
+      operationId: createCart
+      requestBody:
+        description: Cart object that needs to be created
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '201':
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Cart created successfully
+                  data:
+                    type: object
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
+                  errors:
+                    type: object
+      security:
+      - BearerAuth: []
+  /carts/{id}:
+    get:
+      tags:
+      - carts
+      summary: Get cart by ID
+      description: Returns a single cart
+      operationId: getCart
+      parameters:
+      - name: id
+        in: path
+        description: ID of cart to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Cart details
+                  data:
+                    type: object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  status_code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Cart not found
+      security:
+      - BearerAuth: []
+    put:
+      tags:
+      - carts
+      summary: Update cart
+      description: Updates an existing cart
+      operationId: updateCart
+      parameters:
+      - name: id
+        in: path
+        description: ID of cart to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Cart object that needs to be updated
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Cart updated successfully
+                  data:
+                    type: object
+      security:
+      - BearerAuth: []
+    delete:
+      tags:
+      - carts
+      summary: Delete cart
+      description: Deletes a cart
+      operationId: deleteCart
+      parameters:
+      - name: id
+        in: path
+        description: ID of cart to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  status_code:
+                    type: integer
+                    example: 204
+                  message:
+                    type: string
+                    example: Cart deleted successfully
+      security:
+      - BearerAuth: []
+components:
+  schemas: {}
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

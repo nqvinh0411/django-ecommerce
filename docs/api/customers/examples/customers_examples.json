@@ -1,0 +1,321 @@
+{
+  "customeractivity": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of CustomerActivitys",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example CustomerActivity 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example CustomerActivity 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/customeractivitys?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "CustomerActivity details",
+      "data": {
+        "id": 1,
+        "name": "Example CustomerActivity",
+        "description": "This is an example CustomerActivity",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "customeraddress": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of CustomerAddresss",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example CustomerAddress 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example CustomerAddress 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/customeraddresss?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "CustomerAddress details",
+      "data": {
+        "id": 1,
+        "name": "Example CustomerAddress",
+        "description": "This is an example CustomerAddress",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New CustomerAddress",
+      "description": "This is a new CustomerAddress"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "CustomerAddress created successfully",
+      "data": {
+        "id": 3,
+        "name": "New CustomerAddress",
+        "description": "This is a new CustomerAddress",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated CustomerAddress",
+      "description": "This is an updated CustomerAddress"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "CustomerAddress updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated CustomerAddress",
+        "description": "This is an updated CustomerAddress",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "CustomerAddress deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "customergroup": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of CustomerGroups",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example CustomerGroup 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example CustomerGroup 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/customergroups?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "CustomerGroup details",
+      "data": {
+        "id": 1,
+        "name": "Example CustomerGroup",
+        "description": "This is an example CustomerGroup",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New CustomerGroup",
+      "description": "This is a new CustomerGroup"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "CustomerGroup created successfully",
+      "data": {
+        "id": 3,
+        "name": "New CustomerGroup",
+        "description": "This is a new CustomerGroup",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated CustomerGroup",
+      "description": "This is an updated CustomerGroup"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "CustomerGroup updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated CustomerGroup",
+        "description": "This is an updated CustomerGroup",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "CustomerGroup deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  },
+  "customer": {
+    "list_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "List of Customers",
+      "data": [
+        {
+          "id": 1,
+          "name": "Example Customer 1",
+          "created_at": "2025-05-20T10:30:45Z"
+        },
+        {
+          "id": 2,
+          "name": "Example Customer 2",
+          "created_at": "2025-05-21T11:30:45Z"
+        }
+      ],
+      "pagination": {
+        "count": 20,
+        "page_size": 10,
+        "current_page": 1,
+        "total_pages": 2,
+        "next": "/api/v1/customers?page=2",
+        "previous": null
+      }
+    },
+    "detail_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Customer details",
+      "data": {
+        "id": 1,
+        "name": "Example Customer",
+        "description": "This is an example Customer",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-25T14:15:30Z"
+      }
+    },
+    "create_request": {
+      "name": "New Customer",
+      "description": "This is a new Customer"
+    },
+    "create_response": {
+      "status": "success",
+      "status_code": 201,
+      "message": "Customer created successfully",
+      "data": {
+        "id": 3,
+        "name": "New Customer",
+        "description": "This is a new Customer",
+        "created_at": "2025-05-27T10:30:45Z",
+        "updated_at": "2025-05-27T10:30:45Z"
+      }
+    },
+    "update_request": {
+      "name": "Updated Customer",
+      "description": "This is an updated Customer"
+    },
+    "update_response": {
+      "status": "success",
+      "status_code": 200,
+      "message": "Customer updated successfully",
+      "data": {
+        "id": 1,
+        "name": "Updated Customer",
+        "description": "This is an updated Customer",
+        "created_at": "2025-05-20T10:30:45Z",
+        "updated_at": "2025-05-27T11:15:30Z"
+      }
+    },
+    "delete_response": {
+      "status": "success",
+      "status_code": 204,
+      "message": "Customer deleted successfully"
+    },
+    "error_response": {
+      "status": "error",
+      "status_code": 400,
+      "message": "Invalid input",
+      "errors": {
+        "name": [
+          "This field is required."
+        ],
+        "description": [
+          "This field cannot be blank."
+        ]
+      }
+    }
+  }
+}

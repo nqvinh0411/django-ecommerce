@@ -1,5 +1,14 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
+from .viewsets import (
+    CustomerViewSet,
+    CustomerGroupViewSet,
+    CustomerAddressViewSet,
+    CustomerActivityViewSet
+)
+
+# Legacy imports for backward compatibility
 from .views import (
     # Customer views
     CustomerListCreateView, CustomerRetrieveUpdateDestroyView,
@@ -14,54 +23,47 @@ from .views import (
 
 app_name = 'customers'
 
+# Thiết lập router cho ViewSets
+router = DefaultRouter()
+router.register(r'', CustomerViewSet, basename='customer')
+router.register(r'groups', CustomerGroupViewSet, basename='customer-group')
+router.register(r'addresses', CustomerAddressViewSet, basename='customer-address')
+router.register(r'activities', CustomerActivityViewSet, basename='customer-activity')
+
+# URL patterns cho router và các views khác
 urlpatterns = [
-    # Customer endpoints
-    # GET /customers - list all customers
-    path('', CustomerListCreateView.as_view(), name='customer-list'),
-    # POST /customers - create a new customer
-    path('/create', CustomerListCreateView.as_view(), name='customer-create'),
-    # GET /customers/{id} - retrieve a customer
-    path('/<int:pk>', CustomerRetrieveUpdateDestroyView.as_view(), name='customer-detail'),
-    # PUT/PATCH /customers/{id} - update a customer
-    path('/<int:pk>/update', CustomerRetrieveUpdateDestroyView.as_view(), name='customer-update'),
-    # DELETE /customers/{id} - delete a customer
-    path('/<int:pk>/delete', CustomerRetrieveUpdateDestroyView.as_view(), name='customer-delete'),
+    # ViewSets URL patterns
+    path('', include(router.urls)),
+    
+    # ===== LEGACY ENDPOINTS FOR BACKWARD COMPATIBILITY =====
+    # These endpoints are kept for backward compatibility but will be deprecated
+    # Hãy sử dụng các endpoint mới từ router ở trên
+    
+    # Customer endpoints - DEPRECATED
+    path('/old/list', CustomerListCreateView.as_view(), name='customer-list-legacy'),
+    path('/old/create', CustomerListCreateView.as_view(), name='customer-create-legacy'),
+    path('/old/<int:pk>', CustomerRetrieveUpdateDestroyView.as_view(), name='customer-detail-legacy'),
+    path('/old/<int:pk>/update', CustomerRetrieveUpdateDestroyView.as_view(), name='customer-update-legacy'),
+    path('/old/<int:pk>/delete', CustomerRetrieveUpdateDestroyView.as_view(), name='customer-delete-legacy'),
 
-    # CustomerGroup endpoints
-    # GET /groups - list all customer groups
-    path('/groups', CustomerGroupListCreateView.as_view(), name='customer-group-list-create'),
-    # POST /groups - create a new customer group
-    path('/groups/create', CustomerGroupListCreateView.as_view(), name='customer-group-list-create'),
-    # GET /groups/{id} - retrieve a customer group
-    path('/groups/<int:pk>', CustomerGroupRetrieveUpdateDestroyView.as_view(), name='customer-group-detail'),
-    # PUT/PATCH /groups/{id} - update a customer group
-    path('/groups/<int:pk>/update', CustomerGroupRetrieveUpdateDestroyView.as_view(), name='customer-group-update'),
-    # DELETE /groups/{id} - delete a customer group
-    path('/groups/<int:pk>/delete', CustomerGroupRetrieveUpdateDestroyView.as_view(), name='customer-group-delete'),
+    # CustomerGroup endpoints - DEPRECATED
+    path('/old/groups', CustomerGroupListCreateView.as_view(), name='customer-group-list-create-legacy'),
+    path('/old/groups/create', CustomerGroupListCreateView.as_view(), name='customer-group-list-create-legacy'),
+    path('/old/groups/<int:pk>', CustomerGroupRetrieveUpdateDestroyView.as_view(), name='customer-group-detail-legacy'),
+    path('/old/groups/<int:pk>/update', CustomerGroupRetrieveUpdateDestroyView.as_view(), name='customer-group-update-legacy'),
+    path('/old/groups/<int:pk>/delete', CustomerGroupRetrieveUpdateDestroyView.as_view(), name='customer-group-delete-legacy'),
 
-    # CustomerAddress endpoints
-    # GET /addresses - list all customer addresses
-    path('/addresses', CustomerAddressListCreateView.as_view(), name='customer-address-list-create'),
-    # POST /addresses - create a new customer address
-    path('/addresses/create', CustomerAddressListCreateView.as_view(), name='customer-address-list-create'),
-    # GET /addresses/{id} - retrieve a customer address
-    path('/addresses/<int:pk>', CustomerAddressRetrieveUpdateDestroyView.as_view(), name='customer-address-detail'),
-    # PUT/PATCH /addresses/{id} - update a customer address
-    path('/addresses/<int:pk>/update', CustomerAddressRetrieveUpdateDestroyView.as_view(),
-         name='customer-address-update'),
-    # DELETE /addresses/{id} - delete a customer address
-    path('/addresses/<int:pk>/delete', CustomerAddressRetrieveUpdateDestroyView.as_view(),
-         name='customer-address-delete'),
-    # GET /addresses/default-shipping - get the default shipping address
-    path('/addresses/default-shipping', CustomerAddressDefaultShippingView.as_view(),
-         name='customer-address-default-shipping'),
-    # GET /addresses/default-billing - get the default billing address
-    path('/addresses/default-billing', CustomerAddressDefaultBillingView.as_view(),
-         name='customer-address-default-billing'),
-
-    # CustomerActivity endpoints
-    # GET /activities - list all customer activities
-    path('/activities', CustomerActivityListView.as_view(), name='customer-activity-list'),
-    # GET /activities/{id} - retrieve a customer activity
-    path('/activities/<int:pk>', CustomerActivityRetrieveView.as_view(), name='customer-activity-detail'),
+    # CustomerAddress endpoints - DEPRECATED
+    path('/old/addresses', CustomerAddressListCreateView.as_view(), name='customer-address-list-create-legacy'),
+    path('/old/addresses/create', CustomerAddressListCreateView.as_view(), name='customer-address-list-create-legacy'),
+    path('/old/addresses/<int:pk>', CustomerAddressRetrieveUpdateDestroyView.as_view(), name='customer-address-detail-legacy'),
+    path('/old/addresses/<int:pk>/update', CustomerAddressRetrieveUpdateDestroyView.as_view(), name='customer-address-update-legacy'),
+    path('/old/addresses/<int:pk>/delete', CustomerAddressRetrieveUpdateDestroyView.as_view(), name='customer-address-delete-legacy'),
+    
+    # CustomerActivity endpoints - DEPRECATED
+    path('/old/activities', CustomerActivityListView.as_view(), name='customer-activity-list-legacy'),
+    path('/old/activities/<int:pk>', CustomerActivityRetrieveView.as_view(), name='customer-activity-detail-legacy'),
+    
+    # Note: Những URL patterns cũ này sẽ bị loại bỏ trong phiên bản tương lai
+    # Vui lòng sử dụng các endpoints mới được cung cấp bởi router
 ]
