@@ -1,0 +1,387 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Event": {
+      "type": "object",
+      "required": ["event_id", "event_type", "version", "source", "timestamp", "data"],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "description": "ID duy nhất của sự kiện, thường là UUID"
+        },
+        "event_type": {
+          "type": "string",
+          "description": "Loại sự kiện, theo định dạng domain.resource.action"
+        },
+        "version": {
+          "type": "string",
+          "description": "Phiên bản của schema sự kiện, theo định dạng major.minor"
+        },
+        "source": {
+          "type": "string",
+          "description": "Nguồn phát sinh sự kiện (tên service)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm sự kiện xảy ra, theo ISO 8601"
+        },
+        "data": {
+          "type": "object",
+          "description": "Dữ liệu sự kiện, tùy thuộc vào loại sự kiện"
+        },
+        "trace_id": {
+          "type": "string",
+          "description": "ID theo dõi cho distributed tracing (tùy chọn)"
+        }
+      }
+    },
+    
+    "OrderCreatedEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "order.order.created"
+            },
+            "data": {
+              "type": "object",
+              "required": ["order_id", "customer_id", "order_items", "total_amount"],
+              "properties": {
+                "order_id": {
+                  "type": "string"
+                },
+                "order_number": {
+                  "type": "string"
+                },
+                "customer_id": {
+                  "type": "string"
+                },
+                "total_amount": {
+                  "type": "number"
+                },
+                "currency": {
+                  "type": "string",
+                  "default": "VND"
+                },
+                "order_items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["product_id", "quantity", "unit_price"],
+                    "properties": {
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "variant_id": {
+                        "type": "string"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "unit_price": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "shipping_address": {
+                  "type": "object",
+                  "properties": {
+                    "address_id": {
+                      "type": "string"
+                    },
+                    "full_name": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "address_line1": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "postal_code": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    
+    "OrderStatusChangedEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "order.order.status_changed"
+            },
+            "data": {
+              "type": "object",
+              "required": ["order_id", "previous_status", "new_status"],
+              "properties": {
+                "order_id": {
+                  "type": "string"
+                },
+                "order_number": {
+                  "type": "string"
+                },
+                "customer_id": {
+                  "type": "string"
+                },
+                "previous_status": {
+                  "type": "string",
+                  "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
+                },
+                "new_status": {
+                  "type": "string",
+                  "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
+                },
+                "changed_by": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    
+    "PaymentCompletedEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "payment.payment.completed"
+            },
+            "data": {
+              "type": "object",
+              "required": ["payment_id", "order_id", "amount"],
+              "properties": {
+                "payment_id": {
+                  "type": "string"
+                },
+                "order_id": {
+                  "type": "string"
+                },
+                "transaction_id": {
+                  "type": "string"
+                },
+                "payment_method": {
+                  "type": "string",
+                  "enum": ["credit_card", "bank_transfer", "cod", "e_wallet"]
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "currency": {
+                  "type": "string",
+                  "default": "VND"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["completed", "pending", "failed", "refunded"]
+                },
+                "payment_date": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    
+    "ProductCreatedEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "catalog.product.created"
+            },
+            "data": {
+              "type": "object",
+              "required": ["product_id", "name", "price"],
+              "properties": {
+                "product_id": {
+                  "type": "string"
+                },
+                "sku": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "sale_price": {
+                  "type": "number"
+                },
+                "category_id": {
+                  "type": "string"
+                },
+                "is_active": {
+                  "type": "boolean"
+                },
+                "created_by": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    
+    "InventoryUpdatedEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "inventory.stock.updated"
+            },
+            "data": {
+              "type": "object",
+              "required": ["product_id", "previous_quantity", "new_quantity"],
+              "properties": {
+                "product_id": {
+                  "type": "string"
+                },
+                "variant_id": {
+                  "type": "string"
+                },
+                "sku": {
+                  "type": "string"
+                },
+                "previous_quantity": {
+                  "type": "integer"
+                },
+                "new_quantity": {
+                  "type": "integer"
+                },
+                "warehouse_id": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string",
+                  "enum": ["sale", "return", "adjustment", "purchase", "transfer"]
+                },
+                "reference_id": {
+                  "type": "string",
+                  "description": "ID tham chiếu đến đơn hàng, đơn nhập, v.v."
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    
+    "UserRegisteredEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "user.user.registered"
+            },
+            "data": {
+              "type": "object",
+              "required": ["user_id", "email"],
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "full_name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "registration_source": {
+                  "type": "string",
+                  "enum": ["website", "mobile_app", "social", "admin"]
+                },
+                "user_type": {
+                  "type": "string",
+                  "enum": ["customer", "staff", "admin"]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    
+    "MessageSentEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/Event" },
+        {
+          "properties": {
+            "event_type": {
+              "const": "chat.message.sent"
+            },
+            "data": {
+              "type": "object",
+              "required": ["message_id", "thread_id", "sender_id", "content"],
+              "properties": {
+                "message_id": {
+                  "type": "string"
+                },
+                "thread_id": {
+                  "type": "string"
+                },
+                "sender_id": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "sent_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "attachment_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "metadata": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

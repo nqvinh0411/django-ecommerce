@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package midimo.presence;
+
+// Dịch vụ quản lý trạng thái hiện diện của người dùng
+service PresenceService {
+  // Cập nhật trạng thái hiện diện
+  rpc UpdatePresence (UpdatePresenceRequest) returns (UpdatePresenceResponse);
+  
+  // Lấy trạng thái hiện diện của nhiều người dùng
+  rpc GetPresence (GetPresenceRequest) returns (GetPresenceResponse);
+  
+  // Đăng ký nhận cập nhật trạng thái (streaming)
+  rpc SubscribePresence (SubscribePresenceRequest) returns (stream PresenceUpdate);
+}
+
+// Request cập nhật trạng thái
+message UpdatePresenceRequest {
+  // ID của người dùng
+  string user_id = 1;
+  
+  // Trạng thái hiện diện
+  // Giá trị: ONLINE, AWAY, BUSY, OFFLINE
+  string status = 2;
+  
+  // Trạng thái tùy chỉnh (tùy chọn)
+  string custom_status = 3;
+  
+  // Thiết bị đang sử dụng (tùy chọn)
+  string device = 4;
+}
+
+// Response khi cập nhật trạng thái
+message UpdatePresenceResponse {
+  // Thông tin trạng thái đã cập nhật
+  PresenceData presence = 1;
+}
+
+// Request lấy trạng thái
+message GetPresenceRequest {
+  // Danh sách ID người dùng cần lấy trạng thái
+  repeated string user_ids = 1;
+}
+
+// Response khi lấy trạng thái
+message GetPresenceResponse {
+  // Danh sách trạng thái của người dùng
+  repeated PresenceData presence_data = 1;
+}
+
+// Request đăng ký nhận cập nhật
+message SubscribePresenceRequest {
+  // ID của người dùng đăng ký
+  string user_id = 1;
+  
+  // Danh sách ID người dùng cần theo dõi
+  // Nếu rỗng, sẽ theo dõi tất cả người trong danh bạ
+  repeated string target_user_ids = 2;
+}
+
+// Thông tin cập nhật trạng thái (streaming)
+message PresenceUpdate {
+  // Thông tin trạng thái đã cập nhật
+  PresenceData presence = 1;
+  
+  // Loại cập nhật
+  // Giá trị: INITIAL, UPDATE, REMOVE
+  string update_type = 2;
+}
+
+// Dữ liệu trạng thái hiện diện
+message PresenceData {
+  // ID của người dùng
+  string user_id = 1;
+  
+  // Trạng thái hiện diện
+  // Giá trị: ONLINE, AWAY, BUSY, OFFLINE
+  string status = 2;
+  
+  // Trạng thái tùy chỉnh
+  string custom_status = 3;
+  
+  // Thiết bị đang sử dụng
+  string device = 4;
+  
+  // Thời gian cập nhật gần nhất (timestamp)
+  int64 last_active_at = 5;
+}

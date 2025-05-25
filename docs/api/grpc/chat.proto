@@ -1,0 +1,261 @@
+syntax = "proto3";
+
+package midimo.chat;
+
+// Dịch vụ Chat chính
+service ChatService {
+  // Tạo thread chat mới
+  rpc CreateThread (CreateThreadRequest) returns (CreateThreadResponse);
+  
+  // Gửi tin nhắn vào thread
+  rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+  
+  // Lấy danh sách tin nhắn từ thread
+  rpc GetThreadMessages (GetThreadMessagesRequest) returns (GetThreadMessagesResponse);
+  
+  // Lấy danh sách thread của người dùng
+  rpc GetUserThreads (GetUserThreadsRequest) returns (GetUserThreadsResponse);
+  
+  // Lấy thông tin chi tiết thread
+  rpc GetThreadDetail (GetThreadDetailRequest) returns (GetThreadDetailResponse);
+  
+  // Thêm người tham gia vào thread
+  rpc AddParticipant (AddParticipantRequest) returns (AddParticipantResponse);
+  
+  // Xóa người tham gia khỏi thread
+  rpc RemoveParticipant (RemoveParticipantRequest) returns (RemoveParticipantResponse);
+  
+  // Cập nhật trạng thái gõ
+  rpc UpdateTypingStatus (UpdateTypingStatusRequest) returns (UpdateTypingStatusResponse);
+}
+
+// Request tạo thread mới
+message CreateThreadRequest {
+  // ID của người tạo thread
+  string user_id = 1;
+  
+  // Tiêu đề thread (tùy chọn)
+  string title = 2;
+  
+  // Danh sách người tham gia (ngoài người tạo)
+  repeated string participants = 3;
+  
+  // Metadata bổ sung (tùy chọn)
+  map<string, string> metadata = 4;
+}
+
+// Response khi tạo thread
+message CreateThreadResponse {
+  // Thông tin thread đã tạo
+  Thread thread = 1;
+}
+
+// Request gửi tin nhắn
+message SendMessageRequest {
+  // ID của thread
+  string thread_id = 1;
+  
+  // ID của người gửi
+  string user_id = 2;
+  
+  // Nội dung tin nhắn
+  string content = 3;
+  
+  // Danh sách ID của tệp đính kèm (tùy chọn)
+  repeated string attachment_ids = 4;
+}
+
+// Response khi gửi tin nhắn
+message SendMessageResponse {
+  // Thông tin tin nhắn đã gửi
+  Message message = 1;
+}
+
+// Request lấy tin nhắn từ thread
+message GetThreadMessagesRequest {
+  // ID của thread
+  string thread_id = 1;
+  
+  // Số lượng tin nhắn tối đa cần lấy
+  int32 limit = 2;
+  
+  // Chỉ lấy tin nhắn trước ID này (dùng cho phân trang)
+  string before_id = 3;
+}
+
+// Response khi lấy tin nhắn
+message GetThreadMessagesResponse {
+  // Danh sách tin nhắn
+  repeated Message messages = 1;
+  
+  // Token phân trang (nếu còn tin nhắn)
+  string next_page_token = 2;
+}
+
+// Request lấy danh sách thread của người dùng
+message GetUserThreadsRequest {
+  // ID của người dùng
+  string user_id = 1;
+  
+  // Số lượng thread tối đa cần lấy
+  int32 limit = 2;
+  
+  // Token phân trang (từ response trước)
+  string page_token = 3;
+}
+
+// Response khi lấy danh sách thread
+message GetUserThreadsResponse {
+  // Danh sách thread
+  repeated Thread threads = 1;
+  
+  // Token phân trang (nếu còn thread)
+  string next_page_token = 2;
+}
+
+// Request lấy thông tin chi tiết thread
+message GetThreadDetailRequest {
+  // ID của thread
+  string thread_id = 1;
+}
+
+// Response khi lấy thông tin thread
+message GetThreadDetailResponse {
+  // Thông tin chi tiết thread
+  ThreadDetail thread = 1;
+}
+
+// Request thêm người tham gia
+message AddParticipantRequest {
+  // ID của thread
+  string thread_id = 1;
+  
+  // ID của người dùng thực hiện thao tác
+  string user_id = 2;
+  
+  // ID của người dùng được thêm vào
+  string participant_id = 3;
+}
+
+// Response khi thêm người tham gia
+message AddParticipantResponse {
+  // Thông tin thread đã cập nhật
+  Thread thread = 1;
+}
+
+// Request xóa người tham gia
+message RemoveParticipantRequest {
+  // ID của thread
+  string thread_id = 1;
+  
+  // ID của người dùng thực hiện thao tác
+  string user_id = 2;
+  
+  // ID của người dùng bị xóa
+  string participant_id = 3;
+}
+
+// Response khi xóa người tham gia
+message RemoveParticipantResponse {
+  // Thông tin thread đã cập nhật
+  Thread thread = 1;
+}
+
+// Request cập nhật trạng thái gõ
+message UpdateTypingStatusRequest {
+  // ID của thread
+  string thread_id = 1;
+  
+  // ID của người dùng
+  string user_id = 2;
+  
+  // Trạng thái đang gõ
+  bool is_typing = 3;
+}
+
+// Response khi cập nhật trạng thái gõ
+message UpdateTypingStatusResponse {
+  // Kết quả thành công hay không
+  bool success = 1;
+}
+
+// Thông tin cơ bản về thread
+message Thread {
+  // ID của thread
+  string id = 1;
+  
+  // Tiêu đề thread
+  string title = 2;
+  
+  // Danh sách ID người tham gia
+  repeated string participants = 3;
+  
+  // Thời gian tạo (timestamp)
+  int64 created_at = 4;
+  
+  // Thời gian cập nhật gần nhất (timestamp)
+  int64 updated_at = 5;
+  
+  // Metadata bổ sung
+  map<string, string> metadata = 6;
+  
+  // Tin nhắn gần nhất (preview)
+  Message last_message = 7;
+}
+
+// Thông tin chi tiết thread
+message ThreadDetail {
+  // Thông tin cơ bản của thread
+  Thread thread = 1;
+  
+  // Danh sách tin nhắn gần nhất
+  repeated Message recent_messages = 2;
+  
+  // Số lượng tin nhắn chưa đọc
+  int32 unread_count = 3;
+  
+  // Danh sách thông tin người tham gia
+  repeated ParticipantInfo participants = 4;
+}
+
+// Thông tin người tham gia
+message ParticipantInfo {
+  // ID người dùng
+  string user_id = 1;
+  
+  // Thời gian tham gia (timestamp)
+  int64 joined_at = 2;
+  
+  // Thời gian đọc tin nhắn gần nhất (timestamp)
+  int64 last_read_at = 3;
+  
+  // Trạng thái hiện diện
+  string presence_status = 4;
+}
+
+// Thông tin tin nhắn
+message Message {
+  // ID của tin nhắn
+  string id = 1;
+  
+  // ID của thread
+  string thread_id = 2;
+  
+  // ID của người gửi
+  string user_id = 3;
+  
+  // Nội dung tin nhắn
+  string content = 4;
+  
+  // Danh sách ID tệp đính kèm
+  repeated string attachment_ids = 5;
+  
+  // Thời gian tạo (timestamp)
+  int64 created_at = 6;
+  
+  // Thời gian cập nhật (timestamp, nếu đã sửa)
+  int64 updated_at = 7;
+  
+  // Metadata bổ sung
+  map<string, string> metadata = 8;
+}
