@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from customers.models import Customer
 from .models import SupportCategory, SupportTicket, TicketReply, FAQ
 from .serializers import (
@@ -20,7 +21,7 @@ from .serializers import (
 from .permissions import IsOwnerOrAdmin, IsAdminUser
 
 
-class SupportCategoryViewSet(StandardizedModelViewSet):
+class SupportCategoryViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý SupportCategory resources.
     
@@ -54,7 +55,7 @@ class SupportCategoryViewSet(StandardizedModelViewSet):
         return [permission() for permission in permission_classes]
 
 
-class SupportTicketViewSet(StandardizedModelViewSet):
+class SupportTicketViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý SupportTicket resources.
     
@@ -83,6 +84,10 @@ class SupportTicketViewSet(StandardizedModelViewSet):
         """
         Lấy danh sách ticket. Admin xem tất cả, người dùng thường chỉ xem ticket của họ.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return SupportTicket.objects.none()
+            
         if self.request.user.is_staff:
             return SupportTicket.objects.all()
         
@@ -154,7 +159,7 @@ class SupportTicketViewSet(StandardizedModelViewSet):
         )
 
 
-class TicketReplyViewSet(StandardizedModelViewSet):
+class TicketReplyViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý TicketReply resources.
     
@@ -178,6 +183,10 @@ class TicketReplyViewSet(StandardizedModelViewSet):
         Lấy danh sách phản hồi mà người dùng có quyền xem.
         Admin xem tất cả, người dùng thường chỉ xem phản hồi trong ticket của họ.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return TicketReply.objects.none()
+            
         if self.request.user.is_staff:
             return TicketReply.objects.all()
         
@@ -220,7 +229,7 @@ class TicketReplyViewSet(StandardizedModelViewSet):
         )
 
 
-class FAQViewSet(StandardizedModelViewSet):
+class FAQViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý FAQ resources.
     

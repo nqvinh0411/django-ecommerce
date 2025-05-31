@@ -142,7 +142,7 @@ paths:
                     type: string
                     example: Invalid input
                   errors:
-                    type: object
+                    type: obj
       security:
       - BearerAuth: []
   /users/{id}:

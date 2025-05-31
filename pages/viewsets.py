@@ -9,18 +9,20 @@ from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
+from django.db import models
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Page, Banner, MenuItem
 from .serializers import PageSerializer, BannerSerializer, MenuItemSerializer
 from .permissions import CanManagePages
 
 
-class PageViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class PageViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Page resources.
     
@@ -106,7 +108,7 @@ class PageViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
-class BannerViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class BannerViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Banner resources.
     
@@ -134,9 +136,13 @@ class BannerViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         """
         Lọc banner theo trạng thái hoạt động và thời gian nếu người dùng không phải admin.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Banner.objects.none()
+            
         queryset = super().get_queryset()
         
-        # Nếu không phải admin, chỉ hiển thị banner đang hoạt động và chưa hết hạn
+        # Nếu không phải admin, chỉ hiển thị banner đang hoạt động và trong thời gian hiển thị
         if not self.request.user.is_staff:
             now = timezone.now()
             queryset = queryset.filter(
@@ -169,7 +175,7 @@ class BannerViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
-class MenuItemViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class MenuItemViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý MenuItem resources.
     

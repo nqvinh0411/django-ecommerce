@@ -11,6 +11,7 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet, ReadOnlyStandardizedModelViewSet
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 from .serializers import (
     CustomerSerializer, CustomerGroupSerializer,
@@ -19,7 +20,7 @@ from .serializers import (
 from .permissions import IsCustomerOwner, IsAdminOrReadOnly
 
 
-class CustomerViewSet(StandardizedModelViewSet):
+class CustomerViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Customer resources.
     
@@ -42,6 +43,10 @@ class CustomerViewSet(StandardizedModelViewSet):
     
     def get_queryset(self):
         """Lọc danh sách khách hàng dựa trên quyền của user."""
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Customer.objects.none()
+            
         if self.request.user.is_staff:
             return Customer.objects.all()
         return Customer.objects.filter(user=self.request.user)
@@ -51,7 +56,7 @@ class CustomerViewSet(StandardizedModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class CustomerGroupViewSet(StandardizedModelViewSet):
+class CustomerGroupViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý CustomerGroup resources.
     
@@ -74,7 +79,7 @@ class CustomerGroupViewSet(StandardizedModelViewSet):
     ordering = ['name']
 
 
-class CustomerAddressViewSet(StandardizedModelViewSet):
+class CustomerAddressViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý CustomerAddress resources.
     
@@ -100,6 +105,10 @@ class CustomerAddressViewSet(StandardizedModelViewSet):
     
     def get_queryset(self):
         """Lọc địa chỉ theo user hiện tại."""
+        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
+            return CustomerAddress.objects.none()
+            
         return CustomerAddress.objects.filter(customer__user=self.request.user)
     
     def perform_create(self, serializer):
@@ -193,7 +202,7 @@ class CustomerAddressViewSet(StandardizedModelViewSet):
         )
 
 
-class CustomerActivityViewSet(ReadOnlyStandardizedModelViewSet):
+class CustomerActivityViewSet(SwaggerSchemaMixin, ReadOnlyStandardizedModelViewSet):
     """
     ViewSet để xem CustomerActivity resources.
     
@@ -213,6 +222,10 @@ class CustomerActivityViewSet(ReadOnlyStandardizedModelViewSet):
     
     def get_queryset(self):
         """Lọc hoạt động theo user hiện tại hoặc tất cả nếu là staff."""
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation or self.swagger_fake_view:
+            return CustomerActivity.objects.none()
+            
         if self.request.user.is_staff:
             return CustomerActivity.objects.all()
         return CustomerActivity.objects.filter(customer__user=self.request.user)

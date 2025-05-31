@@ -12,13 +12,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet, ReadOnlyStandardizedModelViewSet
 from core.permissions.base import IsOwnerOrAdminUser
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from cart.models import Cart, CartItem
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, OrderStatusUpdateSerializer
 
 
-class OrderViewSet(StandardizedModelViewSet):
+class OrderViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Order resources.
     
@@ -47,6 +48,10 @@ class OrderViewSet(StandardizedModelViewSet):
         Trả về queryset dựa trên quyền hạn của người dùng.
         Admin có thể xem tất cả đơn hàng, người dùng thường chỉ xem được đơn hàng của mình.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Order.objects.none()
+            
         if self.request.user.is_staff:
             return Order.objects.all()
         return Order.objects.filter(user=self.request.user)

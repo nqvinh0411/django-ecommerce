@@ -61,10 +61,6 @@ class ShipmentDetailView(SwaggerSchemaMixin, BaseRetrieveView):
         """
         queryset = Shipment.objects.all()
         
-        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
-        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
-            return queryset.none()
-        
         # Non-staff users can only see their own shipments
         if not self.request.user.is_staff:
             queryset = queryset.filter(order__user=self.request.user)
@@ -72,7 +68,7 @@ class ShipmentDetailView(SwaggerSchemaMixin, BaseRetrieveView):
         return queryset
 
 
-class ShipmentByOrderView(SwaggerSchemaMixin, APIView):
+class ShipmentByOrderView(APIView):
     """
     API để xem thông tin lô hàng theo đơn hàng.
     GET /shipping/shipments/order/{order_id}
@@ -86,11 +82,6 @@ class ShipmentByOrderView(SwaggerSchemaMixin, APIView):
         """
         Get shipment by order ID.
         """
-        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
-        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
-            # Trả về đối tượng giả lập cho Swagger
-            return None
-            
         order_id = self.kwargs.get('order_id')
         
         shipment = get_object_or_404(Shipment, order_id=order_id)
@@ -104,11 +95,6 @@ class ShipmentByOrderView(SwaggerSchemaMixin, APIView):
         """
         Handle GET request.
         """
-        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
-        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
-            # Trả về dữ liệu trống cho Swagger
-            return Response({})
-            
         shipment = self.get_object()
         serializer = ShipmentSerializer(shipment)
         return Response(serializer.data)

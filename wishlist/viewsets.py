@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from customers.models import Customer
 from products.models import Product
 from .models import Wishlist, WishlistItem
@@ -18,7 +19,7 @@ from .serializers import WishlistSerializer, WishlistItemSerializer
 from .permissions import IsWishlistOwner
 
 
-class WishlistViewSet(StandardizedModelViewSet):
+class WishlistViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Wishlist resources.
     
@@ -40,6 +41,10 @@ class WishlistViewSet(StandardizedModelViewSet):
         """
         Lấy wishlist của người dùng hiện tại.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Wishlist.objects.none()
+            
         customer = get_object_or_404(Customer, user=self.request.user)
         return Wishlist.objects.filter(customer=customer)
     

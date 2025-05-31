@@ -12,12 +12,13 @@ from rest_framework.decorators import action
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsOwner
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Cart, CartItem
 from .serializers import CartSerializer, CartItemSerializer, CartItemCreateSerializer
 
 
-class CartViewSet(StandardizedModelViewSet):
+class CartViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Cart resources.
     
@@ -37,6 +38,10 @@ class CartViewSet(StandardizedModelViewSet):
         """
         Trả về queryset với chỉ giỏ hàng của người dùng hiện tại.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Cart.objects.none()
+            
         return Cart.objects.filter(user=self.request.user)
     
     def list(self, request, *args, **kwargs):
@@ -47,6 +52,10 @@ class CartViewSet(StandardizedModelViewSet):
         Returns:
             Response: Thông tin giỏ hàng
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return self.success_response(data={})
+            
         cart, created = Cart.objects.get_or_create(user=request.user)
         serializer = self.get_serializer(cart)
         return self.success_response(

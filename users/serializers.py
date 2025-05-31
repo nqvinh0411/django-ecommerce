@@ -15,6 +15,34 @@ import traceback
 User = get_user_model()
 
 
+class EmptySerializer(serializers.Serializer):
+    """
+    Serializer rỗng để hỗ trợ swagger schema generation cho các view không yêu cầu dữ liệu đầu vào.
+    """
+    pass
+
+
+class LogoutSerializer(serializers.Serializer):
+    """
+    Serializer cho việc đăng xuất, hỗ trợ swagger schema generation.
+    """
+    refresh = serializers.CharField(required=True, help_text="JWT refresh token")
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer cho thông tin chi tiết người dùng hiện tại.
+    """
+    class Meta:
+        model = User
+        fields = (
+            'id', 'username', 'email', 'first_name', 'last_name',
+            'is_seller', 'is_customer', 'phone_number', 'address',
+            'date_joined', 'last_login'
+        )
+        read_only_fields = fields
+
+
 class UserSerializer(serializers.ModelSerializer):
     """
     Serializer cho model User, hiển thị thông tin người dùng.

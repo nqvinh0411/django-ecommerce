@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.filters import SearchFilter, OrderingFilter
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from core.views.base import BaseAPIView, BaseListCreateView, BaseRetrieveUpdateDestroyView, BaseListView, BaseRetrieveView
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 from .serializers import (
     CustomerSerializer, CustomerGroupSerializer,
@@ -41,6 +43,10 @@ class CustomerRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     lookup_url_kwarg = 'pk'
     
     def get_queryset(self):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False):
+            return Customer.objects.none()
+            
         if self.request.user.is_staff:
             return Customer.objects.all()
         return Customer.objects.filter(user=self.request.user)
@@ -59,6 +65,12 @@ class CustomerGroupListCreateView(BaseListCreateView):
     ordering_fields = ['name', 'discount_rate', 'created_at']
     ordering = ['name']
 
+    def get_queryset(self):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False):
+            return CustomerGroup.objects.none()
+        return CustomerGroup.objects.all()
+
 
 class CustomerGroupRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     """
@@ -69,9 +81,15 @@ class CustomerGroupRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     permission_classes = [IsAdminOrReadOnly]
     lookup_url_kwarg = 'pk'
 
+    def get_queryset(self):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False):
+            return CustomerGroup.objects.none()
+        return CustomerGroup.objects.all()
+
 
 # CustomerAddress views
-class CustomerAddressListCreateView(BaseListCreateView):
+class CustomerAddressListCreateView(SwaggerSchemaMixin, BaseListCreateView):
     """
     API endpoint để liệt kê tất cả địa chỉ của khách hàng hoặc tạo một địa chỉ mới.
     """
@@ -83,6 +101,9 @@ class CustomerAddressListCreateView(BaseListCreateView):
     ordering = ['-is_default', '-created_at']
 
     def get_queryset(self):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False):
+            return CustomerAddress.objects.none()
         return CustomerAddress.objects.filter(customer__user=self.request.user)
 
     def perform_create(self, serializer):
@@ -105,7 +126,7 @@ class CustomerAddressListCreateView(BaseListCreateView):
         serializer.save(customer=customer)
 
 
-class CustomerAddressRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
+class CustomerAddressRetrieveUpdateDestroyView(SwaggerSchemaMixin, BaseRetrieveUpdateDestroyView):
     """
     API endpoint để xem, cập nhật hoặc xóa một địa chỉ của khách hàng.
     """
@@ -114,6 +135,9 @@ class CustomerAddressRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
     lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False):
+            return CustomerAddress.objects.none()
         return CustomerAddress.objects.filter(customer__user=self.request.user)
         
     def perform_update(self, serializer):
@@ -136,13 +160,18 @@ class CustomerAddressRetrieveUpdateDestroyView(BaseRetrieveUpdateDestroyView):
         serializer.save()
 
 
-class CustomerAddressDefaultShippingView(BaseAPIView):
+class CustomerAddressDefaultShippingView(SwaggerSchemaMixin, BaseAPIView):
     """
     API endpoint để lấy địa chỉ giao hàng mặc định của khách hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CustomerAddressSerializer
     
     def get(self, request):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(request, 'swagger_fake_view', False):
+            return self.response(status=status.HTTP_200_OK, data={})
+            
         address = CustomerAddress.objects.filter(
             customer__user=request.user,
             is_default=True,
@@ -161,13 +190,18 @@ class CustomerAddressDefaultShippingView(BaseAPIView):
         )
 
 
-class CustomerAddressDefaultBillingView(BaseAPIView):
+class CustomerAddressDefaultBillingView(SwaggerSchemaMixin, BaseAPIView):
     """
     API endpoint để lấy địa chỉ thanh toán mặc định của khách hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CustomerAddressSerializer
     
     def get(self, request):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(request, 'swagger_fake_view', False):
+            return self.response(status=status.HTTP_200_OK, data={})
+            
         address = CustomerAddress.objects.filter(
             customer__user=request.user,
             is_default=True,
@@ -199,6 +233,10 @@ class CustomerActivityListView(BaseListView):
     ordering = ['-created_at']
 
     def get_queryset(self):
+        # Xử lý trường hợp đang tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False):
+            return CustomerActivity.objects.none()
+            
         if self.request.user.is_staff:
             return CustomerActivity.objects.all()
         return CustomerActivity.objects.filter(customer__user=self.request.user)
@@ -213,6 +251,10 @@ class CustomerActivityRetrieveView(BaseRetrieveView):
     lookup_url_kwarg = 'pk'
 
     def get_queryset(self):
+        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
+            return CustomerActivity.objects.none()
+            
         if self.request.user.is_staff:
             return CustomerActivity.objects.all()
         return CustomerActivity.objects.filter(customer__user=self.request.user)

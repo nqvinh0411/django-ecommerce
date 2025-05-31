@@ -14,6 +14,7 @@ class CartDetailView(BaseAPIView):
     API để xem thông tin giỏ hàng hiện tại của người dùng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartSerializer
 
     def get(self, request):
         cart, created = Cart.objects.get_or_create(user=request.user)
@@ -77,6 +78,7 @@ class CartItemUpdateView(BaseAPIView):
     API để cập nhật số lượng sản phẩm trong giỏ hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartSerializer  # Sử dụng CartSerializer vì nó được trả về trong response
     
     def patch(self, request, item_id):
         try:
@@ -115,6 +117,7 @@ class CartItemDeleteView(BaseAPIView):
     API để xóa sản phẩm khỏi giỏ hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartSerializer  # Sử dụng CartSerializer vì nó được trả về trong response
     
     def delete(self, request, item_id):
         try:
@@ -145,6 +148,7 @@ class CartClearView(BaseAPIView):
     API để xóa tất cả sản phẩm trong giỏ hàng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartSerializer  # Sử dụng CartSerializer cho schema generation
     
     def delete(self, request):
         try:

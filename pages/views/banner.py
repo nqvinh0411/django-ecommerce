@@ -5,13 +5,14 @@ from django.utils import timezone
 from django.db.models import Q
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from ..models import Banner
 from ..serializers import BannerSerializer
 from ..permissions import IsAdminUserOrReadOnly
 
 
-class BannerListCreateView(generics.ListCreateAPIView):
+class BannerListCreateView(SwaggerSchemaMixin, generics.ListCreateAPIView):
     """
     API view để liệt kê tất cả các banner hoặc tạo một banner mới.
     
@@ -34,6 +35,10 @@ class BannerListCreateView(generics.ListCreateAPIView):
         """
         queryset = Banner.objects.all()
         
+        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
+            return queryset.none()
+            
         # Non-admin users only see active and non-expired banners
         if not self.request.user.is_staff:
             now = timezone.now()

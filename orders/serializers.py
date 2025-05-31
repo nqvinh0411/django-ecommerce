@@ -31,13 +31,13 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'user_email', 'status', 'status_display', 
-                 'total_amount', 'items_count', 'created_at', 'updated_at', 'items']
-        read_only_fields = ['id', 'user', 'user_email', 'created_at', 'updated_at', 
+        fields = ['id', 'user_id', 'user_email', 'status', 'status_display', 
+                 'total_amount', 'items_count', 'created_at', 'items']
+        read_only_fields = ['id', 'user_id', 'user_email', 'created_at', 
                            'status_display', 'total_amount', 'items_count']
     
     def get_user_email(self, obj):
-        return obj.user.email if obj.user else None
+        return obj.user_id.email if obj.user_id else None
     
     def get_status_display(self, obj):
         status_choices = {

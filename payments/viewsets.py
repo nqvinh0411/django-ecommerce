@@ -10,12 +10,13 @@ from rest_framework import permissions, status
 from rest_framework.decorators import action
 
 from core.viewsets.base import StandardizedModelViewSet
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from orders.models import Order
 from .models import Payment
 from .serializers import PaymentStatusSerializer
 
 
-class PaymentViewSet(StandardizedModelViewSet):
+class PaymentViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Payment resources.
     
@@ -35,6 +36,10 @@ class PaymentViewSet(StandardizedModelViewSet):
         Đảm bảo người dùng chỉ xem được các thanh toán của họ,
         trừ khi là admin.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Payment.objects.none()
+            
         queryset = super().get_queryset()
         if not self.request.user.is_staff:
             queryset = queryset.filter(order__user=self.request.user)

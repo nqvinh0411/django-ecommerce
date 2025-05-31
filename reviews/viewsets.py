@@ -14,12 +14,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsOwnerOrReadOnly
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Review
-from .serializers import ReviewSerializer, ReviewCreateSerializer
+from .serializers import ReviewDetailSerializer, ReviewCreateSerializer
 
 
-class ReviewViewSet(StandardizedModelViewSet):
+class ReviewViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Review resources.
     
@@ -36,7 +37,7 @@ class ReviewViewSet(StandardizedModelViewSet):
     - GET /api/v1/reviews/my-reviews/ - Xem đánh giá của người dùng hiện tại
     """
     queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewDetailSerializer
     permission_classes = [IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['comment', 'product__name']
@@ -48,6 +49,9 @@ class ReviewViewSet(StandardizedModelViewSet):
         Trả về queryset mặc định là đánh giá của người dùng hiện tại.
         Các actions khác sẽ override nếu cần.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Review.objects.none()
         if self.action == 'list':
             # Mặc định list chỉ trả về đánh giá của người dùng hiện tại
             return Review.objects.filter(user=self.request.user)
@@ -59,7 +63,7 @@ class ReviewViewSet(StandardizedModelViewSet):
         """
         if self.action == 'create':
             return ReviewCreateSerializer
-        return ReviewSerializer
+        return ReviewDetailSerializer
     
     def get_permissions(self):
         """
@@ -110,7 +114,7 @@ class ReviewViewSet(StandardizedModelViewSet):
             product.rating = avg_rating
             product.save(update_fields=['rating'])
             
-            response_serializer = ReviewSerializer(review)
+            response_serializer = ReviewDetailSerializer(review)
             return self.success_response(
                 data=response_serializer.data,
                 message="Đánh giá đã được lưu thành công",

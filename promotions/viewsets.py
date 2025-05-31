@@ -9,6 +9,9 @@ from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
+from django.db import models
+
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
@@ -25,7 +28,7 @@ from .serializers import (
 from .permissions import CanManagePromotions
 
 
-class CouponViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class CouponViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Coupon resources.
     
@@ -58,19 +61,25 @@ class CouponViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     
     def get_queryset(self):
         """
-        Lọc mã giảm giá theo trạng thái kích hoạt nếu người dùng không phải admin.
+        Lọc mã giảm giá theo trạng thái kích hoạt và thời hạn nếu người dùng không phải admin.
         """
-        queryset = super().get_queryset()
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return self.queryset.model.objects.none()
+            
+        queryset = self.queryset
         
-        # Nếu không phải admin, chỉ hiển thị mã giảm giá đang hoạt động
+        # Nếu không phải admin, chỉ trả về các mã giảm giá đang hoạt động
         if not self.request.user.is_staff:
             now = timezone.now()
             queryset = queryset.filter(
                 is_active=True,
                 start_date__lte=now
-            ).filter(
+            )
+            queryset = queryset.filter(
                 models.Q(end_date__isnull=True) | models.Q(end_date__gt=now)
-            ).filter(
+            )
+            queryset = queryset.filter(
                 models.Q(max_uses=0) | models.Q(used_count__lt=models.F('max_uses'))
             )
             
@@ -126,7 +135,7 @@ class CouponViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
-class PromotionCampaignViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class PromotionCampaignViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý PromotionCampaign resources.
     
@@ -161,15 +170,20 @@ class PromotionCampaignViewSet(QueryOptimizationMixin, StandardizedModelViewSet)
         """
         Lọc chiến dịch khuyến mãi theo trạng thái kích hoạt nếu người dùng không phải admin.
         """
-        queryset = super().get_queryset()
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return self.queryset.model.objects.none()
+            
+        queryset = self.queryset
         
-        # Nếu không phải admin, chỉ hiển thị chiến dịch đang hoạt động
+        # Nếu không phải admin, chỉ trả về các chiến dịch đang hoạt động
         if not self.request.user.is_staff:
             now = timezone.now()
             queryset = queryset.filter(
                 is_active=True,
                 start_date__lte=now
-            ).filter(
+            )
+            queryset = queryset.filter(
                 models.Q(end_date__isnull=True) | models.Q(end_date__gt=now)
             )
             
@@ -202,7 +216,7 @@ class PromotionCampaignViewSet(QueryOptimizationMixin, StandardizedModelViewSet)
         )
 
 
-class VoucherViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class VoucherViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Voucher resources.
     
@@ -339,7 +353,7 @@ class VoucherViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
-class UsageLogViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class UsageLogViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý UsageLog resources.
     

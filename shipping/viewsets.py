@@ -11,6 +11,7 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from orders.models import Order
 
 from .models import ShippingMethod, ShippingZone, ShippingRate, Shipment, TrackingInfo
@@ -21,7 +22,7 @@ from .serializers import (
 from core.permissions.base import IsAdminOrReadOnly, IsOwnerOrAdminUser
 
 
-class ShippingMethodViewSet(StandardizedModelViewSet):
+class ShippingMethodViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý ShippingMethod resources.
     
@@ -45,7 +46,7 @@ class ShippingMethodViewSet(StandardizedModelViewSet):
     filterset_fields = ['is_active']
 
 
-class ShippingZoneViewSet(StandardizedModelViewSet):
+class ShippingZoneViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý ShippingZone resources.
     
@@ -69,7 +70,7 @@ class ShippingZoneViewSet(StandardizedModelViewSet):
     filterset_fields = ['is_active']
 
 
-class ShippingRateViewSet(StandardizedModelViewSet):
+class ShippingRateViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý ShippingRate resources.
     
@@ -167,7 +168,7 @@ class ShippingRateViewSet(StandardizedModelViewSet):
         )
 
 
-class ShipmentViewSet(StandardizedModelViewSet):
+class ShipmentViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Shipment resources.
     
@@ -196,6 +197,10 @@ class ShipmentViewSet(StandardizedModelViewSet):
         Đảm bảo người dùng chỉ xem được đơn vận chuyển của họ,
         trừ khi là admin.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Shipment.objects.none()
+            
         queryset = super().get_queryset()
         if not self.request.user.is_staff:
             queryset = queryset.filter(order__user=self.request.user)

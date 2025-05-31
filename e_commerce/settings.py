@@ -89,6 +89,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.response.StandardizedResponseMiddleware',
     'core.middleware.ensure_cors.EnsureCORSHeadersMiddleware',  # Middleware đảm bảo CORS headers
+    'core.middleware.swagger_fix.SwaggerSchemaMiddleware',  # Middleware xử lý Swagger schema generation
 ]
 
 ROOT_URLCONF = 'e_commerce.urls'

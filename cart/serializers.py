@@ -52,8 +52,8 @@ class CartSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'items', 'total_items', 'total_amount', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+        fields = ['id', 'user', 'items', 'total_items', 'total_amount', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']
     
     def get_total_items(self, obj):
         return obj.items.count()

@@ -10,11 +10,12 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from .models import Notification
 from .serializers import NotificationSerializer
 
 
-class NotificationViewSet(StandardizedModelViewSet):
+class NotificationViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Notification resources.
     
@@ -40,6 +41,10 @@ class NotificationViewSet(StandardizedModelViewSet):
         """
         Lấy danh sách thông báo của người dùng hiện tại.
         """
+        # Xử lý trường hợp đang tạo schema Swagger
+        if self.is_swagger_generation:
+            return Notification.objects.none()
+            
         return Notification.objects.filter(user=self.request.user)
     
     def get_permissions(self):

@@ -6,16 +6,18 @@ from core.views.base import (
     BaseAPIView, BaseListView, BaseRetrieveView, BaseUpdateView
 )
 from core.permissions.base import IsOwnerOrAdminUser
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, OrderStatusUpdateSerializer
 
 
-class OrderCreateView(BaseAPIView):
+class OrderCreateView(SwaggerSchemaMixin, BaseAPIView):
     """
     API để tạo đơn hàng mới từ giỏ hàng của người dùng.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OrderSerializer
 
     def post(self, request):
         cart, created = Cart.objects.get_or_create(user=request.user)
@@ -56,7 +58,7 @@ class OrderCreateView(BaseAPIView):
         )
 
 
-class UserOrderListView(BaseListView):
+class UserOrderListView(SwaggerSchemaMixin, BaseListView):
     """
     API để lấy danh sách đơn hàng của người dùng hiện tại.
     """
@@ -67,10 +69,13 @@ class UserOrderListView(BaseListView):
     ordering = ['-created_at']  # Đơn hàng mới nhất hiển thị trước
 
     def get_queryset(self):
+        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
+            return Order.objects.none()
         return Order.objects.filter(user=self.request.user)
 
 
-class OrderDetailView(BaseRetrieveView):
+class OrderDetailView(SwaggerSchemaMixin, BaseRetrieveView):
     """
     API để xem chi tiết một đơn hàng.
     """
@@ -85,7 +90,7 @@ class OrderDetailView(BaseRetrieveView):
         return Order.objects.filter(user=self.request.user)
 
 
-class OrderStatusUpdateView(BaseUpdateView):
+class OrderStatusUpdateView(SwaggerSchemaMixin, BaseUpdateView):
     """
     API để cập nhật trạng thái đơn hàng.
     - Người dùng thường chỉ có thể cập nhật trạng thái thành 'cancelled'

@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from datetime import date
 
 
 class Timesheet(models.Model):
@@ -26,7 +27,7 @@ class Timesheet(models.Model):
         related_name='timesheets',
         verbose_name=_('Employee')
     )
-    date = models.DateField(_('Date'), default=timezone.now)
+    date = models.DateField(_('Date'), default=date.today)
     check_in = models.DateTimeField(_('Check In Time'))
     check_out = models.DateTimeField(_('Check Out Time'), null=True, blank=True)
     break_duration = models.PositiveIntegerField(

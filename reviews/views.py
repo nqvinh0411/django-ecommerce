@@ -6,12 +6,13 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 from core.views.base import BaseAPIView, BaseListView, BaseRetrieveUpdateDestroyView
 from core.permissions.base import IsOwnerOrReadOnly
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Review
-from .serializers import ReviewSerializer, ReviewCreateSerializer
+from .serializers import ReviewDetailSerializer, ReviewCreateSerializer
 
 
-class ReviewCreateView(BaseAPIView):
+class ReviewCreateView(SwaggerSchemaMixin, BaseAPIView):
     """
     API để tạo đánh giá mới cho sản phẩm.
     """
@@ -47,7 +48,7 @@ class ReviewCreateView(BaseAPIView):
             product.save(update_fields=['rating'])
             
             return self.success_response(
-                data=ReviewSerializer(review).data,
+                data=ReviewDetailSerializer(review).data,
                 message="Đánh giá đã được lưu thành công",
                 status_code=status.HTTP_201_CREATED if created else status.HTTP_200_OK
             )
@@ -58,11 +59,11 @@ class ReviewCreateView(BaseAPIView):
             )
 
 
-class ProductReviewListView(BaseListView):
+class ProductReviewListView(SwaggerSchemaMixin, BaseListView):
     """
     API để lấy danh sách đánh giá của một sản phẩm.
     """
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewDetailSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['comment']
@@ -74,11 +75,11 @@ class ProductReviewListView(BaseListView):
         return Review.objects.filter(product_id=product_id)
 
 
-class UserReviewListView(BaseListView):
+class UserReviewListView(SwaggerSchemaMixin, BaseListView):
     """
     API để lấy danh sách đánh giá của người dùng hiện tại.
     """
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['product__name', 'comment']
@@ -86,15 +87,18 @@ class UserReviewListView(BaseListView):
     ordering = ['-created_at']
     
     def get_queryset(self):
+        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
+            return Review.objects.none()
         return Review.objects.filter(user=self.request.user)
 
 
-class ReviewDetailView(BaseRetrieveUpdateDestroyView):
+class ReviewDetailView(SwaggerSchemaMixin, BaseRetrieveUpdateDestroyView):
     """
     API để xem, cập nhật hoặc xóa một đánh giá cụ thể.
     """
     queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewDetailSerializer
     permission_classes = [IsOwnerOrReadOnly]
     lookup_url_kwarg = 'review_id'
     

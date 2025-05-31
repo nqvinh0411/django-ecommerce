@@ -4,13 +4,14 @@ Page views module
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from ..models import Page
 from ..serializers import PageSerializer
 from ..permissions import IsAdminUserOrReadOnly
 
 
-class PageListCreateView(generics.ListCreateAPIView):
+class PageListCreateView(SwaggerSchemaMixin, generics.ListCreateAPIView):
     """
     API view để liệt kê tất cả các trang hoặc tạo một trang mới.
     

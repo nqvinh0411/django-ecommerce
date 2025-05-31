@@ -19,7 +19,8 @@ from users.backends import EmailBackend
 from .models import UserToken, LoginHistory
 from .serializers import (
     RegisterSerializer, UserSerializer, CustomTokenObtainPairSerializer,
-    UserSessionSerializer, LoginHistorySerializer
+    UserSessionSerializer, LoginHistorySerializer, LogoutSerializer, UserDetailSerializer,
+    EmptySerializer
 )
 
 User = get_user_model()
@@ -39,6 +40,7 @@ class LogoutView(BaseAPIView):
     API để đăng xuất và vô hiệu hóa token.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = LogoutSerializer
 
     def post(self, request):
         try:
@@ -81,6 +83,7 @@ class UserDetailView(BaseAPIView):
     API để lấy thông tin người dùng hiện tại.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserDetailSerializer
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -213,6 +216,7 @@ class LogoutOtherSessionsView(BaseAPIView):
     API để đăng xuất tất cả các phiên khác ngoại trừ phiên hiện tại.
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = EmptySerializer  # Sử dụng EmptySerializer cho schema generation
 
     def post(self, request):
         current_token = request.META.get("HTTP_AUTHORIZATION", "").split(" ")[-1]
@@ -260,6 +264,7 @@ class TokenRefreshView(BaseAPIView):
     API để refresh JWT token.
     """
     permission_classes = [AllowAny]
+    serializer_class = TokenRefreshSerializer
 
     def post(self, request):
         serializer = TokenRefreshSerializer(data=request.data)

@@ -22,7 +22,7 @@ class ReviewCreateSerializer(serializers.Serializer):
         return value
 
 
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewDetailSerializer(serializers.ModelSerializer):
     """
     Serializer cho model Review, hiển thị thông tin chi tiết của đánh giá.
     """
@@ -34,9 +34,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['id', 'user', 'username', 'product', 'product_name', 
-                 'rating', 'comment', 'created_at', 'updated_at']
+                 'rating', 'comment', 'created_at']
         read_only_fields = ['id', 'user', 'username', 'product', 'product_name', 
-                           'created_at', 'updated_at']
+                           'created_at']
     
     def get_username(self, obj):
         return obj.user.username if obj.user else None

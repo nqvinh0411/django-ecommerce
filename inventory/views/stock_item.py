@@ -1,6 +1,7 @@
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from core.views.base import (
     BaseListView, BaseCreateView, BaseRetrieveView, 
@@ -11,7 +12,7 @@ from ..models import StockItem
 from ..serializers import StockItemSerializer
 
 
-class StockItemListView(BaseListView):
+class StockItemListView(SwaggerSchemaMixin, BaseListView):
     """
     API endpoint để liệt kê tất cả các sản phẩm trong kho (GET).
     """
@@ -25,6 +26,10 @@ class StockItemListView(BaseListView):
     ordering = ['-created_at']
     
     def get_queryset(self):
+        # Kiểm tra nếu đang trong quá trình tạo schema Swagger
+        if getattr(self.request, 'swagger_fake_view', False) or self.is_swagger_generation:
+            return StockItem.objects.none()
+            
         queryset = super().get_queryset()
         
         # Lọc theo product_id nếu được cung cấp
@@ -40,7 +45,7 @@ class StockItemListView(BaseListView):
         return queryset
 
 
-class StockItemCreateView(BaseCreateView):
+class StockItemCreateView(SwaggerSchemaMixin, BaseCreateView):
     """
     API endpoint để tạo mới một sản phẩm trong kho (POST).
     """
@@ -76,7 +81,7 @@ class StockItemCreateView(BaseCreateView):
             )
 
 
-class StockItemRetrieveView(BaseRetrieveView):
+class StockItemRetrieveView(SwaggerSchemaMixin, BaseRetrieveView):
     """
     API endpoint để xem chi tiết một sản phẩm trong kho (GET).
     """
@@ -85,7 +90,7 @@ class StockItemRetrieveView(BaseRetrieveView):
     permission_classes = [IsAdminUser]
 
 
-class StockItemUpdateView(BaseUpdateView):
+class StockItemUpdateView(SwaggerSchemaMixin, BaseUpdateView):
     """
     API endpoint để cập nhật thông tin một sản phẩm trong kho (PUT, PATCH).
     """
@@ -130,7 +135,7 @@ class StockItemUpdateView(BaseUpdateView):
             )
 
 
-class StockItemDestroyView(BaseDestroyView):
+class StockItemDestroyView(SwaggerSchemaMixin, BaseDestroyView):
     """
     API endpoint để xóa một sản phẩm trong kho (DELETE).
     """
