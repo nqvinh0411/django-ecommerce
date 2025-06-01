@@ -13,6 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from core.viewsets.base import StandardizedModelViewSet, ReadOnlyStandardizedModelViewSet
 from core.permissions.base import IsOwnerOrAdminUser
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_yasg.utils import swagger_auto_schema
 
 from cart.models import Cart, CartItem
 from .models import Order, OrderItem

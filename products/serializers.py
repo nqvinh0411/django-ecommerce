@@ -1,5 +1,6 @@
 from core.validators.common import validate_slug
 from rest_framework import serializers
+from typing import Optional, Dict, Any
 
 from .models import Product, ProductImage
 
@@ -24,18 +25,17 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     category_name = serializers.ReadOnlyField(source='category.name')
-    seller_username = serializers.ReadOnlyField(source='seller.username')
     primary_image = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Product
         fields = ['id', 'name', 'description', 'price', 'category', 'category_name',
-                  'seller_username', 'stock', 'created_at', 'updated_at',
+                  'stock', 'created_at', 'updated_at',
                   'images', 'primary_image']
-        read_only_fields = ['id', 'category_name', 'seller_username',
+        read_only_fields = ['id', 'category_name',
                             'created_at', 'updated_at', 'images', 'primary_image']
 
-    def get_primary_image(self, obj):
+    def get_primary_image(self, obj: Product) -> Optional[Dict[str, Any]]:
         primary_image = obj.images.filter(is_primary=True).first()
         if primary_image:
             return ProductImageSerializer(primary_image).data
@@ -65,7 +65,4 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
-            validated_data['seller'] = request.user
         return super().create(validated_data)

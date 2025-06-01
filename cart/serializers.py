@@ -2,6 +2,8 @@ from django.db.models import Sum
 from products.models import Product
 from products.serializers import ProductSerializer
 from rest_framework import serializers
+from typing import Union
+from decimal import Decimal
 
 from .models import Cart, CartItem
 
@@ -18,7 +20,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'product', 'quantity', 'subtotal']
         read_only_fields = ['id', 'subtotal']
     
-    def get_subtotal(self, obj):
+    def get_subtotal(self, obj: CartItem) -> Decimal:
         return obj.product.price * obj.quantity
 
 
@@ -55,8 +57,8 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'items', 'total_items', 'total_amount', 'created_at']
         read_only_fields = ['id', 'user', 'created_at']
     
-    def get_total_items(self, obj):
+    def get_total_items(self, obj: Cart) -> int:
         return obj.items.count()
     
-    def get_total_amount(self, obj):
+    def get_total_amount(self, obj: Cart) -> Decimal:
         return sum(item.product.price * item.quantity for item in obj.items.all())

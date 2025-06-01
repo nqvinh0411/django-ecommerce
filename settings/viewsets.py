@@ -13,6 +13,7 @@ from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
+from drf_spectacular.utils import extend_schema
 
 from .models import StoreSetting, Currency, LanguageSetting, EmailTemplate
 from .serializers import (
@@ -22,6 +23,7 @@ from .serializers import (
 from .permissions import CanManageSettings
 
 
+@extend_schema(tags=['Settings'])
 class StoreSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý StoreSetting resources.
@@ -102,6 +104,7 @@ class StoreSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Settings'])
 class CurrencyViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Currency resources.
@@ -150,6 +153,7 @@ class CurrencyViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Settings'])
 class LanguageSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý LanguageSetting resources.
@@ -198,6 +202,7 @@ class LanguageSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Settings'])
 class EmailTemplateViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý EmailTemplate resources.

@@ -13,11 +13,13 @@ from rest_framework.decorators import action
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsOwner
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 
 from .models import Cart, CartItem
 from .serializers import CartSerializer, CartItemSerializer, CartItemCreateSerializer
 
 
+@extend_schema(tags=['Cart'])
 class CartViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Cart resources.

@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
-    'drf_yasg',
 
     # Core apps
     'core',
@@ -269,11 +268,112 @@ APPEND_SLASH = False
 # Spectacular API documentation settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'E-commerce API',
-    'DESCRIPTION': 'API documentation for E-commerce platform',
-    'VERSION': 'v1',
+    'DESCRIPTION': 'API documentation for E-commerce platform, organized by modules.',
+    'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    'SCHEMA_PATH_PREFIX': r'/api/v[0-9]',
     'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': '/api/',
+    
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'displayOperationId': False,
+        'displayRequestDuration': True,
+        'filter': True,
+        'tryItOutEnabled': True,
+        'defaultModelsExpandDepth': 2,
+        'defaultModelExpandDepth': 2,
+        'docExpansion': 'list',
+        'tagsSorter': 'alpha',
+        'operationsSorter': 'alpha',
+    },
+    
+    'SCHEMA_COERCE_METHOD_NAMES': {
+        'retrieve': 'get',
+        'list': 'list',
+        'create': 'create',
+        'update': 'update',
+        'partial_update': 'partial_update',
+        'destroy': 'delete',
+    },
+    
+    'TAGS': [
+        {
+            'name': 'Authentication',
+            'description': 'API endpoints for user authentication and authorization'
+        },
+        {
+            'name': 'Products',
+            'description': 'Product catalog management endpoints'
+        },
+        {
+            'name': 'Categories',
+            'description': 'Product category management endpoints'
+        },
+        {
+            'name': 'Cart',
+            'description': 'Shopping cart management endpoints'
+        },
+        {
+            'name': 'Orders',
+            'description': 'Order processing and management endpoints'
+        },
+        {
+            'name': 'Customers',
+            'description': 'Customer account management endpoints'
+        },
+        {
+            'name': 'Users',
+            'description': 'User management and profile endpoints'
+        },
+        {
+            'name': 'Payments',
+            'description': 'Payment processing endpoints'
+        },
+        {
+            'name': 'Shipping',
+            'description': 'Shipping and delivery management endpoints'
+        },
+        {
+            'name': 'Inventory',
+            'description': 'Inventory and stock management endpoints'
+        },
+        {
+            'name': 'Reviews',
+            'description': 'Product review and rating endpoints'
+        },
+        {
+            'name': 'Wishlist',
+            'description': 'User wishlist management endpoints'
+        },
+        {
+            'name': 'Promotions',
+            'description': 'Discount and promotion management endpoints'
+        },
+        {
+            'name': 'Notifications',
+            'description': 'Notification system endpoints'
+        },
+        {
+            'name': 'Support',
+            'description': 'Customer support and ticket system endpoints'
+        },
+        {
+            'name': 'Reports',
+            'description': 'Analytics and reporting endpoints'
+        },
+        {
+            'name': 'Settings',
+            'description': 'Application configuration endpoints'
+        },
+        {
+            'name': 'HRM',
+            'description': 'Human Resource Management endpoints'
+        },
+        {
+            'name': 'Pages',
+            'description': 'Static page and content management endpoints'
+        },
+    ],
 }
 
 # Error handlers

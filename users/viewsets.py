@@ -18,6 +18,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from core.viewsets.base import StandardizedModelViewSet
 from core.optimization.mixins import QueryOptimizationMixin
 from users.backends import EmailBackend
+from drf_spectacular.utils import extend_schema
 
 from .models import UserToken, LoginHistory
 from .serializers import (
@@ -28,6 +29,7 @@ from .serializers import (
 User = get_user_model()
 
 
+@extend_schema(tags=['Authentication'])
 class UserViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý User resources.

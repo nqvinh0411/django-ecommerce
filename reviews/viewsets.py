@@ -8,18 +8,21 @@ tuân thủ định dạng response và quy ước API đã được thiết l�
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 from products.models import Product
-from rest_framework import permissions, status, filters
+from rest_framework import filters, permissions, status
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 
-from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsOwnerOrReadOnly
+from core.utils.response import success_response, error_response
+from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Review
 from .serializers import ReviewDetailSerializer, ReviewCreateSerializer
 
 
+@extend_schema(tags=['Reviews'])
 class ReviewViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Review resources.

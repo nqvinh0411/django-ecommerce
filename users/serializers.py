@@ -11,6 +11,7 @@ from core.validators.common import validate_password
 from .models import UserToken, LoginHistory
 
 import traceback
+from typing import Optional, Union
 
 User = get_user_model()
 
@@ -164,7 +165,7 @@ class UserSessionSerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
     
-    def get_is_current(self, obj):
+    def get_is_current(self, obj: UserToken) -> bool:
         request = self.context.get('request')
         if request:
             current_token = request.META.get("HTTP_AUTHORIZATION", "").split(" ")[-1]
@@ -190,7 +191,7 @@ class LoginHistorySerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
     
-    def get_session_duration(self, obj):
+    def get_session_duration(self, obj: LoginHistory) -> Optional[int]:
         if obj.logout_date and obj.login_date:
             duration = obj.logout_date - obj.login_date
             return int(duration.total_seconds())

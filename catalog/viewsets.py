@@ -13,6 +13,7 @@ from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
+from drf_spectacular.utils import extend_schema
 
 from .models import Category, Brand, Tag, Attribute, AttributeValue
 from .serializers import (
@@ -22,6 +23,7 @@ from .serializers import (
 )
 
 
+@extend_schema(tags=['Catalog'])
 class CategoryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Category resources.
@@ -94,6 +96,7 @@ class CategoryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Catalog'])
 class BrandViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Brand resources.
@@ -124,6 +127,7 @@ class BrandViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         return BrandSerializer
 
 
+@extend_schema(tags=['Catalog'])
 class TagViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Tag resources.
@@ -149,6 +153,7 @@ class TagViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     ordering = ['name']
 
 
+@extend_schema(tags=['Catalog'])
 class AttributeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Attribute resources.
@@ -198,6 +203,7 @@ class AttributeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Catalog'])
 class AttributeValueViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý AttributeValue resources.

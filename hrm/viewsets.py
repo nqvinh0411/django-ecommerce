@@ -13,6 +13,7 @@ from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
+from drf_spectacular.utils import extend_schema
 
 from .models.department import Department
 from .models.position import Position
@@ -35,6 +36,7 @@ from .serializers.salary_serializer import SalarySerializer
 from .serializers.payroll_serializer import PayrollSerializer
 
 
+@extend_schema(tags=['HRM'])
 class DepartmentViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Department resources.
@@ -79,6 +81,7 @@ class DepartmentViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['HRM'])
 class PositionViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Position resources.
@@ -123,6 +126,7 @@ class PositionViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['HRM'])
 class EmployeeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Employee resources.
@@ -263,6 +267,7 @@ class EmployeeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['HRM'])
 class WorkScheduleViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý WorkSchedule resources.
@@ -281,13 +286,15 @@ class WorkScheduleViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     serializer_class = WorkScheduleSerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['employee', 'day_of_week']
-    ordering_fields = ['employee__last_name', 'day_of_week', 'start_time']
-    ordering = ['employee__last_name', 'day_of_week', 'start_time']
+    filterset_fields = ['department', 'schedule_type', 'is_active']
+    search_fields = ['name', 'description']
+    ordering_fields = ['name', 'start_time', 'effective_date']
+    ordering = ['name', 'start_time']
     
-    select_related_fields = ['employee']
+    select_related_fields = ['department']
 
 
+@extend_schema(tags=['HRM'])
 class HolidayViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Holiday resources.
@@ -311,6 +318,7 @@ class HolidayViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     ordering = ['date']
 
 
+@extend_schema(tags=['HRM'])
 class TimesheetViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Timesheet resources.
@@ -336,6 +344,7 @@ class TimesheetViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     select_related_fields = ['employee']
 
 
+@extend_schema(tags=['HRM'])
 class LeaveRequestViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý LeaveRequest resources.
@@ -412,6 +421,7 @@ class LeaveRequestViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['HRM'])
 class SalaryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Salary resources.
@@ -437,6 +447,7 @@ class SalaryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     select_related_fields = ['employee']
 
 
+@extend_schema(tags=['HRM'])
 class PayrollViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Payroll resources.
@@ -456,9 +467,9 @@ class PayrollViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     serializer_class = PayrollSerializer
     permission_classes = [permissions.IsAdminUser]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['employee', 'year', 'month', 'status']
-    ordering_fields = ['employee__last_name', 'year', 'month']
-    ordering = ['-year', '-month', 'employee__last_name']
+    filterset_fields = ['employee', 'payroll_period', 'status']
+    ordering_fields = ['employee__last_name', 'payroll_period', 'start_date']
+    ordering = ['-payroll_period', 'employee__last_name']
     
     select_related_fields = ['employee']
     
@@ -485,13 +496,24 @@ class PayrollViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
         
+        # Tạo payroll_period từ year và month
+        payroll_period = f"{year}-{month:02d}"
+        
         # Kiểm tra nếu đã tồn tại bảng lương cho tháng này
-        existing_payrolls = Payroll.objects.filter(year=year, month=month).count()
+        existing_payrolls = Payroll.objects.filter(payroll_period=payroll_period).count()
         if existing_payrolls > 0:
             return self.error_response(
                 message=f"Đã tồn tại bảng lương cho tháng {month}/{year}",
                 status_code=status.HTTP_400_BAD_REQUEST
             )
+        
+        # Tạo start_date và end_date cho tháng
+        from datetime import date, timedelta
+        import calendar
+        
+        start_date = date(year, month, 1)
+        last_day = calendar.monthrange(year, month)[1]
+        end_date = date(year, month, last_day)
         
         # Tạo bảng lương cho tất cả nhân viên đang hoạt động
         employees = Employee.objects.filter(is_active=True)
@@ -502,7 +524,7 @@ class PayrollViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
             current_salary = Salary.objects.filter(
                 employee=employee,
                 is_active=True,
-                effective_date__lte=f"{year}-{month:02d}-01"
+                effective_date__lte=start_date
             ).order_by('-effective_date').first()
             
             if not current_salary:
@@ -511,9 +533,12 @@ class PayrollViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
             # Tạo bảng lương mới
             Payroll.objects.create(
                 employee=employee,
-                year=year,
-                month=month,
-                base_salary=current_salary.amount,
+                payroll_period=payroll_period,
+                start_date=start_date,
+                end_date=end_date,
+                salary=current_salary,
+                gross_amount=current_salary.amount,
+                net_amount=current_salary.amount,  # Sẽ được tính toán lại sau
                 status=Payroll.STATUS_DRAFT
             )
             payrolls_created += 1

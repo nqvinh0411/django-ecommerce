@@ -15,11 +15,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
+from drf_spectacular.utils import extend_schema
 
 from .models import Product
 from .serializers import ProductSerializer, ProductCreateSerializer, ProductImageSerializer
 
 
+@extend_schema(tags=['Products'])
 class ProductViewSet(StandardizedModelViewSet):
     """
     ViewSet để quản lý Product resources.

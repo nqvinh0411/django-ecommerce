@@ -12,6 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet, ReadOnlyStandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 from .serializers import (
     CustomerSerializer, CustomerGroupSerializer,
@@ -20,6 +21,7 @@ from .serializers import (
 from .permissions import IsCustomerOwner, IsAdminOrReadOnly
 
 
+@extend_schema(tags=['Customers'])
 class CustomerViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Customer resources.
@@ -56,6 +58,7 @@ class CustomerViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         serializer.save(user=self.request.user)
 
 
+@extend_schema(tags=['Customers'])
 class CustomerGroupViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý CustomerGroup resources.
@@ -79,6 +82,7 @@ class CustomerGroupViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     ordering = ['name']
 
 
+@extend_schema(tags=['Customers'])
 class CustomerAddressViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý CustomerAddress resources.
@@ -202,6 +206,7 @@ class CustomerAddressViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Customers'])
 class CustomerActivityViewSet(SwaggerSchemaMixin, ReadOnlyStandardizedModelViewSet):
     """
     ViewSet để xem CustomerActivity resources.

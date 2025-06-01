@@ -12,6 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 from customers.models import Customer
 from .models import SupportCategory, SupportTicket, TicketReply, FAQ
 from .serializers import (
@@ -21,6 +22,7 @@ from .serializers import (
 from .permissions import IsOwnerOrAdmin, IsAdminUser
 
 
+@extend_schema(tags=['Support'])
 class SupportCategoryViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý SupportCategory resources.
@@ -55,6 +57,7 @@ class SupportCategoryViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         return [permission() for permission in permission_classes]
 
 
+@extend_schema(tags=['Support'])
 class SupportTicketViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý SupportTicket resources.
@@ -159,6 +162,7 @@ class SupportTicketViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Support'])
 class TicketReplyViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý TicketReply resources.
@@ -229,6 +233,7 @@ class TicketReplyViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Support'])
 class FAQViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý FAQ resources.

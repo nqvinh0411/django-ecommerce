@@ -13,6 +13,7 @@ from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
+from drf_spectacular.utils import extend_schema
 
 from .models import Warehouse, StockItem, StockMovement, InventoryAuditLog
 from .serializers import (
@@ -23,6 +24,7 @@ from .serializers import (
 from .permissions import CanManageInventory
 
 
+@extend_schema(tags=['Inventory'])
 class WarehouseViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Warehouse resources.
@@ -80,6 +82,7 @@ class WarehouseViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Inventory'])
 class StockItemViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý StockItem resources.
@@ -184,6 +187,7 @@ class StockItemViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Inventory'])
 class StockMovementViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý StockMovement resources.
@@ -219,6 +223,7 @@ class StockMovementViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
         serializer.save(created_by=self.request.user)
 
 
+@extend_schema(tags=['Inventory'])
 class InventoryAuditLogViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý InventoryAuditLog resources.

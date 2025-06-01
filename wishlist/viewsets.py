@@ -12,6 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 from customers.models import Customer
 from products.models import Product
 from .models import Wishlist, WishlistItem
@@ -19,6 +20,7 @@ from .serializers import WishlistSerializer, WishlistItemSerializer
 from .permissions import IsWishlistOwner
 
 
+@extend_schema(tags=['Wishlist'])
 class WishlistViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Wishlist resources.

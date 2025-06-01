@@ -10,6 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 
 from core.viewsets.base import StandardizedModelViewSet
+from drf_spectacular.utils import extend_schema
 from .models import SalesReport, ProductReport, CustomerReport, TrafficLog
 from .serializers import (
     SalesReportSerializer, ProductReportSerializer,
@@ -18,6 +19,7 @@ from .serializers import (
 from .permissions import IsAdminUserForReports
 
 
+@extend_schema(tags=['Reports'])
 class SalesReportViewSet(StandardizedModelViewSet):
     """
     ViewSet để quản lý SalesReport resources.
@@ -86,6 +88,7 @@ class SalesReportViewSet(StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Reports'])
 class ProductReportViewSet(StandardizedModelViewSet):
     """
     ViewSet để quản lý ProductReport resources.
@@ -130,6 +133,7 @@ class ProductReportViewSet(StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Reports'])
 class CustomerReportViewSet(StandardizedModelViewSet):
     """
     ViewSet để quản lý CustomerReport resources.
@@ -174,6 +178,7 @@ class CustomerReportViewSet(StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Reports'])
 class TrafficLogViewSet(StandardizedModelViewSet):
     """
     ViewSet để quản lý TrafficLog resources.

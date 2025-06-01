@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.db import models
 
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.permissions.base import IsAdminOrReadOnly
@@ -28,6 +29,7 @@ from .serializers import (
 from .permissions import CanManagePromotions
 
 
+@extend_schema(tags=['Promotions'])
 class CouponViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Coupon resources.
@@ -135,6 +137,7 @@ class CouponViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedMode
         )
 
 
+@extend_schema(tags=['Promotions'])
 class PromotionCampaignViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý PromotionCampaign resources.
@@ -216,6 +219,7 @@ class PromotionCampaignViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, Stand
         )
 
 
+@extend_schema(tags=['Promotions'])
 class VoucherViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Voucher resources.
@@ -353,6 +357,7 @@ class VoucherViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedMod
         )
 
 
+@extend_schema(tags=['Promotions'])
 class UsageLogViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý UsageLog resources.

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from typing import Optional
 from core.validators.common import validate_slug
 from .models import Category, Brand, Tag, Attribute, AttributeValue
 
@@ -11,7 +12,7 @@ class AttributeValueSerializer(serializers.ModelSerializer):
         fields = ['id', 'attribute', 'attribute_name', 'value', 'display_value', 'slug', 'created_at', 'updated_at']
         read_only_fields = ['id', 'attribute_name', 'created_at', 'updated_at']
     
-    def get_attribute_name(self, obj):
+    def get_attribute_name(self, obj: AttributeValue) -> Optional[str]:
         return obj.attribute.name if obj.attribute else None
     
     def validate_slug(self, value):
@@ -34,7 +35,7 @@ class AttributeSerializer(serializers.ModelSerializer):
                   'values', 'values_count', 'created_at', 'updated_at']
         read_only_fields = ['id', 'values', 'values_count', 'created_at', 'updated_at']
     
-    def get_values_count(self, obj):
+    def get_values_count(self, obj: Attribute) -> int:
         return obj.values.count() if hasattr(obj, 'values') else 0
     
     def validate_slug(self, value):
@@ -58,10 +59,10 @@ class CategorySerializer(serializers.ModelSerializer):
                  'children', 'products_count', 'created_at', 'updated_at']
         read_only_fields = ['id', 'parent_name', 'children', 'products_count', 'created_at', 'updated_at']
     
-    def get_parent_name(self, obj):
+    def get_parent_name(self, obj: Category) -> Optional[str]:
         return obj.parent.name if obj.parent else None
     
-    def get_products_count(self, obj):
+    def get_products_count(self, obj: Category) -> int:
         return obj.product_set.count() if hasattr(obj, 'product_set') else 0
     
     def validate_slug(self, value):
@@ -83,7 +84,7 @@ class BrandSerializer(serializers.ModelSerializer):
                  'products_count', 'created_at', 'updated_at']
         read_only_fields = ['id', 'products_count', 'created_at', 'updated_at']
     
-    def get_products_count(self, obj):
+    def get_products_count(self, obj: Brand) -> int:
         return obj.product_set.count() if hasattr(obj, 'product_set') else 0
     
     def validate_slug(self, value):
@@ -98,7 +99,7 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'slug', 'is_active', 'products_count', 'created_at', 'updated_at']
         read_only_fields = ['id', 'products_count', 'created_at', 'updated_at']
     
-    def get_products_count(self, obj):
+    def get_products_count(self, obj: Tag) -> int:
         return obj.product_set.count() if hasattr(obj, 'product_set') else 0
     
     def validate_slug(self, value):

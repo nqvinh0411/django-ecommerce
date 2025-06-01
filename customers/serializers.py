@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from typing import Optional, Dict, Any
 from users.serializers import UserSerializer
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 
@@ -33,7 +34,7 @@ class CustomerAddressSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
     
-    def get_full_address(self, obj):
+    def get_full_address(self, obj: CustomerAddress) -> str:
         parts = [obj.street_address]
         if obj.apartment:
             parts.append(obj.apartment)
@@ -72,7 +73,7 @@ class CustomerActivitySerializer(serializers.ModelSerializer):
                  'ip_address', 'user_agent', 'created_at']
         read_only_fields = ['id', 'customer', 'customer_info', 'created_at']
     
-    def get_customer_info(self, obj):
+    def get_customer_info(self, obj: CustomerActivity) -> Optional[Dict[str, Any]]:
         if obj.customer:
             return {
                 "id": obj.customer.id,

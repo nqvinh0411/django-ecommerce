@@ -11,11 +11,13 @@ from rest_framework.decorators import action
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 from orders.models import Order
 from .models import Payment
 from .serializers import PaymentStatusSerializer
 
 
+@extend_schema(tags=['Payments'])
 class PaymentViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Payment resources.

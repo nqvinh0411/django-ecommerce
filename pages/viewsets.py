@@ -16,12 +16,14 @@ from core.permissions.base import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 
 from .models import Page, Banner, MenuItem
 from .serializers import PageSerializer, BannerSerializer, MenuItemSerializer
 from .permissions import CanManagePages
 
 
+@extend_schema(tags=['Pages'])
 class PageViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Page resources.
@@ -108,6 +110,7 @@ class PageViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelV
         )
 
 
+@extend_schema(tags=['Pages'])
 class BannerViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Banner resources.
@@ -175,6 +178,7 @@ class BannerViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedMode
         )
 
 
+@extend_schema(tags=['Pages'])
 class MenuItemViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý MenuItem resources.

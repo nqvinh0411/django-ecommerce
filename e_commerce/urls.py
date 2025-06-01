@@ -19,18 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-# Import documentation URLs
-from core.swagger import api_doc_urls
-
 urlpatterns = [
     # Admin interface
     path('admin/', admin.site.urls),
     
     # API routes - Versioned API structure
     path('api/', include('api.urls')),
-    
-    # API Documentation
-    path('api-docs/', include(api_doc_urls)),
 ]
 
 if settings.DEBUG:

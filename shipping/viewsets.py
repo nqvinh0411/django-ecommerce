@@ -12,6 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 from orders.models import Order
 
 from .models import ShippingMethod, ShippingZone, ShippingRate, Shipment, TrackingInfo
@@ -22,6 +23,7 @@ from .serializers import (
 from core.permissions.base import IsAdminOrReadOnly, IsOwnerOrAdminUser
 
 
+@extend_schema(tags=['Shipping'])
 class ShippingMethodViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý ShippingMethod resources.
@@ -46,6 +48,7 @@ class ShippingMethodViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     filterset_fields = ['is_active']
 
 
+@extend_schema(tags=['Shipping'])
 class ShippingZoneViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý ShippingZone resources.
@@ -70,6 +73,7 @@ class ShippingZoneViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     filterset_fields = ['is_active']
 
 
+@extend_schema(tags=['Shipping'])
 class ShippingRateViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý ShippingRate resources.
@@ -168,6 +172,7 @@ class ShippingRateViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         )
 
 
+@extend_schema(tags=['Shipping'])
 class ShipmentViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Shipment resources.

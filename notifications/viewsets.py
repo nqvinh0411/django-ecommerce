@@ -11,10 +11,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from drf_spectacular.utils import extend_schema
 from .models import Notification
 from .serializers import NotificationSerializer
 
 
+@extend_schema(tags=['Notifications'])
 class NotificationViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
     ViewSet để quản lý Notification resources.
