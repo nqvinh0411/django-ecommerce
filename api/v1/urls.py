@@ -2,6 +2,9 @@ from django.urls import path, include
 
 # Nhóm các URL theo module
 urlpatterns = [
+    # Authentication
+    path('auth/', include(('user_auth.urls', 'user_auth'), namespace='auth_v1')),
+    
     # Core modules
     path('products/', include(('products.urls', 'products'), namespace='products_v1')),
     path('users/', include(('users.urls', 'users'), namespace='users_v1')),

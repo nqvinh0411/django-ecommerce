@@ -5,17 +5,18 @@ from .models import UserToken, LoginHistory
 
 User = get_user_model()
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password_confirm = serializers.CharField(write_only=True)
     
     class Meta:
         model = User
-        fields  = ('username', 'email', 'password', 'password_confirm', 'first_name', 'last_name')
+        fields = ('username', 'email', 'password', 'password_confirm', 'first_name', 'last_name')
         
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError("Mật khẩu không khớp")
         return attrs
     
     def create(self, validated_data):
@@ -24,23 +25,25 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.is_customer = True
         user.save()
         return user
-    
+
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
-    device_name = serializers.CharField(required=False, default='Unknown')
-    
+    device = serializers.CharField(required=False, default='Unknown')
+
 
 class ChangePasswordSerializer(serializers.Serializer):
-    current_password = serializers.CharField(write_only=True)
-    new_password = serializers.CharField(write_only=True, validators=[validate_password])
-    new_password_confirm = serializers.CharField(write_only=True)
+    current_password = serializers.CharField()
+    new_password = serializers.CharField(validators=[validate_password])
+    new_password_confirm = serializers.CharField()
     
     def validate(self, attrs):
         if attrs['new_password'] != attrs['new_password_confirm']:
-            raise serializers.ValidationError({"Mật khẩu mới không khớp"})
+            raise serializers.ValidationError("Mật khẩu mới không khớp")
         return attrs
-    
+
+
 class UserTokenSerializer(serializers.ModelSerializer):
     is_current = serializers.SerializerMethodField()
     
@@ -51,11 +54,12 @@ class UserTokenSerializer(serializers.ModelSerializer):
     def get_is_current(self, obj):
         request = self.context.get('request')
         if request:
-            current_token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[-1]
+            current_token = request.META.get("HTTP_AUTHORIZATION", "").split(" ")[-1]
             return obj.token == current_token
         return False
-    
+
+
 class LoginHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginHistory
-        fields = ('id', 'device_name', 'ip_address', 'login_date', 'logout_date')
+        fields = ('id', 'device_name', 'ip_address', 'login_date', 'logout_date') 

@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from django.utils.timezone import now
-from .models import UserToken
+from user_auth.models import UserToken
 
 class CustomJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):

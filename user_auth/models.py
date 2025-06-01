@@ -4,8 +4,9 @@ from django.utils import timezone
 
 User = get_user_model()
 
+
 class UserToken(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tokens')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_auth_tokens')
     token = models.CharField(max_length=255, unique=True)
     created_date = models.DateTimeField(auto_now_add=True)
     expired_date = models.DateTimeField()
@@ -20,10 +21,11 @@ class UserToken(models.Model):
         return self.expired_date < timezone.now()
 
     class Meta:
-        db_table = 'auth_usertoken'
+        db_table = 'user_auth_usertoken'
+
 
 class LoginHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='login_histories')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_auth_login_histories')
     token_ref = models.CharField(max_length=255, blank=True, null=True)
     device_name = models.CharField(max_length=100, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
@@ -35,4 +37,4 @@ class LoginHistory(models.Model):
         return "{} - {}".format(self.user.username, self.login_date)
     
     class Meta:
-        db_table = 'auth_loginhistory'
+        db_table = 'user_auth_loginhistory' 

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # Core apps
     'core',
     'api',
+    'user_auth',  # User Authentication module
 
     # Business apps
     'users',
