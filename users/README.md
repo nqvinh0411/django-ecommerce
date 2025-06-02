@@ -1,104 +1,299 @@
-# Users App
+# Users App - Complete User Management System
 
-## Mô tả
-App `users` quản lý xác thực và thông tin người dùng trong hệ thống e-commerce. App này cung cấp các chức năng đăng ký, đăng nhập, quản lý phiên làm việc và lịch sử đăng nhập.
+## Tổng quan
 
-## Mô hình dữ liệu
+Users app đã được khôi phục đầy đủ các tính năng quản lý user cho hệ thống e-commerce. App này bao gồm:
 
-### User
-Mô hình này mở rộng từ `AbstractUser` của Django và thêm các trường:
-- `is_seller`: Đánh dấu người dùng là người bán
-- `is_customer`: Đánh dấu người dùng là khách hàng
-- `is_staff`: Đánh dấu người dùng là nhân viên
-- `phone_number`: Số điện thoại liên hệ
-- `address`: Địa chỉ người dùng
+- **User Management**: Quản lý users (admin)
+- **Self Management**: User tự quản lý profile
+- **Role Management**: Quản lý roles (seller, customer, staff)
+- **Analytics**: Thống kê user metrics
+- **Security**: Avatar upload, change password, activity tracking
 
-### UserToken
-Lưu trữ token xác thực và thông tin thiết bị:
-- `user`: Liên kết đến người dùng
-- `token`: Token xác thực
-- `created_date`: Thời điểm tạo token
-- `expired_date`: Thời điểm hết hạn
-- `device_name`: Tên thiết bị
-- `ip_address`: Địa chỉ IP
-- `user_agent`: Thông tin trình duyệt/thiết bị
+## Architecture
 
-### LoginHistory
-Ghi lại lịch sử đăng nhập/đăng xuất:
-- `user`: Liên kết đến người dùng
-- `token_ref`: Token tham chiếu
-- `device_name`: Tên thiết bị
-- `ip_address`: Địa chỉ IP
-- `user_agent`: Thông tin trình duyệt/thiết bị
-- `login_date`: Thời điểm đăng nhập
-- `logout_date`: Thời điểm đăng xuất
+### Models
+- `User`: Extended AbstractUser với role management và profile fields
+- Hỗ trợ multi-role: seller, customer, staff
+- Profile fields: phone, address, date_of_birth, avatar
+- Tracking: last_login_ip, created_at, updated_at
 
-## API Endpoints & URLs
+### ViewSets Structure
 
-| URL | View | Method | Chức năng |
-|-----|------|--------|-----------|
-| `/api/users/register` | RegisterView | POST | Đăng ký tài khoản mới với thông tin email, mật khẩu, và các thông tin cá nhân khác |
-| `/api/users/login` | CustomTokenObtainPairView | POST | Đăng nhập và nhận JWT tokens (access và refresh tokens) |
-| `/api/users/logout` | LogoutView | POST | Đăng xuất, vô hiệu hóa token hiện tại và cập nhật lịch sử đăng nhập |
-| `/api/users/token/refresh` | TokenRefreshView | POST | Refresh JWT token khi access token hết hạn |
-| `/api/users/me` | UserDetailView | GET | Lấy thông tin chi tiết của người dùng đang đăng nhập |
-| `/api/users/sessions` | UserSessionListView | GET | Liệt kê tất cả các phiên đăng nhập hiện tại của người dùng |
-| `/api/users/sessions/{session_id}` | UserSessionDeleteView | DELETE | Xóa một phiên đăng nhập cụ thể (đăng xuất khỏi một thiết bị) |
-| `/api/users/sessions/logout-others` | LogoutOtherSessionsView | POST | Đăng xuất tất cả các phiên ngoại trừ phiên hiện tại |
-| `/api/users/login-history` | UserLoginHistoryListView | GET | Lấy lịch sử đăng nhập của người dùng |
+#### 1. UserAdminViewSet (`/api/v1/users/admin/`)
+**Quản lý users cho admin**
 
-## Chi tiết về Views
+```python
+# CRUD Operations
+GET    /api/v1/users/admin/                 # List tất cả users
+POST   /api/v1/users/admin/                 # Tạo user mới  
+GET    /api/v1/users/admin/{id}/            # Chi tiết user
+PUT    /api/v1/users/admin/{id}/            # Cập nhật user
+PATCH  /api/v1/users/admin/{id}/            # Partial update
+DELETE /api/v1/users/admin/{id}/            # Deactivate user
 
-### RegisterView
-- **Kế thừa từ**: BaseCreateView
-- **Chức năng**: Đăng ký người dùng mới
-- **Serializer**: RegisterSerializer
-- **Quyền truy cập**: AllowAny (không yêu cầu đăng nhập)
-- **Logic xử lý**: Xác thực dữ liệu đầu vào, tạo tài khoản mới, và trả về thông tin người dùng
+# Special Actions  
+GET    /api/v1/users/admin/analytics/       # User analytics overview
+POST   /api/v1/users/admin/{id}/activate/   # Activate user
+POST   /api/v1/users/admin/{id}/deactivate/ # Deactivate user
+```
 
-### LoginView
-- **Kế thừa từ**: BaseAPIView
-- **Chức năng**: Đăng nhập bằng email và mật khẩu
-- **Quyền truy cập**: AllowAny
-- **Logic xử lý**:
-  - Xác thực email và mật khẩu
-  - Tạo JWT tokens (access và refresh)
-  - Lưu thông tin phiên và lịch sử đăng nhập
-  - Cập nhật thời gian đăng nhập gần nhất
-  - Trả về tokens và thông tin người dùng
+**Features:**
+- Filtering: `is_seller`, `is_customer`, `is_staff`, `is_active`, `is_verified`
+- Search: `username`, `email`, `first_name`, `last_name`, `phone_number`
+- Ordering: `date_joined`, `last_login`, `username`, `email`
+- Query parameter `?role=sellers/customers/staff` để filter theo role
 
-### LogoutView
-- **Kế thừa từ**: BaseAPIView
-- **Chức năng**: Đăng xuất và vô hiệu hóa token
-- **Quyền truy cập**: IsAuthenticated (yêu cầu đăng nhập)
-- **Logic xử lý**:
-  - Thêm refresh token vào blacklist
-  - Xóa user token hiện tại
-  - Cập nhật thời gian đăng xuất trong lịch sử đăng nhập
+#### 2. UserSelfViewSet (`/api/v1/users/profile/`)
+**User tự quản lý profile**
 
-### UserDetailView
-- **Kế thừa từ**: BaseAPIView
-- **Chức năng**: Lấy thông tin người dùng hiện tại
-- **Quyền truy cập**: IsAuthenticated
-- **Logic xử lý**: Serializer thông tin người dùng đang đăng nhập và trả về
+```python
+# Profile Management
+GET    /api/v1/users/profile/               # Get profile hiện tại
+PUT    /api/v1/users/profile/               # Update profile  
+PATCH  /api/v1/users/profile/               # Partial update
 
-### UserSessionListView
-- **Kế thừa từ**: BaseListView, QueryOptimizationMixin
-- **Chức năng**: Liệt kê các phiên đăng nhập hiện tại
-- **Quyền truy cập**: IsAuthenticated
-- **Logic xử lý**: Tối ưu hóa truy vấn với select_related và trả về danh sách phiên đăng nhập còn hoạt động
+# Special Actions
+POST   /api/v1/users/profile/upload-avatar/     # Upload avatar
+POST   /api/v1/users/profile/change-password/   # Đổi mật khẩu
+GET    /api/v1/users/profile/activity/          # Lịch sử hoạt động
+```
 
-### TokenRefreshView
-- **Chức năng**: Refresh JWT token
-- **Quyền truy cập**: AllowAny
-- **Logic xử lý**:
-  - Xác thực refresh token
-  - Tạo access token mới
-  - Thêm thông tin người dùng vào response
+**Features:**
+- Chỉ user có thể edit profile của mình
+- Avatar upload với validation
+- Change password với current password verification
+- Activity tracking
 
-## Tính năng bảo mật
-- Xác thực JWT (JSON Web Token)
-- Quản lý token và phiên đăng nhập
-- Theo dõi thiết bị và địa chỉ IP
-- Lưu lịch sử đăng nhập/đăng xuất
-- Tối ưu hóa truy vấn với `QueryOptimizationMixin`
+#### 3. UserRoleViewSet (`/api/v1/users/roles/`)
+**Quản lý roles (admin only)**
+
+```python
+# Role Management
+GET    /api/v1/users/roles/{user_id}/       # Get roles của user
+PUT    /api/v1/users/roles/{user_id}/       # Update roles
+PATCH  /api/v1/users/roles/{user_id}/       # Partial update roles
+
+# Role Listing
+GET    /api/v1/users/roles/sellers/         # List sellers
+GET    /api/v1/users/roles/customers/       # List customers  
+GET    /api/v1/users/roles/staff/           # List staff
+```
+
+**Features:**
+- Chỉ admin có thể manage roles
+- Validation: user phải có ít nhất 1 role
+- Bulk role assignment
+
+### Legacy Endpoints (Backward Compatibility)
+
+```python
+# Giữ lại để backward compatibility
+GET    /api/v1/users/me/                    # Get user info (legacy)
+PATCH  /api/v1/users/me/update/             # Update profile (legacy)
+```
+
+## User Analytics 
+
+### Analytics Overview (`GET /api/v1/users/admin/analytics/`)
+
+```json
+{
+  "success": true,
+  "data": {
+    "total_users": 1250,
+    "active_users": 1180,
+    "verified_users": 1100,
+    "seller_users": 45,
+    "customer_users": 1200,
+    "recent_registrations": 125,    // Last 30 days
+    "recently_active": 890,         // Last 7 days
+    "verification_rate": 88.0,      // %
+    "activity_rate": 71.2,          // %
+    "registration_trend": [         // Last 12 months
+      {"month": "2024-01", "count": 45},
+      {"month": "2024-02", "count": 67},
+      // ...
+    ]
+  }
+}
+```
+
+## Permissions
+
+### Admin Endpoints
+- `UserAdminViewSet`: `IsAdminUser`
+- `UserRoleViewSet`: `IsAdminUser`
+
+### User Endpoints  
+- `UserSelfViewSet`: `IsAuthenticated`
+- Legacy views: `IsAuthenticated`
+
+## Serializers
+
+### UserSerializer
+Thông tin cơ bản của user (list view)
+
+### UserDetailSerializer  
+Chi tiết đầy đủ (admin CRUD)
+
+### UserProfileSerializer
+Profile management (self management)
+
+### UserRoleUpdateSerializer
+Role management (admin only)
+
+### UserAnalyticsSerializer
+Analytics data structure
+
+## Security Features
+
+### Avatar Upload
+- Validation file type và size
+- Automatic image processing
+- Secure file storage
+
+### Password Management
+- Current password verification
+- Django password validation
+- Secure password hashing
+
+### Activity Tracking
+- Last login IP tracking
+- Login history (extensible)
+- Profile update tracking (extensible)
+
+## Usage Examples
+
+### Admin tạo user mới
+```bash
+POST /api/v1/users/admin/
+{
+  "username": "newuser",
+  "email": "user@example.com", 
+  "first_name": "John",
+  "last_name": "Doe",
+  "is_seller": true,
+  "is_customer": true
+}
+```
+
+### User update profile
+```bash
+PATCH /api/v1/users/profile/
+{
+  "first_name": "Jane",
+  "phone_number": "+84123456789",
+  "address": "123 Main St, HCMC"
+}
+```
+
+### Admin assign seller role
+```bash
+PATCH /api/v1/users/roles/123/
+{
+  "is_seller": true,
+  "is_customer": true,
+  "is_staff": false
+}
+```
+
+### Upload avatar
+```bash
+POST /api/v1/users/profile/upload-avatar/
+Content-Type: multipart/form-data
+
+avatar: [file]
+```
+
+### Change password
+```bash
+POST /api/v1/users/profile/change-password/
+{
+  "current_password": "old_password",
+  "new_password": "new_secure_password"
+}
+```
+
+## Frontend Integration
+
+### Admin Dashboard
+- User management table với filtering/search
+- User analytics dashboard
+- Role management interface
+- Bulk operations
+
+### User Profile
+- Profile edit form
+- Avatar upload component  
+- Password change form
+- Activity history
+
+### Seller Dashboard
+- Seller-specific features
+- Product management access
+- Sales analytics
+
+## Extensibility
+
+### Planned Features
+- User activity logging system
+- Advanced analytics với charts
+- User settings management
+- Social login integration
+- Two-factor authentication
+- User groups và permissions
+- Audit logs
+- User preferences
+
+### Integration Points
+- Customer app: Customer profile extended từ User
+- Orders app: Order tracking theo user
+- Products app: Seller product management
+- Reviews app: User reviews và ratings
+- Notifications app: User notifications preferences
+
+## Migration Notes
+
+Để migrate từ legacy system:
+
+1. **Legacy endpoints vẫn hoạt động** - không breaking changes
+2. **Frontend có thể dần migrate** sang endpoints mới  
+3. **Admin dashboard** nên sử dụng ViewSets mới ngay
+4. **Mobile apps** có thể sử dụng profile endpoints mới
+
+## Testing
+
+```bash
+# Run user tests
+python manage.py test users
+
+# Test specific ViewSet
+python manage.py test users.tests.test_viewsets
+
+# Test permissions
+python manage.py test users.tests.test_permissions
+```
+
+## API Documentation
+
+- **Swagger UI**: `/api/swagger/`
+- **ReDoc**: `/api/redoc/`
+- **OpenAPI Schema**: `/api/schema/`
+
+Tất cả endpoints đều có đầy đủ Swagger documentation với examples và schema.
+
+---
+
+## Vấn đề đã được giải quyết
+
+✅ **User Management APIs đã được khôi phục hoàn toàn**
+✅ **Admin có thể quản lý users qua REST API**  
+✅ **Users có thể self-manage profiles**
+✅ **Role management system hoạt động**
+✅ **Analytics và reporting có sẵn**
+✅ **Security features đầy đủ**
+✅ **Backward compatibility được đảm bảo**
+✅ **Extensible architecture cho future features**
+
+Bây giờ Users app đã có đầy đủ chức năng của một hệ thống e-commerce portal professional!

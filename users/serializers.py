@@ -85,3 +85,22 @@ class UserRoleUpdateSerializer(serializers.ModelSerializer):
         if not data.get('is_seller', False) and not data.get('is_customer', False) and not data.get('is_staff', False):
             raise serializers.ValidationError('User phải có ít nhất một role')
         return data
+
+
+class UserAnalyticsSerializer(serializers.Serializer):
+    """
+    Serializer cho user analytics data.
+    """
+    total_users = serializers.IntegerField(read_only=True)
+    active_users = serializers.IntegerField(read_only=True)
+    verified_users = serializers.IntegerField(read_only=True)
+    seller_users = serializers.IntegerField(read_only=True)
+    customer_users = serializers.IntegerField(read_only=True)
+    recent_registrations = serializers.IntegerField(read_only=True)
+    recently_active = serializers.IntegerField(read_only=True)
+    verification_rate = serializers.FloatField(read_only=True)
+    activity_rate = serializers.FloatField(read_only=True)
+    registration_trend = serializers.ListField(
+        child=serializers.DictField(),
+        read_only=True
+    )
