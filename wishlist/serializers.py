@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from products.serializers import ProductSerializer
+from products.serializers import ProductSummarySerializer
 from .models import Wishlist, WishlistItem
 
 
@@ -7,7 +7,7 @@ class WishlistItemSerializer(serializers.ModelSerializer):
     """
     Serializer for WishlistItem model with nested product information.
     """
-    product = ProductSerializer(read_only=True)
+    product = ProductSummarySerializer(read_only=True)
     product_id = serializers.PrimaryKeyRelatedField(
         write_only=True,
         source='product',

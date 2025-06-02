@@ -10,11 +10,11 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from drf_spectacular.utils import extend_schema
 
 from core.viewsets.base import StandardizedModelViewSet
-from users.backends import EmailBackend
+from .backends import EmailBackend
 from .models import UserToken, LoginHistory
 from .serializers import (
     RegisterSerializer, LoginSerializer, ChangePasswordSerializer,
-    UserTokenSerializer, LoginHistorySerializer
+    UserTokenSerializer, LoginHistorySerializer, LogoutSerializer
 )
 
 User = get_user_model()
@@ -37,7 +37,26 @@ class AuthViewSet(StandardizedModelViewSet):
     - GET /api/v1/auth/login-history/ - Lịch sử đăng nhập
     """
     queryset = User.objects.none()  # Không cần queryset cho auth
+    serializer_class = LoginSerializer  # Default serializer for Swagger
     permission_classes = [permissions.AllowAny]
+
+    def get_serializer_class(self):
+        """
+        Return the appropriate serializer class based on the action.
+        """
+        action_serializers = {
+            'register': RegisterSerializer,
+            'login': LoginSerializer,
+            'logout': LogoutSerializer,
+            'logout_all': LogoutSerializer,
+            'token_refresh': TokenRefreshSerializer,
+            'change_password': ChangePasswordSerializer,
+            'sessions': UserTokenSerializer,
+            'delete_session': UserTokenSerializer,
+            'login_history': LoginHistorySerializer,
+        }
+        
+        return action_serializers.get(self.action, self.serializer_class)
 
     def get_permissions(self):
         if self.action in ['register', 'login', 'token_refresh']:

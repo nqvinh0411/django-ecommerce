@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .viewsets import ReviewViewSet
+from .viewsets import ReviewSelfViewSet, ReviewAdminViewSet, ProductReviewViewSet
 
 # Legacy imports for backward compatibility
 from .views import (
@@ -11,13 +11,44 @@ from .views import (
 
 app_name = 'reviews'
 
-# Thiết lập router cho ViewSets
+# Router chính
 router = DefaultRouter()
-router.register(r'', ReviewViewSet, basename='review')
 
+# Admin endpoints
+router.register(r'admin', ReviewAdminViewSet, basename='review-admin')
+
+# URL patterns
 urlpatterns = [
-    # ViewSets URL patterns - Chuẩn hóa API
+    # Admin router URLs
     path('', include(router.urls)),
+    
+    # User self-management endpoints
+    # /api/v1/reviews/me/ - Review management của user hiện tại
+    path('me/', ReviewSelfViewSet.as_view({
+        'get': 'list',      # GET /api/v1/reviews/me/ - Danh sách reviews của mình
+        'post': 'create',   # POST /api/v1/reviews/me/ - Tạo review mới
+    }), name='review-self-list'),
+    
+    path('me/<int:pk>/', ReviewSelfViewSet.as_view({
+        'get': 'retrieve',  # GET /api/v1/reviews/me/{id}/ - Chi tiết review
+        'put': 'update',    # PUT /api/v1/reviews/me/{id}/ - Cập nhật review
+        'patch': 'partial_update',  # PATCH /api/v1/reviews/me/{id}/ - Partial update
+        'delete': 'destroy' # DELETE /api/v1/reviews/me/{id}/ - Xóa review
+    }), name='review-self-detail'),
+    
+    # User product reviews
+    path('me/products/<int:product_id>/', ReviewSelfViewSet.as_view({
+        'get': 'product_review'  # GET /api/v1/reviews/me/products/{id}/ - Review của mình cho sản phẩm
+    }), name='review-self-product'),
+    
+    # Public product reviews endpoints
+    path('products/<int:product_id>/', ProductReviewViewSet.as_view({
+        'get': 'list'       # GET /api/v1/reviews/products/{id}/ - Reviews của sản phẩm
+    }), name='product-reviews'),
+    
+    path('products/<int:product_id>/stats/', ProductReviewViewSet.as_view({
+        'get': 'stats'      # GET /api/v1/reviews/products/{id}/stats/ - Thống kê reviews
+    }), name='product-review-stats'),
     
     # ===== LEGACY ENDPOINTS FOR BACKWARD COMPATIBILITY =====
     # These endpoints are kept for backward compatibility but will be deprecated

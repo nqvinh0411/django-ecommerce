@@ -1,15 +1,10 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-from .viewsets import UserViewSet
+from django.urls import path
+from .views import UserDetailView, UserProfileUpdateView
 
 app_name = 'users'
 
-# Thiết lập router cho ViewSets
-router = DefaultRouter()
-router.register(r'', UserViewSet, basename='user')
-
 urlpatterns = [
-    # ViewSets URL patterns - API chuẩn hóa
-    path('', include(router.urls)),
+    # User Profile Management
+    path('me/', UserDetailView.as_view(), name='user-detail'),
+    path('me/update/', UserProfileUpdateView.as_view(), name='user-profile-update'),
 ]

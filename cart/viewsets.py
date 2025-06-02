@@ -16,53 +16,66 @@ from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from drf_spectacular.utils import extend_schema
 
 from .models import Cart, CartItem
-from .serializers import CartSerializer, CartItemSerializer, CartItemCreateSerializer
+from .serializers import (
+    CartSerializer, CartSummarySerializer, CartItemSerializer,
+    CartItemCreateSerializer, CartItemUpdateSerializer, CartCheckoutSerializer
+)
 
 
 @extend_schema(tags=['Cart'])
-class CartViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+class CartSelfViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
     """
-    ViewSet để quản lý Cart resources.
+    ViewSet để user quản lý Cart của chính mình.
     
-    Cung cấp các endpoints để xem và quản lý giỏ hàng của người dùng hiện tại.
+    Cung cấp các endpoints để user xem và quản lý giỏ hàng của mình.
     
     Endpoints:
-    - GET /api/v1/cart/ - Xem thông tin giỏ hàng hiện tại
-    - POST /api/v1/cart/items/ - Thêm sản phẩm vào giỏ hàng
-    - PATCH /api/v1/cart/items/{id}/ - Cập nhật số lượng sản phẩm trong giỏ hàng
-    - DELETE /api/v1/cart/items/{id}/ - Xóa sản phẩm khỏi giỏ hàng
-    - DELETE /api/v1/cart/clear/ - Xóa tất cả sản phẩm trong giỏ hàng
+    - GET /api/v1/cart/me/ - Xem giỏ hàng hiện tại
+    - POST /api/v1/cart/me/items/ - Thêm sản phẩm vào giỏ hàng
+    - PUT/PATCH /api/v1/cart/me/items/{id}/ - Cập nhật số lượng sản phẩm
+    - DELETE /api/v1/cart/me/items/{id}/ - Xóa sản phẩm khỏi giỏ hàng
+    - DELETE /api/v1/cart/me/clear/ - Xóa tất cả sản phẩm
+    - GET /api/v1/cart/me/summary/ - Tóm tắt giỏ hàng
+    - POST /api/v1/cart/me/checkout/ - Checkout giỏ hàng
     """
     serializer_class = CartSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']
     
     def get_queryset(self):
-        """
-        Trả về queryset với chỉ giỏ hàng của người dùng hiện tại.
-        """
-        # Xử lý trường hợp đang tạo schema Swagger
+        """Chỉ trả về cart của user hiện tại."""
         if self.is_swagger_generation:
             return Cart.objects.none()
-            
         return Cart.objects.filter(user=self.request.user)
+    
+    def get_cart(self):
+        """Get or create cart for current user."""
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        return cart
     
     def list(self, request, *args, **kwargs):
         """
         Xem thông tin giỏ hàng hiện tại.
         Nếu giỏ hàng chưa tồn tại, sẽ tạo mới.
-        
-        Returns:
-            Response: Thông tin giỏ hàng
         """
-        # Xử lý trường hợp đang tạo schema Swagger
-        if self.is_swagger_generation:
-            return self.success_response(data={})
-            
-        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart = self.get_cart()
         serializer = self.get_serializer(cart)
         return self.success_response(
             data=serializer.data,
             message="Thông tin giỏ hàng",
+            status_code=status.HTTP_200_OK
+        )
+    
+    @action(detail=False, methods=['get'])
+    def summary(self, request):
+        """
+        Lấy tóm tắt giỏ hàng (không bao gồm chi tiết items).
+        """
+        cart = self.get_cart()
+        serializer = CartSummarySerializer(cart)
+        return self.success_response(
+            data=serializer.data,
+            message="Tóm tắt giỏ hàng",
             status_code=status.HTTP_200_OK
         )
     
@@ -71,43 +84,24 @@ class CartViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
         """
         Thêm sản phẩm vào giỏ hàng.
         
-        Args:
-            request: HTTP request với product_id và quantity
-            
-        Returns:
-            Response: Thông tin giỏ hàng sau khi thêm sản phẩm
+        Body:
+            - product_id: ID của sản phẩm
+            - quantity: Số lượng (mặc định: 1)
         """
         serializer = CartItemCreateSerializer(data=request.data, context={'request': request})
-        if not serializer.is_valid():
-            return self.error_response(
-                errors=serializer.errors,
-                message="Dữ liệu không hợp lệ",
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
-            
-        # Lấy hoặc tạo giỏ hàng
-        cart, created = Cart.objects.get_or_create(user=request.user)
+        serializer.is_valid(raise_exception=True)
+        
+        cart = self.get_cart()
         product_id = serializer.validated_data.get('product_id')
         quantity = serializer.validated_data.get('quantity', 1)
         
-        # Kiểm tra sản phẩm
-        try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
-            return self.error_response(
-                message="Không tìm thấy sản phẩm",
-                status_code=status.HTTP_404_NOT_FOUND
-            )
-            
-        # Thêm sản phẩm vào giỏ hàng hoặc cập nhật số lượng
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        if created:
-            cart_item.quantity = quantity
-        else:
-            cart_item.quantity += quantity
-        cart_item.save()
+        # Get product
+        product = get_object_or_404(Product, id=product_id)
         
-        # Trả về kết quả
+        # Add item to cart using model method
+        cart_item = cart.add_item(product, quantity)
+        
+        # Return updated cart
         cart_serializer = self.get_serializer(cart)
         return self.success_response(
             data=cart_serializer.data,
@@ -115,106 +109,153 @@ class CartViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
             status_code=status.HTTP_200_OK
         )
     
-    @action(detail=False, methods=['patch'], url_path='items/(?P<item_id>[^/.]+)')
+    @action(detail=False, methods=['put', 'patch'], url_path='items/(?P<item_id>[^/.]+)')
     def update_item(self, request, item_id=None):
         """
         Cập nhật số lượng sản phẩm trong giỏ hàng.
         
         Args:
-            request: HTTP request với quantity
-            item_id: ID của cart item cần cập nhật
+            item_id: ID của cart item
             
-        Returns:
-            Response: Thông tin giỏ hàng sau khi cập nhật
+        Body:
+            - quantity: Số lượng mới
         """
-        try:
-            # Lấy giỏ hàng của người dùng
-            cart = Cart.objects.get(user=request.user)
-            # Lấy item cần cập nhật
-            cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
-            
-            # Cập nhật số lượng
-            quantity = request.data.get('quantity')
-            if not quantity or int(quantity) < 1:
-                return self.error_response(
-                    message="Số lượng không hợp lệ",
-                    status_code=status.HTTP_400_BAD_REQUEST
-                )
-                
-            cart_item.quantity = int(quantity)
-            cart_item.save()
-            
-            # Trả về kết quả
-            cart_serializer = self.get_serializer(cart)
-            return self.success_response(
-                data=cart_serializer.data,
-                message="Đã cập nhật giỏ hàng",
-                status_code=status.HTTP_200_OK
-            )
-        except Cart.DoesNotExist:
-            return self.error_response(
-                message="Không tìm thấy giỏ hàng",
-                status_code=status.HTTP_404_NOT_FOUND
-            )
+        cart = self.get_cart()
+        cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
+        
+        serializer = CartItemUpdateSerializer(cart_item, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        # Return updated cart
+        cart_serializer = self.get_serializer(cart)
+        return self.success_response(
+            data=cart_serializer.data,
+            message="Đã cập nhật giỏ hàng",
+            status_code=status.HTTP_200_OK
+        )
     
     @action(detail=False, methods=['delete'], url_path='items/(?P<item_id>[^/.]+)')
-    def delete_item(self, request, item_id=None):
+    def remove_item(self, request, item_id=None):
         """
         Xóa sản phẩm khỏi giỏ hàng.
         
         Args:
-            request: HTTP request
             item_id: ID của cart item cần xóa
-            
-        Returns:
-            Response: Thông tin giỏ hàng sau khi xóa sản phẩm
         """
-        try:
-            # Lấy giỏ hàng của người dùng
-            cart = Cart.objects.get(user=request.user)
-            # Lấy item cần xóa
-            cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
-            
-            # Xóa item
-            cart_item.delete()
-            
-            # Trả về kết quả
-            cart_serializer = self.get_serializer(cart)
-            return self.success_response(
-                data=cart_serializer.data,
-                message="Đã xóa sản phẩm khỏi giỏ hàng",
-                status_code=status.HTTP_200_OK
-            )
-        except Cart.DoesNotExist:
-            return self.error_response(
-                message="Không tìm thấy giỏ hàng",
-                status_code=status.HTTP_404_NOT_FOUND
-            )
+        cart = self.get_cart()
+        cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
+        
+        cart_item.delete()
+        
+        # Return updated cart
+        cart_serializer = self.get_serializer(cart)
+        return self.success_response(
+            data=cart_serializer.data,
+            message="Đã xóa sản phẩm khỏi giỏ hàng",
+            status_code=status.HTTP_200_OK
+        )
     
-    @action(detail=False, methods=['delete'], url_path='clear')
-    def clear_cart(self, request):
+    @action(detail=False, methods=['delete'])
+    def clear(self, request):
         """
         Xóa tất cả sản phẩm trong giỏ hàng.
-        
-        Args:
-            request: HTTP request
-            
-        Returns:
-            Response: Thông báo xóa thành công
         """
-        try:
-            # Lấy giỏ hàng của người dùng
-            cart = Cart.objects.get(user=request.user)
-            # Xóa tất cả items
-            CartItem.objects.filter(cart=cart).delete()
-            
-            # Trả về kết quả
-            return self.success_response(
-                message="Đã xóa tất cả sản phẩm trong giỏ hàng",
-                status_code=status.HTTP_200_OK
-            )
-        except Cart.DoesNotExist:
+        cart = self.get_cart()
+        cart.clear()
+        
+        # Return empty cart
+        cart_serializer = self.get_serializer(cart)
+        return self.success_response(
+            data=cart_serializer.data,
+            message="Đã xóa tất cả sản phẩm trong giỏ hàng",
+            status_code=status.HTTP_200_OK
+        )
+    
+    @action(detail=False, methods=['post'])
+    def checkout(self, request):
+        """
+        Checkout giỏ hàng - chuyển sang tạo đơn hàng.
+        
+        Body:
+            - shipping_address: Địa chỉ giao hàng (bắt buộc)
+            - billing_address: Địa chỉ thanh toán (tùy chọn)
+            - notes: Ghi chú (tùy chọn)
+        """
+        cart = self.get_cart()
+        
+        if cart.is_empty:
             return self.error_response(
-                message="Không tìm thấy giỏ hàng",
-                status_code=status.HTTP_404_NOT_FOUND
+                message="Giỏ hàng đang trống",
+                status_code=status.HTTP_400_BAD_REQUEST
             )
+        
+        serializer = CartCheckoutSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        
+        # Prepare checkout data
+        checkout_data = {
+            'cart': cart,
+            'user': request.user,
+            'total_amount': cart.total_amount,
+            'total_items': cart.total_items,
+            **serializer.validated_data
+        }
+        
+        return self.success_response(
+            data=checkout_data,
+            message="Sẵn sàng checkout. Vui lòng chuyển sang tạo đơn hàng.",
+            status_code=status.HTTP_200_OK
+        )
+
+
+@extend_schema(tags=['Cart Management'])
+class CartItemAdminViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+    """
+    ViewSet để admin quản lý tất cả CartItem resources.
+    
+    Hỗ trợ tất cả các operations CRUD cho CartItem với định dạng response
+    chuẩn hóa và phân quyền admin.
+    
+    Endpoints:
+    - GET /api/v1/cart/admin/items/ - Liệt kê tất cả cart items (admin only)
+    - GET /api/v1/cart/admin/items/{id}/ - Xem chi tiết cart item (admin only)
+    - PUT/PATCH /api/v1/cart/admin/items/{id}/ - Cập nhật cart item (admin only)
+    - DELETE /api/v1/cart/admin/items/{id}/ - Xóa cart item (admin only)
+    """
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAdminUser]
+    filterset_fields = ['cart__user', 'product', 'created_at']
+    search_fields = ['cart__user__email', 'product__name']
+    ordering_fields = ['created_at', 'updated_at', 'quantity']
+    ordering = ['-created_at']
+
+
+@extend_schema(tags=['Cart Management'])  
+class CartAdminViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+    """
+    ViewSet để admin quản lý tất cả Cart resources.
+    
+    Hỗ trợ tất cả các operations cho Cart với định dạng response
+    chuẩn hóa và phân quyền admin.
+    
+    Endpoints:
+    - GET /api/v1/cart/admin/ - Liệt kê tất cả carts (admin only)
+    - GET /api/v1/cart/admin/{id}/ - Xem chi tiết cart (admin only)
+    - DELETE /api/v1/cart/admin/{id}/ - Xóa cart (admin only)
+    """
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [permissions.IsAdminUser]
+    filterset_fields = ['user', 'created_at', 'updated_at']
+    search_fields = ['user__email', 'user__first_name', 'user__last_name']
+    ordering_fields = ['created_at', 'updated_at']
+    ordering = ['-updated_at']
+    http_method_names = ['get', 'delete', 'head', 'options']  # No create/update for admin
+    
+    def get_serializer_class(self):
+        """Use summary serializer for list view"""
+        if self.action == 'list':
+            return CartSummarySerializer
+        return CartSerializer

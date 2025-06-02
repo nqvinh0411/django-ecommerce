@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from customers.serializers import CustomerSerializer
-from products.serializers import ProductSerializer
+from products.serializers import ProductSummarySerializer
 from .models import SalesReport, ProductReport, CustomerReport, TrafficLog
 
 
@@ -14,14 +14,17 @@ class SalesReportSerializer(serializers.ModelSerializer):
             'id', 'date', 'total_orders', 'total_revenue',
             'total_discount', 'net_revenue', 'created_at', 'updated_at'
         ]
-        read_only_fields = fields
+        read_only_fields = [
+            'id', 'date', 'total_orders', 'total_revenue',
+            'total_discount', 'net_revenue', 'created_at', 'updated_at'
+        ]
 
 
 class ProductReportSerializer(serializers.ModelSerializer):
     """
     Serializer for ProductReport model - read-only with product details.
     """
-    product = ProductSerializer(read_only=True)
+    product = ProductSummarySerializer(read_only=True)
     
     class Meta:
         model = ProductReport
@@ -29,7 +32,10 @@ class ProductReportSerializer(serializers.ModelSerializer):
             'id', 'product', 'sold_quantity', 'total_revenue',
             'average_rating', 'last_sold_at', 'created_at', 'updated_at'
         ]
-        read_only_fields = fields
+        read_only_fields = [
+            'id', 'product', 'sold_quantity', 'total_revenue',
+            'average_rating', 'last_sold_at', 'created_at', 'updated_at'
+        ]
 
 
 class CustomerReportSerializer(serializers.ModelSerializer):
@@ -44,7 +50,10 @@ class CustomerReportSerializer(serializers.ModelSerializer):
             'id', 'customer', 'total_orders', 'total_spent',
             'average_order_value', 'last_order_at', 'created_at', 'updated_at'
         ]
-        read_only_fields = fields
+        read_only_fields = [
+            'id', 'customer', 'total_orders', 'total_spent',
+            'average_order_value', 'last_order_at', 'created_at', 'updated_at'
+        ]
 
 
 class TrafficLogSerializer(serializers.ModelSerializer):
@@ -57,4 +66,7 @@ class TrafficLogSerializer(serializers.ModelSerializer):
             'id', 'endpoint', 'method', 'ip_address',
             'user_agent', 'duration_ms', 'timestamp'
         ]
-        read_only_fields = fields
+        read_only_fields = [
+            'id', 'endpoint', 'method', 'ip_address',
+            'user_agent', 'duration_ms', 'timestamp'
+        ]
