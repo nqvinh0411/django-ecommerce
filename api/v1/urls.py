@@ -12,8 +12,14 @@ urlpatterns = [
     path('cart/', include(('cart.urls', 'cart'), namespace='cart_v1')),
     path('orders/', include(('orders.urls', 'orders'), namespace='orders_v1')),
     
+    # Catalog modules (refactored)
+    path('categories/', include(('catalog.urls_categories', 'catalog'), namespace='categories_v1')),
+    path('attributes/', include(('catalog.urls_attributes', 'catalog'), namespace='attributes_v1')),
+    path('brands/', include(('catalog.urls_brands', 'catalog'), namespace='brands_v1')),
+    path('tags/', include(('catalog.urls_tags', 'catalog'), namespace='tags_v1')),
+    path('attribute-values/', include(('catalog.urls_attribute_values', 'catalog'), namespace='attribute_values_v1')),
+    
     # Additional modules
-    path('catalog/', include(('catalog.urls', 'catalog'), namespace='catalog_v1')),
     path('hrm/', include(('hrm.urls', 'hrm'), namespace='hrm_v1')),
     path('reports/', include(('reports.urls', 'reports'), namespace='reports_v1')),
     

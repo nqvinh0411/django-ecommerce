@@ -1,25 +1,15 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-from .viewsets import (
-    CategoryViewSet,
-    BrandViewSet,
-    TagViewSet,
-    AttributeViewSet,
-    AttributeValueViewSet
-)
+from django.urls import path
 
 app_name = 'catalog'
 
-# Tạo router cho Catalog API
-router = DefaultRouter()
-router.register('categories', CategoryViewSet, basename='category')
-router.register('brands', BrandViewSet, basename='brand')
-router.register('tags', TagViewSet, basename='tag')
-router.register('attributes', AttributeViewSet, basename='attribute')
-router.register('attribute-values', AttributeValueViewSet, basename='attribute-value')
+# Lưu ý: Tất cả đường dẫn trong catalog đã được di chuyển sang các URL riêng biệt:
+# - api/v1/categories/
+# - api/v1/brands/
+# - api/v1/tags/
+# - api/v1/attributes/
+# - api/v1/attribute-values/
 
+# Không còn sử dụng router với prefix /catalog/ nữa
 urlpatterns = [
-    # Sử dụng router URLs
-    path('', include(router.urls)),
+    # URLs đã được deprecated, không còn sử dụng nữa
 ]

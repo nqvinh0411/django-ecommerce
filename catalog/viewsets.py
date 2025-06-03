@@ -28,7 +28,7 @@ from .serializers import (
 )
 
 
-@extend_schema(tags=['Catalog'])
+@extend_schema(tags=['Categories'])
 class CategoryViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Category resources.
@@ -37,13 +37,13 @@ class CategoryViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     chuẩn hóa và phân quyền phù hợp.
     
     Endpoints:
-    - GET /api/v1/catalog/categories/ - Liệt kê tất cả danh mục
-    - POST /api/v1/catalog/categories/ - Tạo danh mục mới
-    - GET /api/v1/catalog/categories/{slug}/ - Xem chi tiết danh mục
-    - PUT/PATCH /api/v1/catalog/categories/{slug}/ - Cập nhật danh mục
-    - DELETE /api/v1/catalog/categories/{slug}/ - Xóa danh mục
-    - GET /api/v1/catalog/categories/{slug}/children/ - Xem danh mục con
-    - GET /api/v1/catalog/categories/{slug}/descendants/ - Xem tất cả danh mục con cháu
+    - GET /api/v1/categories/ - Liệt kê tất cả danh mục
+    - POST /api/v1/categories/ - Tạo danh mục mới
+    - GET /api/v1/categories/{slug}/ - Xem chi tiết danh mục
+    - PUT/PATCH /api/v1/categories/{slug}/ - Cập nhật danh mục
+    - DELETE /api/v1/categories/{slug}/ - Xóa danh mục
+    - GET /api/v1/categories/{slug}/children/ - Xem danh mục con
+    - GET /api/v1/categories/{slug}/descendants/ - Xem tất cả danh mục con cháu
     """
     queryset = Category.objects.all()
     permission_classes = [IsAdminOrReadOnly]
@@ -101,7 +101,7 @@ class CategoryViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
         )
 
 
-@extend_schema(tags=['Catalog'])
+@extend_schema(tags=['Brands'])
 class BrandViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Brand resources.
@@ -110,11 +110,11 @@ class BrandViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     chuẩn hóa và phân quyền phù hợp.
     
     Endpoints:
-    - GET /api/v1/catalog/brands/ - Liệt kê tất cả thương hiệu
-    - POST /api/v1/catalog/brands/ - Tạo thương hiệu mới
-    - GET /api/v1/catalog/brands/{slug}/ - Xem chi tiết thương hiệu
-    - PUT/PATCH /api/v1/catalog/brands/{slug}/ - Cập nhật thương hiệu
-    - DELETE /api/v1/catalog/brands/{slug}/ - Xóa thương hiệu
+    - GET /api/v1/brands/ - Liệt kê tất cả thương hiệu
+    - POST /api/v1/brands/ - Tạo thương hiệu mới
+    - GET /api/v1/brands/{slug}/ - Xem chi tiết thương hiệu
+    - PUT/PATCH /api/v1/brands/{slug}/ - Cập nhật thương hiệu
+    - DELETE /api/v1/brands/{slug}/ - Xóa thương hiệu
     """
     queryset = Brand.objects.all()
     permission_classes = [IsAdminOrReadOnly]
@@ -132,7 +132,7 @@ class BrandViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
         return BrandSerializer
 
 
-@extend_schema(tags=['Catalog'])
+@extend_schema(tags=['Tags'])
 class TagViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Tag resources.
@@ -141,11 +141,11 @@ class TagViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     chuẩn hóa và phân quyền phù hợp.
     
     Endpoints:
-    - GET /api/v1/catalog/tags/ - Liệt kê tất cả thẻ
-    - POST /api/v1/catalog/tags/ - Tạo thẻ mới
-    - GET /api/v1/catalog/tags/{slug}/ - Xem chi tiết thẻ
-    - PUT/PATCH /api/v1/catalog/tags/{slug}/ - Cập nhật thẻ
-    - DELETE /api/v1/catalog/tags/{slug}/ - Xóa thẻ
+    - GET /api/v1/tags/ - Liệt kê tất cả thẻ
+    - POST /api/v1/tags/ - Tạo thẻ mới
+    - GET /api/v1/tags/{slug}/ - Xem chi tiết thẻ
+    - PUT/PATCH /api/v1/tags/{slug}/ - Cập nhật thẻ
+    - DELETE /api/v1/tags/{slug}/ - Xóa thẻ
     """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -158,7 +158,7 @@ class TagViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     ordering = ['name']
 
 
-@extend_schema(tags=['Catalog'])
+@extend_schema(tags=['Attributes'])
 class AttributeViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Attribute resources.
@@ -167,12 +167,12 @@ class AttributeViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     chuẩn hóa và phân quyền phù hợp.
     
     Endpoints:
-    - GET /api/v1/catalog/attributes/ - Liệt kê tất cả thuộc tính
-    - POST /api/v1/catalog/attributes/ - Tạo thuộc tính mới
-    - GET /api/v1/catalog/attributes/{slug}/ - Xem chi tiết thuộc tính
-    - PUT/PATCH /api/v1/catalog/attributes/{slug}/ - Cập nhật thuộc tính
-    - DELETE /api/v1/catalog/attributes/{slug}/ - Xóa thuộc tính
-    - GET /api/v1/catalog/attributes/{slug}/values/ - Xem giá trị thuộc tính
+    - GET /api/v1/attributes/ - Liệt kê tất cả thuộc tính
+    - POST /api/v1/attributes/ - Tạo thuộc tính mới
+    - GET /api/v1/attributes/{slug}/ - Xem chi tiết thuộc tính
+    - PUT/PATCH /api/v1/attributes/{slug}/ - Cập nhật thuộc tính
+    - DELETE /api/v1/attributes/{slug}/ - Xóa thuộc tính
+    - GET /api/v1/attributes/{slug}/values/ - Xem giá trị thuộc tính
     """
     queryset = Attribute.objects.all()
     serializer_class = AttributeSerializer
@@ -208,7 +208,7 @@ class AttributeViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
         )
 
 
-@extend_schema(tags=['Catalog'])
+@extend_schema(tags=['Attribute Values'])
 class AttributeValueViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý AttributeValue resources.
@@ -217,11 +217,11 @@ class AttributeValueViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     chuẩn hóa và phân quyền phù hợp.
     
     Endpoints:
-    - GET /api/v1/catalog/attribute-values/ - Liệt kê tất cả giá trị thuộc tính
-    - POST /api/v1/catalog/attribute-values/ - Tạo giá trị thuộc tính mới
-    - GET /api/v1/catalog/attribute-values/{id}/ - Xem chi tiết giá trị thuộc tính
-    - PUT/PATCH /api/v1/catalog/attribute-values/{id}/ - Cập nhật giá trị thuộc tính
-    - DELETE /api/v1/catalog/attribute-values/{id}/ - Xóa giá trị thuộc tính
+    - GET /api/v1/attribute-values/ - Liệt kê tất cả giá trị thuộc tính
+    - POST /api/v1/attribute-values/ - Tạo giá trị thuộc tính mới
+    - GET /api/v1/attribute-values/{id}/ - Xem chi tiết giá trị thuộc tính
+    - PUT/PATCH /api/v1/attribute-values/{id}/ - Cập nhật giá trị thuộc tính
+    - DELETE /api/v1/attribute-values/{id}/ - Xóa giá trị thuộc tính
     """
     queryset = AttributeValue.objects.all()
     serializer_class = AttributeValueSerializer
