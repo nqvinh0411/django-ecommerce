@@ -1,23 +1,14 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-from .viewsets import (
-    CouponViewSet,
-    PromotionCampaignViewSet,
-    VoucherViewSet,
-    UsageLogViewSet
-)
+from django.urls import path
 
 app_name = 'promotions'
 
-# Tạo router cho Promotions API
-router = DefaultRouter()
-router.register('coupons', CouponViewSet, basename='coupon')
-router.register('campaigns', PromotionCampaignViewSet, basename='campaign')
-router.register('vouchers', VoucherViewSet, basename='voucher')
-router.register('usage-logs', UsageLogViewSet, basename='usage-log')
+# Lưu ý: Tất cả đường dẫn trong promotions đã được di chuyển sang các URL riêng biệt:
+# - api/v1/coupons/
+# - api/v1/vouchers/
+# - api/v1/campaigns/
+# - api/v1/usage-logs/
 
+# Không còn sử dụng router với prefix /promotions/ nữa
 urlpatterns = [
-    # Sử dụng router URLs
-    path('', include(router.urls)),
+    # URLs đã được deprecated, không còn sử dụng nữa
 ]

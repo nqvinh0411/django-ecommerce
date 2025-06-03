@@ -19,6 +19,12 @@ urlpatterns = [
     path('tags/', include(('catalog.urls_tags', 'catalog'), namespace='tags_v1')),
     path('attribute-values/', include(('catalog.urls_attribute_values', 'catalog'), namespace='attribute_values_v1')),
     
+    # Promotions modules (refactored)
+    path('coupons/', include(('promotions.urls_coupons', 'promotions'), namespace='coupons_v1')),
+    path('vouchers/', include(('promotions.urls_vouchers', 'promotions'), namespace='vouchers_v1')),
+    path('campaigns/', include(('promotions.urls_campaigns', 'promotions'), namespace='campaigns_v1')),
+    path('usage-logs/', include(('promotions.urls_usage_logs', 'promotions'), namespace='usage_logs_v1')),
+    
     # Additional modules
     path('hrm/', include(('hrm.urls', 'hrm'), namespace='hrm_v1')),
     path('reports/', include(('reports.urls', 'reports'), namespace='reports_v1')),
