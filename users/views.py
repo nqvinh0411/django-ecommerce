@@ -11,7 +11,6 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from core.views.base import BaseAPIView
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
-from core.permissions import IsOwnerOrAdmin, IsSellerOrAdmin
 from core.optimization.mixins import QueryOptimizationMixin
 from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
 

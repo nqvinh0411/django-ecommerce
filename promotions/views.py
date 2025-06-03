@@ -9,12 +9,14 @@ from decimal import Decimal
 from django.db import models
 from django.db.models import Q
 
+from core.permissions import IsOwnerOrAdmin
+
 from .models import Coupon, PromotionCampaign, Voucher, UsageLog
 from .serializers import (
     CouponSerializer, PromotionCampaignSerializer, VoucherSerializer,
     UsageLogSerializer, ApplyCouponSerializer, ApplyVoucherSerializer
 )
-from .permissions import IsAdminUserOrReadOnly, IsOwnerOrAdmin
+from .permissions import IsAdminUserOrReadOnly
 
 
 class CouponListCreateView(generics.ListCreateAPIView):

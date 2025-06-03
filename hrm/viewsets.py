@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
-from core.permissions.base import IsAdminOrReadOnly
+from core.permissions import IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.optimization.mixins import QueryOptimizationMixin
 from drf_spectacular.utils import extend_schema
@@ -37,7 +37,7 @@ from .serializers.payroll_serializer import PayrollSerializer
 
 
 @extend_schema(tags=['HRM'])
-class DepartmentViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class DepartmentViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Department resources.
     
@@ -82,7 +82,7 @@ class DepartmentViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class PositionViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class PositionViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Position resources.
     
@@ -127,7 +127,7 @@ class PositionViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class EmployeeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class EmployeeViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Employee resources.
     
@@ -268,7 +268,7 @@ class EmployeeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class WorkScheduleViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class WorkScheduleViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý WorkSchedule resources.
     
@@ -295,7 +295,7 @@ class WorkScheduleViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class HolidayViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class HolidayViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Holiday resources.
     
@@ -319,7 +319,7 @@ class HolidayViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class TimesheetViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class TimesheetViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Timesheet resources.
     
@@ -345,7 +345,7 @@ class TimesheetViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class LeaveRequestViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class LeaveRequestViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý LeaveRequest resources.
     
@@ -422,7 +422,7 @@ class LeaveRequestViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class SalaryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class SalaryViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Salary resources.
     
@@ -448,7 +448,7 @@ class SalaryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['HRM'])
-class PayrollViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class PayrollViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Payroll resources.
     

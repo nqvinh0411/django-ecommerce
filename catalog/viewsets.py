@@ -5,26 +5,31 @@ Module này cung cấp các ViewSets chuẩn hóa cho Catalog API,
 tuân thủ định dạng response và quy ước API đã được thiết lập.
 """
 
+from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q, Avg, F
 from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from core.viewsets.base import StandardizedModelViewSet
-from core.permissions.base import IsAdminOrReadOnly
-from core.optimization.decorators import log_slow_queries
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from core.optimization.mixins import QueryOptimizationMixin
-from drf_spectacular.utils import extend_schema
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from core.permissions import IsAdminOrReadOnly
 
-from .models import Category, Brand, Tag, Attribute, AttributeValue
+from .models import (
+    Category, Brand, Attribute, AttributeValue, Tag
+)
 from .serializers import (
-    CategorySerializer,
-    BrandSerializer,
-    TagSerializer, AttributeSerializer, AttributeValueSerializer
+    CategorySerializer, BrandSerializer, AttributeSerializer,
+    AttributeValueSerializer, TagSerializer
 )
 
 
 @extend_schema(tags=['Catalog'])
-class CategoryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class CategoryViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Category resources.
     
@@ -97,7 +102,7 @@ class CategoryViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Catalog'])
-class BrandViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class BrandViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Brand resources.
     
@@ -128,7 +133,7 @@ class BrandViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Catalog'])
-class TagViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class TagViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Tag resources.
     
@@ -154,7 +159,7 @@ class TagViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Catalog'])
-class AttributeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class AttributeViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Attribute resources.
     
@@ -204,7 +209,7 @@ class AttributeViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Catalog'])
-class AttributeValueViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class AttributeValueViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý AttributeValue resources.
     

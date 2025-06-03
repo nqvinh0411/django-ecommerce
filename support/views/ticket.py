@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 
 from ..models import SupportTicket
 from ..serializers import SupportTicketSerializer, TicketReplySerializer
-from ..permissions import IsOwnerOrAdmin
+from core.permissions import IsOwnerOrAdmin
 
 
 class SupportTicketListCreateView(generics.ListCreateAPIView):

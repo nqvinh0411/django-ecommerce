@@ -29,8 +29,7 @@ from .serializers import (
 from .permissions import CanManagePromotions
 
 
-@extend_schema(tags=['Promotions'])
-class CouponViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class CouponViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý Coupon resources.
     
@@ -137,8 +136,7 @@ class CouponViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedMode
         )
 
 
-@extend_schema(tags=['Promotions'])
-class PromotionCampaignViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class PromotionCampaignViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý PromotionCampaign resources.
     
@@ -219,8 +217,7 @@ class PromotionCampaignViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, Stand
         )
 
 
-@extend_schema(tags=['Promotions'])
-class VoucherViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class VoucherViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý Voucher resources.
     
@@ -357,8 +354,7 @@ class VoucherViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedMod
         )
 
 
-@extend_schema(tags=['Promotions'])
-class UsageLogViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class UsageLogViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý UsageLog resources.
     

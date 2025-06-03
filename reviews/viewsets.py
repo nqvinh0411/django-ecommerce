@@ -13,10 +13,12 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
-from core.permissions.base import IsOwnerOrReadOnly
+from core.permissions import IsOwnerOrReadOnly
 from core.utils.response import success_response, error_response
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from core.optimization.mixins import QueryOptimizationMixin
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
 
 from .models import Review
 from .serializers import (

@@ -15,27 +15,6 @@ class IsAdminUserOrReadOnly(permissions.BasePermission):
         return request.user and request.user.is_staff
 
 
-class IsOwnerOrAdmin(permissions.BasePermission):
-    """
-    Custom permission to only allow owners of a voucher to view it.
-    Admin users can view all vouchers.
-    """
-    def has_permission(self, request, view):
-        # Always require authentication
-        return request.user and request.user.is_authenticated
-        
-    def has_object_permission(self, request, view, obj):
-        # Admin can do anything
-        if request.user.is_staff:
-            return True
-        
-        # Check if the user is the owner of the voucher
-        if hasattr(request.user, 'customer'):
-            return obj.owner == request.user.customer
-            
-        return False
-
-
 class CanManagePromotions(permissions.BasePermission):
     """
     Custom permission to only allow users with promotion management permission to edit promotions.

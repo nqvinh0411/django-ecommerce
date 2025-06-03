@@ -6,20 +6,32 @@ tuân thủ định dạng response và quy ước API đã được thiết l�
 """
 
 from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q, Avg
+from django.utils import timezone
+from datetime import timedelta
 from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from core.viewsets.base import StandardizedModelViewSet, ReadOnlyStandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from core.optimization.mixins import QueryOptimizationMixin
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from core.permissions import IsAdminOrReadOnly
+
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 from .serializers import (
-    CustomerSerializer, CustomerGroupSerializer,
-    CustomerAddressSerializer, CustomerActivitySerializer
+    CustomerSerializer,
+    CustomerDetailSerializer,
+    CustomerGroupSerializer,
+    CustomerAddressSerializer,
+    CustomerActivitySerializer,
+    CustomerCreateSerializer,
+    CustomerUpdateSerializer
 )
-from .permissions import IsCustomerOwner, IsAdminOrReadOnly
+from .permissions import IsCustomerOwner
 
 
 @extend_schema(tags=['Customer Management'])

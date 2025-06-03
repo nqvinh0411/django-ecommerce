@@ -10,21 +10,26 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
 from django.db import models
+from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q
+from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from core.viewsets.base import StandardizedModelViewSet
-from core.permissions.base import IsAdminOrReadOnly
-from core.optimization.decorators import log_slow_queries
-from core.optimization.mixins import QueryOptimizationMixin
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
-from drf_spectacular.utils import extend_schema
+from core.optimization.mixins import QueryOptimizationMixin
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from core.permissions import IsAdminOrReadOnly
 
 from .models import Page, Banner, MenuItem
-from .serializers import PageSerializer, BannerSerializer, MenuItemSerializer
+from .serializers import (
+    PageSerializer, BannerSerializer, MenuItemSerializer
+)
 from .permissions import CanManagePages
 
 
 @extend_schema(tags=['Pages'])
-class PageViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class PageViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý Page resources.
     
@@ -111,7 +116,7 @@ class PageViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelV
 
 
 @extend_schema(tags=['Pages'])
-class BannerViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class BannerViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý Banner resources.
     
@@ -179,7 +184,7 @@ class BannerViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedMode
 
 
 @extend_schema(tags=['Pages'])
-class MenuItemViewSet(SwaggerSchemaMixin, QueryOptimizationMixin, StandardizedModelViewSet):
+class MenuItemViewSet(StandardizedModelViewSet, SwaggerSchemaMixin, QueryOptimizationMixin):
     """
     ViewSet để quản lý MenuItem resources.
     

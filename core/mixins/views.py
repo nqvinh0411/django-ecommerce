@@ -10,6 +10,53 @@ from rest_framework import status
 #         return super().dispatch(request, *args, **kwargs)
 
 
+class FilterByTenantMixin:
+    """
+    Mixin để lọc dữ liệu theo tenant (người thuê) hiện tại.
+    
+    Trong hệ thống multi-tenant, mixin này đảm bảo rằng mỗi tenant 
+    chỉ có thể xem và quản lý dữ liệu của chính họ.
+    
+    Sử dụng:
+    1. Thêm mixin này vào ViewSet
+    2. Mỗi model cần có trường tenant hoặc một cách để liên kết đến tenant
+    
+    Lưu ý: ViewSet sử dụng mixin này cần override lại phương thức get_queryset()
+    để triển khai logic lọc cụ thể cho model đó.
+    """
+    def get_tenant(self):
+        """
+        Trả về tenant hiện tại dựa trên người dùng đang đăng nhập.
+        
+        Override phương thức này để xác định tenant theo logic ứng dụng.
+        Mặc định, tenant được xem là user hiện tại.
+        """
+        return self.request.user if hasattr(self, 'request') else None
+    
+    def filter_by_tenant(self, queryset):
+        """
+        Lọc queryset theo tenant hiện tại.
+        
+        Đây là phương thức cơ bản, các lớp con nên override lại phương thức
+        get_queryset() để triển khai logic lọc cụ thể.
+        """
+        tenant = self.get_tenant()
+        if tenant is None or tenant.is_staff:
+            return queryset  # Admin thấy tất cả
+        
+        # Mặc định giả định model có trường 'tenant'
+        # Nếu không, cần override lại phương thức này
+        filter_kwargs = {'tenant': tenant}
+        return queryset.filter(**filter_kwargs)
+    
+    def get_queryset(self):
+        """
+        Trả về queryset đã được lọc theo tenant hiện tại.
+        """
+        queryset = super().get_queryset()
+        return self.filter_by_tenant(queryset)
+
+
 class ApiResponseMixin:
     """
     Mixin cung cấp các phương thức response chuẩn hóa cho API views.

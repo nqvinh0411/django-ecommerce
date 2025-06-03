@@ -1,4 +1,4 @@
-from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from core.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from core.views.base import (
     BaseListView,
     BaseCreateView,
@@ -7,6 +7,7 @@ from core.views.base import (
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Category, Brand, Tag, Attribute, AttributeValue
 from .serializers import (

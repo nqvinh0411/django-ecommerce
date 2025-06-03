@@ -6,14 +6,18 @@ tuân thủ định dạng response và quy ước API đã được thiết l�
 """
 
 from django.shortcuts import get_object_or_404
-from products.models import Product
-from rest_framework import permissions, status
+from django.db.models import Count, Q, Sum, F
+from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from core.viewsets.base import StandardizedModelViewSet
-from core.permissions.base import IsOwner
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
-from drf_spectacular.utils import extend_schema
+from core.optimization.mixins import QueryOptimizationMixin
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from core.permissions import IsOwner
 
 from .models import Cart, CartItem
 from .serializers import (

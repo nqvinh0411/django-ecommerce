@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from ..models import SupportTicket
 from ..serializers import AdminSupportTicketSerializer
-from ..permissions import IsAdminUser
+from core.permissions import IsAdminUser
 
 
 class AdminSupportTicketListView(generics.ListAPIView):

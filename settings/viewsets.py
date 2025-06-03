@@ -5,26 +5,31 @@ Module này cung cấp các ViewSets chuẩn hóa cho Settings API,
 tuân thủ định dạng response và quy ước API đã được thiết lập.
 """
 
+from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q
 from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from core.viewsets.base import StandardizedModelViewSet
-from core.permissions.base import IsAdminOrReadOnly
-from core.optimization.decorators import log_slow_queries
+from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from core.optimization.mixins import QueryOptimizationMixin
-from drf_spectacular.utils import extend_schema
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from core.permissions import IsAdminOrReadOnly
 
-from .models import StoreSetting, Currency, LanguageSetting, EmailTemplate
+from .models import (
+    StoreSetting, EmailTemplate, Currency, LanguageSetting
+)
 from .serializers import (
-    StoreSettingSerializer, CurrencySerializer, 
-    LanguageSettingSerializer, EmailTemplateSerializer
+    StoreSettingSerializer, EmailTemplateSerializer, CurrencySerializer, LanguageSettingSerializer
 )
 from .permissions import CanManageSettings
 
 
 @extend_schema(tags=['Settings'])
-class StoreSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class StoreSettingViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý StoreSetting resources.
     
@@ -105,7 +110,7 @@ class StoreSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Settings'])
-class CurrencyViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class CurrencyViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý Currency resources.
     
@@ -154,7 +159,7 @@ class CurrencyViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Settings'])
-class LanguageSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class LanguageSettingViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý LanguageSetting resources.
     
@@ -203,7 +208,7 @@ class LanguageSettingViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Settings'])
-class EmailTemplateViewSet(QueryOptimizationMixin, StandardizedModelViewSet):
+class EmailTemplateViewSet(StandardizedModelViewSet, QueryOptimizationMixin):
     """
     ViewSet để quản lý EmailTemplate resources.
     

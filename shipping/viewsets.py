@@ -6,25 +6,34 @@ tuân thủ định dạng response và quy ước API đã được thiết l�
 """
 
 from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q, Sum, Avg, F
+from django.utils import timezone
+from datetime import timedelta
 from rest_framework import permissions, status, filters
 from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from core.viewsets.base import StandardizedModelViewSet
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
-from drf_spectacular.utils import extend_schema
-from orders.models import Order
+from core.optimization.mixins import QueryOptimizationMixin
+from core.optimization.decorators import log_slow_queries, cached_property_with_ttl
+from core.mixins.views import FilterByTenantMixin, PermissionByActionMixin
+from core.permissions import IsAdminOrReadOnly, IsOwnerOrAdminUser
 
-from .models import ShippingMethod, ShippingZone, ShippingRate, Shipment, TrackingInfo
+from .models import (
+    ShippingMethod, ShippingZone, ShippingRate, Shipment, TrackingInfo
+)
 from .serializers import (
     ShippingMethodSerializer, ShippingZoneSerializer, ShippingRateSerializer,
-    ShipmentSerializer, TrackingInfoSerializer, CalculateShippingSerializer
+    ShipmentSerializer, ShipmentCreateSerializer, TrackingInfoSerializer,
+    TrackingInfoCreateSerializer, CalculateShippingSerializer
 )
-from core.permissions.base import IsAdminOrReadOnly, IsOwnerOrAdminUser
 
 
 @extend_schema(tags=['Shipping'])
-class ShippingMethodViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+class ShippingMethodViewSet(StandardizedModelViewSet, SwaggerSchemaMixin):
     """
     ViewSet để quản lý ShippingMethod resources.
     
@@ -49,7 +58,7 @@ class ShippingMethodViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Shipping'])
-class ShippingZoneViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+class ShippingZoneViewSet(StandardizedModelViewSet, SwaggerSchemaMixin):
     """
     ViewSet để quản lý ShippingZone resources.
     
@@ -74,7 +83,7 @@ class ShippingZoneViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Shipping'])
-class ShippingRateViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+class ShippingRateViewSet(StandardizedModelViewSet, SwaggerSchemaMixin):
     """
     ViewSet để quản lý ShippingRate resources.
     
@@ -173,7 +182,7 @@ class ShippingRateViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
 
 
 @extend_schema(tags=['Shipping'])
-class ShipmentViewSet(SwaggerSchemaMixin, StandardizedModelViewSet):
+class ShipmentViewSet(StandardizedModelViewSet, SwaggerSchemaMixin):
     """
     ViewSet để quản lý Shipment resources.
     

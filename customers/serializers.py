@@ -2,6 +2,7 @@ from rest_framework import serializers
 from typing import Optional, Dict, Any
 from users.serializers import UserSerializer
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
+from django.db import models
 
 
 class CustomerGroupSerializer(serializers.ModelSerializer):
@@ -110,4 +111,71 @@ class CustomerSerializer(serializers.ModelSerializer):
     def validate_loyalty_points(self, value):
         if value < 0:
             raise serializers.ValidationError("Điểm thưởng không thể là số âm")
+        return value
+
+
+class CustomerDetailSerializer(CustomerSerializer):
+    """
+    Detailed serializer cho Customer với đầy đủ thông tin.
+    Bao gồm user details, addresses, activities, etc.
+    """
+    recent_activities = serializers.SerializerMethodField(read_only=True)
+    total_orders = serializers.SerializerMethodField(read_only=True)
+    total_spent = serializers.SerializerMethodField(read_only=True)
+    
+    class Meta(CustomerSerializer.Meta):
+        fields = CustomerSerializer.Meta.fields + [
+            'recent_activities', 'total_orders', 'total_spent'
+        ]
+    
+    def get_recent_activities(self, obj: Customer) -> list:
+        """Get recent 5 activities for this customer"""
+        activities = obj.activities.order_by('-created_at')[:5]
+        return CustomerActivitySerializer(activities, many=True).data
+    
+    def get_total_orders(self, obj: Customer) -> int:
+        """Get total number of orders for this customer"""
+        if hasattr(obj, 'orders'):
+            return obj.orders.count()
+        return 0
+    
+    def get_total_spent(self, obj: Customer) -> float:
+        """Get total amount spent by this customer"""
+        if hasattr(obj, 'orders'):
+            total = obj.orders.filter(status='completed').aggregate(
+                total=models.Sum('total_amount')
+            )['total']
+            return float(total or 0)
+        return 0.0
+
+
+class CustomerCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer để tạo mới Customer.
+    """
+    class Meta:
+        model = Customer
+        fields = [
+            'phone_number', 'date_of_birth', 'gender', 'group', 'notes'
+        ]
+        
+    def validate_phone_number(self, value):
+        if value and not value.isdigit():
+            raise serializers.ValidationError("Số điện thoại chỉ được chứa các chữ số")
+        return value
+
+
+class CustomerUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer để cập nhật Customer.
+    """
+    class Meta:
+        model = Customer
+        fields = [
+            'phone_number', 'date_of_birth', 'gender', 'group', 'notes'
+        ]
+        
+    def validate_phone_number(self, value):
+        if value and not value.isdigit():
+            raise serializers.ValidationError("Số điện thoại chỉ được chứa các chữ số")
         return value

@@ -16,12 +16,3 @@ class IsCustomerOwner(permissions.BasePermission):
         
         # For customer object itself
         return obj.user == request.user
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission to only allow admins to edit but allow anyone to read
-    """
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user and request.user.is_staff

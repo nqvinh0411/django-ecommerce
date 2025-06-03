@@ -5,12 +5,13 @@ from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from core.views.base import BaseAPIView, BaseListCreateView, BaseRetrieveUpdateDestroyView, BaseListView, BaseRetrieveView
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
+from core.permissions import IsAdminOrReadOnly
 from .models import Customer, CustomerGroup, CustomerAddress, CustomerActivity
 from .serializers import (
     CustomerSerializer, CustomerGroupSerializer,
     CustomerAddressSerializer, CustomerActivitySerializer
 )
-from .permissions import IsCustomerOwner, IsAdminOrReadOnly
+from .permissions import IsCustomerOwner
 
 
 # Customer views

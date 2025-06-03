@@ -5,7 +5,7 @@ from rest_framework import permissions, status
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from core.views.base import BaseAPIView, BaseListView, BaseRetrieveUpdateDestroyView
-from core.permissions.base import IsOwnerOrReadOnly
+from core.permissions import IsOwnerOrReadOnly
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
 
 from .models import Review

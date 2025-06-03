@@ -15,7 +15,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.viewsets.base import StandardizedModelViewSet
-from core.permissions.base import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from core.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from core.optimization.decorators import log_slow_queries
 from core.mixins.swagger_helpers import SwaggerSchemaMixin
 from drf_spectacular.utils import extend_schema
