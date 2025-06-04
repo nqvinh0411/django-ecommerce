@@ -12,7 +12,7 @@ from . import views
 app_name = 'shipping'
 
 # Thiết lập router cho ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'methods', ShippingMethodViewSet, basename='shipping-method')
 router.register(r'zones', ShippingZoneViewSet, basename='shipping-zone')
 router.register(r'rates', ShippingRateViewSet, basename='shipping-rate')

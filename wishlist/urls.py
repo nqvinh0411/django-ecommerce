@@ -15,7 +15,7 @@ from .views import (
 app_name = "wishlist"
 
 # Thiết lập router cho ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'', WishlistViewSet, basename='wishlist')
 
 urlpatterns = [

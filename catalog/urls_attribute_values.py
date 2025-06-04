@@ -6,7 +6,7 @@ from .viewsets import AttributeValueViewSet
 app_name = 'attribute_values'
 
 # Tạo router cho Attribute Values API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', AttributeValueViewSet, basename='attribute-value')
 
 urlpatterns = [

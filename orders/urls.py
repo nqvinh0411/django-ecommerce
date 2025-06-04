@@ -6,7 +6,7 @@ from .viewsets import OrderViewSet, OrderSelfViewSet
 app_name = 'orders'
 
 # Router chính
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # Admin endpoints
 router.register(r'admin', OrderViewSet, basename='order-admin')

@@ -4,7 +4,7 @@ from .views import AuthViewSet
 
 app_name = 'user_auth'
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'', AuthViewSet, basename='user_auth')
 
 urlpatterns = [

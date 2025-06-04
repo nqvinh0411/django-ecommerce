@@ -12,7 +12,7 @@ from .views import (
 app_name = 'cart'
 
 # Router chính
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # Admin endpoints
 router.register(r'admin', CartAdminViewSet, basename='cart-admin')

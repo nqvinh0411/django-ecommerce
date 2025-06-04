@@ -112,6 +112,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'e_commerce.wsgi.application'
 
+APPEND_SLASH = False
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -321,10 +323,6 @@ SPECTACULAR_SETTINGS = {
         {
             'name': 'Customers',
             'description': 'Customer account management endpoints'
-        },
-        {
-            'name': 'Users',
-            'description': 'User management and profile endpoints'
         },
         {
             'name': 'Payments',

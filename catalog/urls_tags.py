@@ -6,10 +6,10 @@ from .viewsets import TagViewSet
 app_name = 'tags'
 
 # Tạo router cho Tags API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', TagViewSet, basename='tag')
 
 urlpatterns = [
     # Sử dụng router URLs
     path('', include(router.urls)),
-] 
+]

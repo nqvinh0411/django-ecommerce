@@ -14,7 +14,7 @@ from .viewsets import (
 app_name = 'customers'
 
 # Router chính
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # Admin endpoints
 router.register(r'admin', CustomerViewSet, basename='customer-admin')

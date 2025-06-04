@@ -9,7 +9,7 @@ from .views import PaymentCheckoutView, PaymentStatusView
 app_name = 'payments'
 
 # Thiết lập router cho ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'', PaymentViewSet, basename='payment')
 
 urlpatterns = [

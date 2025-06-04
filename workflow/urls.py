@@ -8,7 +8,7 @@ from .views import (
 )
 
 # Create a router and register our viewsets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'workflows', WorkflowViewSet)
 router.register(r'workflow-steps', WorkflowStepViewSet)
 router.register(r'workflow-transitions', WorkflowTransitionViewSet)

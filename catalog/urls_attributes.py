@@ -6,10 +6,10 @@ from .viewsets import AttributeViewSet
 app_name = 'attributes'
 
 # Tạo router cho Attributes API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', AttributeViewSet, basename='attribute')
 
 urlpatterns = [
     # Sử dụng router URLs
     path('', include(router.urls)),
-] 
+]

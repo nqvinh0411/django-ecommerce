@@ -10,7 +10,7 @@ from .viewsets import (
 app_name = "pages"
 
 # Tạo router cho Pages API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', PageViewSet, basename='page')
 router.register('banners', BannerViewSet, basename='banner')
 router.register('menu-items', MenuItemViewSet, basename='menu-item')

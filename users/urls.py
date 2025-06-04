@@ -14,7 +14,7 @@ from .views import (
 app_name = 'users'
 
 # Router cho các ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # Admin user management
 router.register(r'admin', UserAdminViewSet, basename='user-admin')

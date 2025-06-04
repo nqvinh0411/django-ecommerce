@@ -11,7 +11,7 @@ from .viewsets import (
 app_name = 'inventory'
 
 # Tạo router cho Inventory API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('warehouses', WarehouseViewSet, basename='warehouse')
 router.register('stock-items', StockItemViewSet, basename='stock-item')
 router.register('stock-movements', StockMovementViewSet, basename='stock-movement')

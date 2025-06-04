@@ -6,7 +6,7 @@ from .viewsets import VoucherViewSet
 app_name = 'vouchers'
 
 # Tạo router cho Vouchers API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', VoucherViewSet, basename='voucher')
 
 urlpatterns = [

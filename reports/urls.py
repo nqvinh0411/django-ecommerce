@@ -17,7 +17,7 @@ from .views import (
 app_name = "reports"
 
 # Thiết lập router cho ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'sales', SalesReportViewSet, basename='sales-report')
 router.register(r'products', ProductReportViewSet, basename='product-report')
 router.register(r'customers', CustomerReportViewSet, basename='customer-report')

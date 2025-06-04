@@ -6,7 +6,7 @@ from .viewsets import BrandViewSet
 app_name = 'brands'
 
 # Tạo router cho Brands API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', BrandViewSet, basename='brand')
 
 urlpatterns = [

@@ -6,7 +6,7 @@ from .viewsets import CategoryViewSet
 app_name = 'categories'
 
 # Tạo router cho Categories API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('', CategoryViewSet, basename='category')
 
 urlpatterns = [

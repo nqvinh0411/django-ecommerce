@@ -16,7 +16,7 @@ from .viewsets import (
 app_name = 'hrm'
 
 # Tạo router cho HRM API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('departments', DepartmentViewSet, basename='department')
 router.register('positions', PositionViewSet, basename='position')
 router.register('employees', EmployeeViewSet, basename='employee')

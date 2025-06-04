@@ -19,7 +19,7 @@ from .views import (
 app_name = "support"
 
 # Thiết lập router cho ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'categories', SupportCategoryViewSet, basename='support-category')
 router.register(r'tickets', SupportTicketViewSet, basename='support-ticket')
 router.register(r'replies', TicketReplyViewSet, basename='ticket-reply')

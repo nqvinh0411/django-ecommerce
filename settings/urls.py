@@ -11,7 +11,7 @@ from .viewsets import (
 app_name = "settings"
 
 # Tạo router cho Settings API
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register('store', StoreSettingViewSet, basename='store-setting')
 router.register('currencies', CurrencyViewSet, basename='currency')
 router.register('languages', LanguageSettingViewSet, basename='language')

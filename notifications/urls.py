@@ -9,7 +9,7 @@ from .views import NotificationListView, NotificationCreateView, NotificationUpd
 app_name = 'notifications'
 
 # Thiết lập router cho ViewSets
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'', NotificationViewSet, basename='notification')
 
 urlpatterns = [

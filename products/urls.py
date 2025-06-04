@@ -9,7 +9,7 @@ from .viewsets import (
 app_name = 'products'
 
 # Router chính
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # Admin endpoints
 router.register(r'admin', ProductAdminViewSet, basename='product-admin')
